@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد - السيادة المطلقة</title>
+    <title>منصة الإدارة الكشفية - مدرسة القاسم بن محمد</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        :root { --primary: #2563eb; --danger: #dc2626; --bg: #0f172a; --card: #1e293b; }
         * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
-        body { margin: 0; background: var(--bg); color: var(--text); direction: rtl; }
-        .container { padding: 15px; max-width: 600px; margin: auto; }
-        .official-header { background: var(--card); padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary); text-align: center; margin-bottom: 20px; }
+        body { margin: 0; background: var(--bg); color: white; direction: rtl; padding: 10px; }
+        .container { max-width: 600px; margin: auto; }
+        .header-official { background: var(--card); padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary); margin-bottom: 20px; text-align: center; }
         .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #334155; }
-        .member-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #334155; }
-        input, select { background: #334155; color: white; border: 1px solid #475569; padding: 8px; border-radius: 6px; margin-bottom: 10px; width: 100%; }
-        button { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
-        .platoon-title { color: var(--primary); border-right: 4px solid var(--primary); padding-right: 10px; margin: 10px 0; }
-        .badge-tag { font-size: 10px; background: #2563eb; padding: 2px 5px; border-radius: 4px; margin-left: 3px; }
+        .member-row { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #334155; }
+        .member-name { font-weight: bold; font-size: 14px; }
+        input, select, textarea { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        button { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; overflow-y: auto; }
+        .info-btn { background: #475569; width: 35px; height: 35px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .label-official { color: #94a3b8; font-size: 12px; margin-bottom: 5px; display: block; }
+        .badge-box { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+        .badge-item { font-size: 10px; background: #1e293b; border: 1px solid var(--primary); padding: 2px 6px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -28,71 +32,96 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const DATA = {
-            admins: [
-                { name: "سلمان الصويلح", id: "202021", title: "قائد الوحدة" },
-                { name: "معاذ الشنقيطي", id: "202030", title: "مساعد القائد" },
-                { name: "عبدالله العرفه", id: "333", title: "عريف أول" }
-            ],
-            violations: ["تأخر", "هندام", "فوضى"],
-            excellence: ["انضباط", "مبادرة"],
-            badges: ["وسام الخدمة", "وسام المهارة"]
-        };
-
-        const PLATOONS = [
-            { id: 1, name: "طليعة 1", members: ["صالح حبتور", "عزام خبراني", "الوليد الحازمي"] },
-            { id: 4, name: "طليعة 4", members: ["وضاح الصويلح", "مبارك خميس"] }
+        const INITIAL_PLATOONS = [
+            { id: 1, name: "طليعة 1", members: ["صالح سعيد حبتور", "حسن محمد الشهري", "ريان محمد جعام", "غازي ابراهيم العجمي", "يزيد يحي خال", "زياد العجلاني", "فهد المهيني", "يحي شراحيلي", "عزام حيدر خبراني"] },
+            { id: 2, name: "طليعة 2", members: ["ياسر موسى ابو حيه", "محمد جابر عسيري", "رياض محمد الزهراني", "ابراهيم فرحان التليدي", "غازي باني العنزي", "صالح عبدالله الخثعمي", "اصيل متعب العتيبي", "فواز سعيد الشهراني", "علي مرضي الغامدي"] },
+            { id: 3, name: "طليعة 3", members: ["بسام علي جابر قرادي", "علي بندر الشهراني", "زايد محمد القحطاني", "راشد سعيدان الراشدي", "عبدالعزيز القحطاني", "عيسى غازي الرشيدي", "بدر عبدالله كعبي", "عبدالله عادل قشاش", "حسام سعد الشهراني"] },
+            { id: 4, name: "طليعة 4", members: ["مشعل محمد القحطاني", "مشاري محمد القحطاني", "محمد حسين فقيه", "فارس بريحي العمري", "رائد حسين حوباني", "راكان حسين حوباني", "عبدالله سعيد القرني", "ناصر مفلح المطيري", "مبارك مرزوق خميس"] }
         ];
 
         function App() {
-            const [isAuth, setIsAuth] = useState(false);
-            const [pass, setPass] = useState("");
             const [user, setUser] = useState(null);
+            const [pass, setPass] = useState("");
+            const [membersData, setMembersData] = useState({});
+            const [editingMember, setEditingMember] = useState(null);
 
-            if (!isAuth) {
-                return (
-                    <div className="container" style={{paddingTop: "100px"}}>
-                        <div className="official-header">
-                            <h2>نظام أوتاد الكشفي</h2>
-                            <p>مدرسة القاسم بن محمد</p>
-                        </div>
-                        <div className="card">
-                            <input type="password" placeholder="أدخل رمز الدخول" value={pass} onChange={e => setPass(e.target.value)} />
-                            <button onClick={() => {
-                                const found = DATA.admins.find(a => a.id === pass);
-                                if(found) { setUser(found); setIsAuth(true); }
-                                else { alert("الرمز خطأ"); }
-                            }}>دخول</button>
-                        </div>
+            useEffect(() => {
+                const saved = localStorage.getItem("awtad_official_v15");
+                if (saved) setMembersData(JSON.parse(saved));
+            }, []);
+
+            const saveMemberInfo = (mId, field, value) => {
+                const newData = { ...membersData, [mId]: { ...membersData[mId], [field]: value } };
+                setMembersData(newData);
+                localStorage.setItem("awtad_official_v15", JSON.stringify(newData));
+            };
+
+            if (!user) return (
+                <div className="container" style={{paddingTop: "15vh"}}>
+                    <div className="header-official"><h2>نظام الإدارة الكشفية</h2></div>
+                    <div className="card">
+                        <input type="password" placeholder="رمز الدخول" value={pass} onChange={e => setPass(e.target.value)} />
+                        <button onClick={() => {
+                            if(["333", "202021", "202030"].includes(pass)) setUser(pass);
+                            else alert("الرمز غير صحيح");
+                        }}>دخول</button>
                     </div>
-                );
-            }
+                </div>
+            );
 
             return (
                 <div className="container">
-                    <div className="official-header">
-                        <h3>{user.title}: {user.name}</h3>
-                        <p>{new Date().toLocaleDateString('ar-SA')}</p>
+                    <div className="header-official">
+                        <h3>{user === "333" ? "عبدالله العرفه" : user === "202021" ? "سلمان الصويلح" : "معاذ الشنقيطي"}</h3>
+                        <p>عريف أول الوحدة</p>
                     </div>
 
-                    {PLATOONS.map(p => (
+                    {INITIAL_PLATOONS.map(p => (
                         <div key={p.id} className="card">
-                            <h3 className="platoon-title">{p.name}</h3>
-                            {p.members.map(m => (
-                                <div key={m} className="member-row">
-                                    <span>{m}</span>
-                                    <div style={{display: 'flex', gap: '5px'}}>
-                                        <select style={{width: '80px', margin: 0}}>
-                                            <option>حاضر</option>
-                                            <option>غائب</option>
-                                        </select>
-                                        <button style={{width: '40px'}} onClick={() => alert('تم فتح سجل ' + m)}>🛠️</button>
+                            <h4 style={{color: "var(--primary)", borderRight: "4px solid var(--primary)", paddingRight: "10px"}}>{p.name}</h4>
+                            {p.members.map(m => {
+                                const data = membersData[m] || { name: m, phone: "", nationalId: "", badges: [] };
+                                return (
+                                    <div key={m} className="member-row">
+                                        <div style={{flex: 1}}>
+                                            <span className="member-name">{data.name}</span>
+                                            <div className="badge-box">
+                                                {data.badges?.map(b => <span key={b} className="badge-item">{b}</span>)}
+                                            </div>
+                                        </div>
+                                        <div className="info-btn" onClick={() => setEditingMember(m)}>ℹ️</div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     ))}
-                    <button onClick={() => setIsAuth(false)} style={{background: '#dc2626'}}>خروج</button>
+
+                    {editingMember && (
+                        <div className="modal">
+                            <div className="card" style={{width: "100%", maxWidth: "400px"}}>
+                                <h3 style={{marginTop: 0}}>بطاقة بيانات العضو</h3>
+                                
+                                <span className="label-official">الاسم الرسمي</span>
+                                <input value={membersData[editingMember]?.name || editingMember} 
+                                       onChange={e => saveMemberInfo(editingMember, "name", e.target.value)} />
+
+                                <span className="label-official">رقم الهوية الوطنية</span>
+                                <input placeholder="10 أرقام" value={membersData[editingMember]?.nationalId || ""} 
+                                       onChange={e => saveMemberInfo(editingMember, "nationalId", e.target.value)} />
+
+                                <span className="label-official">رقم الجوال</span>
+                                <input placeholder="05xxxxxxxx" value={membersData[editingMember]?.phone || ""} 
+                                       onChange={e => saveMemberInfo(editingMember, "phone", e.target.value)} />
+
+                                <span className="label-official">الملاحظات والتميز</span>
+                                <textarea rows="3" placeholder="رصد يدوي..." value={membersData[editingMember]?.notes || ""} 
+                                          onChange={e => saveMemberInfo(editingMember, "notes", e.target.value)}></textarea>
+
+                                <button onClick={() => setEditingMember(null)} style={{background: "var(--primary)"}}>حفظ وإغلاق</button>
+                            </div>
+                        </div>
+                    )}
+                    <button onClick={() => setUser(null)} style={{background: "var(--danger)", marginTop: "10px"}}>خروج</button>
                 </div>
             );
         }
