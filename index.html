@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الإدارة المدرسية - مدرسة القاسم بن محمد</title>
+    <title>نظام الإدارة المتكامل - مدرسة القاسم بن محمد</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
-        body { margin: 0; background: #0f172a; color: white; min-height: 100vh; }
-        .container { padding: 20px; max-width: 800px; margin: auto; }
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; transition: 0.2s; }
+        body { margin: 0; background: #0f172a; color: white; min-height: 100vh; padding-bottom: 50px; }
+        .container { padding: 15px; max-width: 800px; margin: auto; }
         .header { background: #1e293b; padding: 20px; border-radius: 15px; margin-bottom: 20px; border-bottom: 4px solid #3b82f6; }
-        .card { background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
-        input, select { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        .card { background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #334155; }
+        .admin-section { border: 2px solid #ef4444; background: #1a1625; }
+        input, select, textarea { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
         button { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
-        .member-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #334155; }
-        .member-name { flex: 1; font-size: 14px; }
-        .status-select { width: 85px; margin-bottom: 0; padding: 5px; font-size: 12px; }
-        .score-input { width: 55px; margin-bottom: 0; padding: 5px; text-align: center; }
-        .label { color: #94a3b8; font-size: 13px; margin-bottom: 5px; display: block; }
+        .member-row { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #334155; flex-wrap: wrap; }
+        .member-name { flex: 1; font-size: 14px; font-weight: 700; }
+        .controls { display: flex; gap: 5px; align-items: center; }
+        .status-select { width: 80px; padding: 5px; font-size: 12px; }
+        .score-input { width: 50px; padding: 5px; text-align: center; }
+        .note-btn { background: #64748b; width: 35px; padding: 5px; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justifyContent: center; z-index: 100; padding: 20px; }
+        .badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: #3b82f6; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -30,32 +34,31 @@
         const { useState, useEffect } = React;
 
         const DATA = {
-            unit: "مدرسة القاسم بن محمد",
             users: [
-                { name: "عبدالله العرفه", id: "333", role: "admin" },
-                { name: "سلمان الصويلح", id: "202021", role: "admin" },
-                { name: "معاذ الشنقيطي", id: "202030", role: "admin" },
-                { name: "الوليد فيصل الحازمي", id: "619425", role: "leader" },
-                { name: "حاتم هشام خريزي", id: "442971", role: "leader" },
-                { name: "راكان سلمان شراحيلي", id: "992041", role: "leader" },
-                { name: "وضاح ماجد الصويلح", id: "883102", role: "leader" }
+                { name: "عبدالله العرفه", id: "333", role: "admin", title: "عريف أول" },
+                { name: "سلمان الصويلح", id: "202021", role: "admin", title: "قائد الوحدة" },
+                { name: "معاذ الشنقيطي", id: "202030", role: "admin", title: "مساعد القائد" },
+                { name: "الوليد الحازمي", id: "619425", role: "leader", title: "قائد طليعة 1" },
+                { name: "حاتم خريزي", id: "442971", role: "leader", title: "قائد طليعة 2" },
+                { name: "راكان شراحيلي", id: "992041", role: "leader", title: "قائد طليعة 3" },
+                { name: "وضاح الصويلح", id: "883102", role: "leader", title: "قائد طليعة 4" }
             ],
             platoons: [
                 { id: 1, name: "طليعة 1", leaderId: "619425", members: [
-                    {n:"صالح سعيد حبتور", id:"1-1"}, {n:"حسن محمد الشهري", id:"1-2"}, {n:"ريان محمد جعام", id:"1-3"}, {n:"غازي ابراهيم العجمي", id:"1-4"},
-                    {n:"يزيد يحي خال", id:"1-5"}, {n:"زياد آل احمد العجلاني", id:"1-6"}, {n:"فهد فيصل المهيني", id:"1-7"}, {n:"يحي علي شراحيلي", id:"1-8"}, {n:"عزام حيدر خبراني", id:"1-9"}
+                    {n:"صالح حبتور", id:"1-1"}, {n:"حسن الشهري", id:"1-2"}, {n:"ريان جعام", id:"1-3"}, {n:"غازي العجمي", id:"1-4"},
+                    {n:"يزيد خال", id:"1-5"}, {n:"زياد العجلاني", id:"1-6"}, {n:"فهد المهيني", id:"1-7"}, {n:"يحي شراحيلي", id:"1-8"}, {n:"عزام خبراني", id:"1-9"}
                 ]},
                 { id: 2, name: "طليعة 2", leaderId: "442971", members: [
-                    {n:"ياسر موسى ابو حيه", id:"2-1"}, {n:"محمد جابر عسيري", id:"2-2"}, {n:"رياض محمد الزهراني", id:"2-3"}, {n:"ابراهيم فرحان التليدي", id:"2-4"},
-                    {n:"غازي باني العنزي", id:"2-5"}, {n:"صالح عبدالله الخثعمي", id:"2-6"}, {n:"اصيل متعب العتيبي", id:"2-7"}, {n:"فواز سعيد الشهراني", id:"2-8"}, {n:"علي مرضي الغامدي", id:"2-9"}
+                    {n:"ياسر ابو حيه", id:"2-1"}, {n:"محمد عسيري", id:"2-2"}, {n:"رياض الزهراني", id:"2-3"}, {n:"ابراهيم التليدي", id:"2-4"},
+                    {n:"غازي العنزي", id:"2-5"}, {n:"صالح الخثعمي", id:"2-6"}, {n:"اصيل العتيبي", id:"2-7"}, {n:"فواز الشهراني", id:"2-8"}, {n:"علي الغامدي", id:"2-9"}
                 ]},
                 { id: 3, name: "طليعة 3", leaderId: "992041", members: [
-                    {n:"بسام علي قرادي", id:"3-1"}, {n:"علي بندر الشهراني", id:"3-2"}, {n:"زايد محمد القحطاني", id:"3-3"}, {n:"راشد سعيدان الراشدي", id:"3-4"},
-                    {n:"عبدالعزيز محمد القحطاني", id:"3-5"}, {n:"عيسى غازي الرشيدي", id:"3-6"}, {n:"بدر عبدالله كعبي", id:"3-7"}, {n:"عبدالله عادل قشاش", id:"3-8"}, {n:"حسام سعد الشهراني", id:"3-9"}
+                    {n:"بسام قرادي", id:"3-1"}, {n:"علي الشهراني", id:"3-2"}, {n:"زايد القحطاني", id:"3-3"}, {n:"راشد الراشدي", id:"3-4"},
+                    {n:"عبدالعزيز القحطاني", id:"3-5"}, {n:"عيسى الرشيدي", id:"3-6"}, {n:"بدر كعبي", id:"3-7"}, {n:"عبدالله قشاش", id:"3-8"}, {n:"حسام الشهراني", id:"3-9"}
                 ]},
                 { id: 4, name: "طليعة 4", leaderId: "883102", members: [
-                    {n:"مشعل محمد القحطاني", id:"4-1"}, {n:"مشاري محمد القحطاني", id:"4-2"}, {n:"محمد حسين فقيه", id:"4-3"}, {n:"فارس بريحي العمري", id:"4-4"},
-                    {n:"رائد حسين حوباني", id:"4-5"}, {n:"راكان حسين حوباني", id:"4-6"}, {n:"عبدالله سعيد القرني", id:"4-7"}, {n:"ناصر مفلح المطيري", id:"4-8"}, {n:"مبارك مرزوق خميس", id:"4-9"}
+                    {n:"مشعل القحطاني", id:"4-1"}, {n:"مشاري القحطاني", id:"4-2"}, {n:"محمد فقيه", id:"4-3"}, {n:"فارس العمري", id:"4-4"},
+                    {n:"رائد حوباني", id:"4-5"}, {n:"راكان حوباني", id:"4-6"}, {n:"عبدالله القرني", id:"4-7"}, {n:"ناصر المطيري", id:"4-8"}, {n:"مبارك خميس", id:"4-9"}
                 ]}
             ]
         };
@@ -65,33 +68,28 @@
             const [pass, setPass] = useState("");
             const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
             const [db, setDb] = useState({});
+            const [activeNote, setActiveNote] = useState(null);
 
             useEffect(() => {
-                const saved = localStorage.getItem("awtad_final_v12");
+                const saved = localStorage.getItem("awtad_management_v13");
                 if (saved) setDb(JSON.parse(saved));
             }, []);
 
-            const login = () => {
-                const found = DATA.users.find(u => u.id === pass.trim());
-                if (found) setUser(found);
-                else alert("الرمز غير صحيح");
-            };
-
-            const update = (pId, mId, field, val) => {
-                const key = `${pId}:${mId}`;
-                const newDb = { ...db, [date]: { ...db[date], [key]: { ...(db[date]?.[key] || { status: "", score: 5 }), [field]: val, editor: user.name } } };
+            const update = (mId, field, val) => {
+                const newDb = { ...db, [date]: { ...db[date], [mId]: { ...(db[date]?.[mId] || { status: "", score: 5, note: "", type: "ملاحظة" }), [field]: val, editor: user.name } } };
                 setDb(newDb);
-                localStorage.setItem("awtad_final_v12", JSON.stringify(newDb));
+                localStorage.setItem("awtad_management_v13", JSON.stringify(newDb));
             };
 
             if (!user) return (
                 <div className="container" style={{textAlign: "center", marginTop: "20vh"}}>
-                    <div className="header">
-                        <h2 style={{margin: 0}}>نظام الإدارة - مدرسة القاسم</h2>
-                    </div>
+                    <h2 style={{color: "#3b82f6"}}>نظام الإدارة المدرسية</h2>
                     <div className="card">
                         <input type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="رمز الدخول" />
-                        <button onClick={login}>دخول</button>
+                        <button onClick={() => {
+                            const u = DATA.users.find(x => x.id === pass.trim());
+                            if(u) setUser(u); else alert("الرمز غير صحيح");
+                        }}>دخول</button>
                     </div>
                 </div>
             );
@@ -100,32 +98,81 @@
                 <div className="container">
                     <div className="header">
                         <div style={{display: "flex", justifyContent: "space-between"}}>
-                            <span>{user.name}</span>
-                            <button onClick={() => setUser(null)} style={{width: "auto", background: "none", color: "#ef4444", padding: 0}}>خروج</button>
+                            <div>
+                                <h3 style={{margin: 0}}>{user.name}</h3>
+                                <span style={{fontSize: "12px", color: "#3b82f6"}}>{user.title}</span>
+                            </div>
+                            <button onClick={() => setUser(null)} style={{width: "auto", background: "none", color: "#ef4444"}}>خروج</button>
                         </div>
                     </div>
+
                     <div className="card"><input type="date" value={date} onChange={e => setDate(e.target.value)} /></div>
+
+                    {/* قسم إدارة القادة - خاص بالإدارة فقط */}
+                    {user.role === "admin" && (
+                        <div className="card admin-section">
+                            <h4 style={{margin: "0 0 10px", color: "#ef4444"}}>إدارة قادة الطلايع</h4>
+                            {DATA.users.filter(u => u.role === "leader").map(l => (
+                                <div key={l.id} className="member-row">
+                                    <span className="member-name">{l.name} <span className="badge">{l.title}</span></span>
+                                    <div className="controls">
+                                        <select className="status-select" value={db[date]?.[l.id]?.status || ""} onChange={e => update(l.id, "status", e.target.value)}>
+                                            <option value="">حالة</option>
+                                            <option value="حاضر">حاضر</option>
+                                            <option value="غائب">غائب</option>
+                                        </select>
+                                        <input type="number" className="score-input" value={db[date]?.[l.id]?.score || 5} onChange={e => update(l.id, "score", e.target.value)} />
+                                        <button className="note-btn" onClick={() => setActiveNote(l)}>📝</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* قسم الطلايع والطلاب */}
                     {DATA.platoons.map(p => (
                         (user.role === "admin" || p.leaderId === user.id) && (
                             <div key={p.id} className="card">
                                 <h4 style={{color: "#3b82f6", margin: "0 0 10px"}}>{p.name}</h4>
                                 {p.members.map(m => {
-                                    const entry = db[date]?.[`${p.id}:${m.id}`] || { status: "", score: 5 };
+                                    const entry = db[date]?.[m.id] || { status: "", score: 5 };
                                     return (
                                         <div key={m.id} className="member-row">
                                             <span className="member-name">{m.n}</span>
-                                            <select className="status-select" value={entry.status} onChange={e => update(p.id, m.id, "status", e.target.value)}>
-                                                <option value="">حالة</option>
-                                                <option value="حاضر">حاضر</option>
-                                                <option value="غائب">غائب</option>
-                                            </select>
-                                            <input type="number" className="score-input" value={entry.score} onChange={e => update(p.id, m.id, "score", e.target.value)} />
+                                            <div className="controls">
+                                                <select className="status-select" value={entry.status} onChange={e => update(m.id, "status", e.target.value)}>
+                                                    <option value="">حالة</option>
+                                                    <option value="حاضر">حاضر</option>
+                                                    <option value="غائب">غائب</option>
+                                                </select>
+                                                <input type="number" className="score-input" value={entry.score} onChange={e => update(m.id, "score", e.target.value)} />
+                                                <button className="note-btn" onClick={() => setActiveNote(m)}>📝</button>
+                                            </div>
+                                            {entry.note && <div style={{width: "100%", fontSize: "11px", color: "#94a3b8", background: "#0f172a", padding: "5px", borderRadius: "5px", marginTop: "5px"}}>
+                                                ⚠️ {entry.type}: {entry.note}
+                                            </div>}
                                         </div>
                                     );
                                 })}
                             </div>
                         )
                     ))}
+
+                    {/* نافذة الملاحظات والمخالفات */}
+                    {activeNote && (
+                        <div className="modal">
+                            <div className="card" style={{width: "100%", maxWidth: "400px"}}>
+                                <h4>إضافة ملاحظة/مخالفة لـ: {activeNote.n || activeNote.name}</h4>
+                                <select value={db[date]?.[activeNote.id]?.type || "ملاحظة"} onChange={e => update(activeNote.id, "type", e.target.value)}>
+                                    <option value="ملاحظة">ملاحظة عادية</option>
+                                    <option value="مخالفة">مخالفة رسمية</option>
+                                    <option value="توجيه">توجيه مباشر</option>
+                                </select>
+                                <textarea placeholder="اكتب التفاصيل هنا..." rows="4" value={db[date]?.[activeNote.id]?.note || ""} onChange={e => update(activeNote.id, "note", e.target.value)}></textarea>
+                                <button onClick={() => setActiveNote(null)} style={{background: "#22c55e"}}>حفظ وإغلاق</button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
