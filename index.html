@@ -12,12 +12,12 @@
         * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
         body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; direction: rtl; }
         .box { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #1e293b; }
-        button { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 5px; }
+        button { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 2px; }
         input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #0b1220; color: white; text-align: center; margin-bottom: 10px; }
         .hidden { display: none; }
         h2, h3 { color: var(--gold); margin-top: 0; }
-        .log-item { font-size: 12px; padding: 5px; border-bottom: 1px solid #1e293b; }
-        .badge-tag { background: rgba(251, 191, 36, 0.2); color: var(--gold); padding: 2px 8px; border-radius: 5px; font-size: 12px; margin-left: 5px; }
+        .user-item { border-bottom: 1px solid #1e293b; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .pin-tag { background: #1e293b; color: #fff; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 14px; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -32,44 +32,21 @@
 <div id="app" class="hidden container" style="max-width: 600px; margin: auto;">
     <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
         <h3 id="user" style="margin:0;"></h3>
-        <button onclick="location.reload()" style="background:#ef4444; padding:5px 10px;">خروج</button>
+        <button onclick="location.reload()" style="background:#ef4444;">خروج</button>
     </div>
 
     <div id="controls" class="box hidden">
-        <h3>أدوات القيادة</h3>
-        <button onclick="addUser()">➕ إضافة مستخدم</button>
-        <button onclick="resetAll()" style="background:#ef4444;">⚠️ تصفير الكل</button>
+        <button onclick="importOldData()">🔄 استيراد الأسماء وتوليد الأرقام السرية</button>
+        <button onclick="resetAll()" style="background:#ef4444;">⚠️ تصفير النقاط</button>
     </div>
 
     <div class="box">
-        <h3>👥 الأعضاء والطلايع</h3>
+        <h3>👥 قائمة الطلاب (مع الأرقام السرية)</h3>
         <div id="users-list"></div>
-    </div>
-
-    <div class="box">
-        <h3>🏆 جدول الترتيب</h3>
-        <div id="rank"></div>
-    </div>
-
-    <div class="box">
-        <h3>📜 سجل العمليات</h3>
-        <div id="logs" style="max-height: 150px; overflow-y: auto;"></div>
-    </div>
-
-    <div id="super-only" class="hidden">
-        <div class="box">
-            <h3>⚠️ تنبيهات النظام</h3>
-            <div id="alerts"></div>
-        </div>
-        <div class="box">
-            <h3>🔑 سجل الدخول</h3>
-            <div id="access"></div>
-        </div>
     </div>
 </div>
 
 <script>
-// 1. إعدادات الفايربيس (حسب بياناتك الشغالة)
 const firebaseConfig = {
     apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
     databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
@@ -78,164 +55,83 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("awtad_clean");
 
-// 2. هيكل البيانات الأساسي
-let data = {
-    users: {},
-    logs: [],
-    access: [],
-    alerts: []
-};
-
+let data = { users: {} };
 let currentUser = null;
 
-// 3. وظيفة الدخول (تم إصلاح الـ 9999)
+// القائمة الكاملة للطلاب
+const OLD_LIST = [
+    {name:"صالح حبتور", platoon:"طليعة 1"}, {name:"حسن الشهري", platoon:"طليعة 1"}, {name:"عزام خبراني", platoon:"طليعة 1"}, {name:"ريان جعام", platoon:"طليعة 1"}, {name:"غازي العجمي", platoon:"طليعة 1"}, {name:"يزيد خال", platoon:"طليعة 1"}, {name:"زياد العجلاني", platoon:"طليعة 1"}, {name:"فهد المهيني", platoon:"طليعة 1"}, {name:"يحي شراحيلي", platoon:"طليعة 1"},
+    {name:"ياسر ابو حيه", platoon:"طليعة 2"}, {name:"محمد عسيري", platoon:"طليعة 2"}, {name:"علي الغامدي", platoon:"طليعة 2"}, {name:"رياض الزهراني", platoon:"طليعة 2"}, {name:"ابراهيم التليدي", platoon:"طليعة 2"}, {name:"غازي العنزي", platoon:"طليعة 2"}, {name:"صالح الخثعمي", platoon:"طليعة 2"}, {name:"اصيل العتيبي", platoon:"طليعة 2"}, {name:"فواز الشهراني", platoon:"طليعة 2"},
+    {name:"بسام قرادي", platoon:"طليعة 3"}, {name:"بدر كعبي", platoon:"طليعة 3"}, {name:"حسام الشهراني", platoon:"طليعة 3"}, {name:"علي الشهراني", platoon:"طليعة 3"}, {name:"زايد القحطاني", platoon:"طليعة 3"}, {name:"راشد الراشدي", platoon:"طليعة 3"}, {name:"عبدالعزيز القحطاني", platoon:"طليعة 3"}, {name:"عيسى الرشيدي", platoon:"طليعة 3"}, {name:"عبدالله قشاش", platoon:"طليعة 3"},
+    {name:"مشعل القحطاني", platoon:"طليعة 4"}, {name:"ناصر المطيري", platoon:"طليعة 4"}, {name:"مبارك خميس", platoon:"طليعة 4"}, {name:"مشاري القحطاني", platoon:"طليعة 4"}, {name:"محمد فقيه", platoon:"طليعة 4"}, {name:"فارس العمري", platoon:"طليعة 4"}, {name:"رائد حوباني", platoon:"طليعة 4"}, {name:"راكان حوباني", platoon:"طليعة 4"}, {name:"عبدالله القرني", platoon:"طليعة 4"}
+];
+
 function login() {
     let pinInput = document.getElementById("pin").value;
-    let found = null;
+    if(pinInput === "9999") currentUser = {name: "سلمان", role: "super"};
+    else if(pinInput === "8888") currentUser = {name: "معاذ", role: "super"};
+    else if(pinInput === "7777") currentUser = {name: "عبدالله", role: "super"};
 
-    // فحص الأرقام السرية للقادة (Super Admins)
-    if(pinInput === "9999") found = {name: "سلمان", role: "super"};
-    else if(pinInput === "8888") found = {name: "معاذ", role: "super"};
-    else if(pinInput === "7777") found = {name: "عبدالله", role: "super"};
-    
-    // فحص المستخدمين العاديين من القاعدة
-    if(!found) {
-        Object.entries(data.users || {}).forEach(([id, u]) => {
-            if(u.pin === pinInput) {
-                found = {...u, id: id};
-            }
-        });
-    }
-
-    if(!found) {
-        document.getElementById("err").innerText = "الرمز السري غير صحيح!";
+    if(!currentUser) {
+        document.getElementById("err").innerText = "الرمز خطأ!";
         return;
     }
 
-    currentUser = found;
-    logAccess(currentUser.name, "دخول");
-    
     document.getElementById("login").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
-    
-    if(currentUser.role === "super") {
-        document.getElementById("controls").classList.remove("hidden");
-        document.getElementById("super-only").classList.remove("hidden");
-    }
-    
+    if(currentUser.role === "super") document.getElementById("controls").classList.remove("hidden");
     render();
 }
 
-function logAccess(name, action) {
-    if(!data.access) data.access = [];
-    data.access.unshift({name, action, time: new Date().toLocaleTimeString("ar-SA")});
+function importOldData() {
+    if(!confirm("سيتم إضافة الطلاب وتوليد 4 أرقام عشوائية لكل طالب. هل أنت متأكد؟")) return;
+    
+    OLD_LIST.forEach(s => {
+        let id = "U" + Math.random().toString(36).substr(2, 9);
+        data.users[id] = {
+            name: s.name,
+            platoon: s.platoon,
+            pts: 0,
+            badges: [],
+            // توليد الرقم العشوائي المكون من 4 خانات هنا
+            pin: Math.floor(1000 + Math.random() * 9000).toString() 
+        };
+    });
     save();
+    alert("تم استيراد الطلاب بنجاح!");
 }
 
-function addUser() {
-    let name = prompt("اسم العضو الجديد:");
-    if(!name) return;
-    let role = prompt("الرتبة (member أو leader):", "member");
-    
-    let id = "U" + Date.now();
-    if(!data.users) data.users = {};
-    
-    data.users[id] = {
-        name: name,
-        role: role,
-        pts: 0,
-        badges: [],
-        pin: Math.floor(1000 + Math.random()*9000).toString()
-    };
-    save();
+function save() { db.set(data); }
+
+function render() {
+    let html = "";
+    Object.entries(data.users || {}).forEach(([id, u]) => {
+        html += `<div class="user-item">
+            <div>
+                <strong>${u.name}</strong> <br>
+                <small style="opacity:0.6">${u.platoon}</small>
+            </div>
+            <div style="text-align: left;">
+                <span class="pin-tag">PIN: ${u.pin}</span>
+                <span style="color:var(--gold); font-weight:bold;">${u.pts || 0} ن</span>
+                <button onclick="addPts('${id}')">+</button>
+            </div>
+        </div>`;
+    });
+    document.getElementById("users-list").innerHTML = html || "القائمة فارغة، اضغط استيراد.";
 }
 
 function addPts(id) {
-    let v = parseInt(prompt("كم نقطة تريد الإضافة؟"));
-    if(isNaN(v) || v <= 0) return;
-
-    data.users[id].pts = (data.users[id].pts || 0) + v;
-
-    // أوسمة تلقائية
-    if(!data.users[id].badges) data.users[id].badges = [];
-    if(data.users[id].pts >= 50 && !data.users[id].badges.includes("التميز")) data.users[id].badges.push("التميز");
-    if(data.users[id].pts >= 100 && !data.users[id].badges.includes("الأسطورة")) data.users[id].badges.push("الأسطورة");
-
-    if(v >= 30) {
-        if(!data.alerts) data.alerts = [];
-        data.alerts.unshift({msg: `تنبيه: إضافة كبيرة (${v}) للعضو ${data.users[id].name}`, time: new Date().toLocaleTimeString("ar-SA")});
-    }
-
-    logAction(currentUser.name, "إضافة نقاط", data.users[id].name, v);
-    save();
-}
-
-function logAction(admin, action, target, val) {
-    if(!data.logs) data.logs = [];
-    data.logs.unshift({admin, action, target, val, time: new Date().toLocaleTimeString("ar-SA")});
-}
-
-function save() {
-    db.set(data);
-}
-
-function render() {
-    if(!currentUser) return;
-    document.getElementById("user").innerText = `مرحباً: ${currentUser.name}`;
-
-    // عرض قائمة المستخدمين
-    let usersHtml = "";
-    Object.entries(data.users || {}).forEach(([id, u]) => {
-        usersHtml += `
-        <div class="box" style="background:#1a263f">
-            <strong>${u.name}</strong> <span style="font-size:12px; opacity:0.7">(${u.role})</span>
-            <div style="font-size:20px; color:var(--gold); font-weight:bold;">${u.pts || 0} <small>نقطة</small></div>
-            <div style="margin:5px 0">${(u.badges || []).map(b => `<span class="badge-tag">${b}</span>`).join("")}</div>
-            ${currentUser.role !== 'member' ? `
-                <button onclick="addPts('${id}')" style="background:var(--gold); color:#000">+ نقاط</button>
-                ${currentUser.role === 'super' ? `<button onclick="deleteUser('${id}')" style="background:#ef4444">حذف</button>` : ''}
-            ` : ''}
-            ${currentUser.role === 'super' ? `<div style="font-size:11px; margin-top:5px; opacity:0.5">PIN: ${u.pin}</div>` : ''}
-        </div>`;
-    });
-    document.getElementById("users-list").innerHTML = usersHtml || "لا يوجد أعضاء مضافين بعد.";
-
-    // الترتيب
-    let sorted = Object.values(data.users || {}).sort((a,b) => (b.pts||0) - (a.pts||0));
-    document.getElementById("rank").innerHTML = sorted.map((u, i) => `${i+1}. ${u.name} (${u.pts || 0} ن)`).join("<br>");
-
-    // السجلات
-    document.getElementById("logs").innerHTML = (data.logs || []).map(l => `<div class="log-item">${l.admin} - ${l.action} لـ ${l.target} (${l.val})</div>`).join("");
-}
-
-function deleteUser(id) {
-    if(confirm("هل أنت متأكد من حذف هذا العضو؟")) {
-        delete data.users[id];
+    let v = parseInt(prompt("إضافة نقاط لـ " + data.users[id].name));
+    if(!isNaN(v)) {
+        data.users[id].pts = (data.users[id].pts || 0) + v;
         save();
     }
 }
 
-function resetAll() {
-    if(confirm("⚠️ سيتم تصفير نقاط جميع الأعضاء! هل أنت متأكد؟")) {
-        Object.values(data.users || {}).forEach(u => u.pts = 0);
-        save();
-    }
-}
-
-// المزامنة الحية
 db.on("value", snap => {
-    let val = snap.val();
-    if(val) {
-        data = val;
-        // التأكد من وجود المصفوفات لتجنب الأخطاء
-        if(!data.users) data.users = {};
-        if(!data.logs) data.logs = [];
-        if(!data.access) data.access = [];
-        if(!data.alerts) data.alerts = [];
-        render();
-    }
+    if(snap.val()) { data = snap.val(); if(!data.users) data.users = {}; render(); }
 });
 </script>
-
 </body>
 </html>
