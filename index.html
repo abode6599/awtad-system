@@ -3,109 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد الإداري | التقني</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>نظام أوتاد الإداري | AWTAD SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
         :root {
-            --p-dark: #0f172a; --p-border: #1e293b; --p-accent: #3b82f6;
-            --p-gold: #fbbf24; --p-success: #22c55e; --p-danger: #ef4444;
-            --p-text: #f8fafc; --p-sub: #94a3b8;
+            --bg: #0f172a; --side: #1e293b; --accent: #3b82f6; --gold: #fbbf24;
+            --text: #f8fafc; --sub: #94a3b8; --border: #334155; --danger: #ef4444;
         }
         * { box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--p-dark); color: var(--p-text); margin: 0; padding: 0; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; flex-direction: column; }
 
-        /* ✅ حل مشكلة الانهيار: نظام الحاويات المرن */
-        .app-container { display: flex; height: 100vh; flex-direction: row; }
-        @media (max-width: 900px) { .app-container { flex-direction: column; } }
+        /* Navigation Style */
+        nav { background: var(--side); border-bottom: 2px solid var(--border); padding: 10px 20px; display: flex; gap: 10px; overflow-x: auto; sticky; top: 0; z-index: 1000; }
+        .nav-btn { padding: 8px 15px; border-radius: 8px; border: none; background: transparent; color: var(--sub); cursor: pointer; font-weight: 700; white-space: nowrap; font-size: 13px; }
+        .nav-btn.active { background: var(--accent); color: white; }
 
-        /* Sidebar - القائمة الجانبية (للشاشات الكبيرة) */
-        aside { width: 280px; background: #0c111d; border-left: 1px solid var(--p-border); display: flex; flex-direction: column; padding: 20px; transition: 0.3s; }
-        @media (max-width: 900px) { 
-            aside { width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--p-border); padding: 10px; flex-direction: row; justify-content: space-around; position: fixed; bottom: 0; z-index: 1000; background: rgba(12, 17, 29, 0.95); backdrop-filter: blur(10px); }
-            .sys-name, .user-brief { display: none; }
-        }
+        /* Layout Units */
+        .container { flex: 1; overflow-y: auto; padding: 20px; max-width: 1400px; margin: auto; width: 100%; }
+        .team-section { margin-bottom: 40px; }
+        .team-header { background: var(--border); padding: 10px 20px; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid var(--accent); }
 
-        .nav-link { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: var(--p-sub); font-weight: 600; font-size: 14px; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
-        .nav-link:hover, .nav-link.active { background: var(--p-accent); color: white; }
+        /* Grid & Member Cards */
+        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .member-card { background: var(--side); border: 1px solid var(--border); border-radius: 12px; padding: 15px; position: relative; }
+        .member-card.leader { border: 2px solid var(--gold); }
+        .member-card.leader::after { content: "قائد"; position: absolute; top: -10px; left: 10px; background: var(--gold); color: black; padding: 0 10px; border-radius: 5px; font-size: 10px; font-weight: 900; }
+        
+        .pts-display { font-size: 22px; font-weight: 900; color: var(--gold); }
+        .badge-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+        .badge-item { font-size: 9px; padding: 2px 6px; border-radius: 4px; background: #334155; color: #cbd5e1; border: 1px solid #475569; }
 
-        /* Main View - منطقة العرض الأساسية */
-        main { flex: 1; overflow-y: auto; padding-bottom: 80px; }
-        header { padding: 20px 30px; border-bottom: 1px solid var(--p-border); background: rgba(15, 23, 42, 0.8); display: flex; justify-content: space-between; align-items: center; sticky; top: 0; z-index: 900; }
+        /* Modals & Inputs */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: var(--side); padding: 25px; border-radius: 15px; width: 100%; max-width: 500px; border: 1px solid var(--accent); }
+        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; margin-bottom: 15px; }
 
-        /* Grid System */
-        .content-padding { padding: 20px; max-width: 1200px; margin: auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-        .card { background: #1e293b; border-radius: 15px; padding: 20px; border: 1px solid var(--p-border); transition: 0.2s; }
-        .card:hover { border-color: var(--p-accent); transform: translateY(-3px); }
-
-        /* Auth Screen */
-        #auth-gate { position: fixed; inset: 0; background: var(--p-dark); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-box { width: 100%; max-width: 400px; background: #1e293b; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid var(--p-border); }
-        input { width: 100%; background: #0f172a; border: 1px solid var(--p-border); color: white; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 20px; text-align: center; letter-spacing: 5px; }
-        .btn { border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.2s; }
-        .btn-p { background: var(--p-accent); color: white; }
-        .btn-s { background: #334155; color: white; margin-top: 10px; font-size: 12px; }
-
+        #auth-gate { position: fixed; inset: 0; background: var(--bg); z-index: 3000; display: flex; align-items: center; justify-content: center; }
+        
         .hidden { display: none !important; }
-        .badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: var(--p-accent); font-weight: 800; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-p { background: var(--accent); color: white; }
+        .btn-d { background: var(--danger); color: white; }
     </style>
 </head>
 <body>
 
 <div id="auth-gate">
-    <div class="auth-box">
-        <h2 style="color: var(--p-accent); margin:0;">نظام أوتاد</h2>
-        <p style="color: var(--p-sub); font-size: 13px;">المصادقة المؤسسية المطلوبة</p>
-        <input type="password" id="pin-code" maxlength="4" placeholder="••••">
-        <button class="btn btn-p" onclick="App.validate()">دخول النظام</button>
-        <p id="auth-err" style="color: var(--p-danger); margin-top: 10px; font-size: 12px;"></p>
+    <div style="width: 320px; text-align: center;">
+        <h1 style="color: var(--accent); margin-bottom: 5px;">AWTAD</h1>
+        <p style="color: var(--sub); font-size: 12px; margin-bottom: 20px;">نظام الإدارة والتحكم المركزي</p>
+        <input type="password" id="pin-entry" maxlength="4" placeholder="أدخل الرمز PIN" style="letter-spacing: 8px;">
+        <button class="btn btn-p" style="width: 100%;" onclick="System.login()">دخول النظام</button>
     </div>
 </div>
 
-<div class="app-container">
-    <aside id="main-nav">
-        <div class="sys-name" style="font-weight: 900; color: var(--p-accent); font-size: 22px; margin-bottom: 30px; text-align: center;">AWTAD SYS</div>
-        <div class="nav-link active" onclick="App.route('home', this)">📊 المعلومات</div>
-        <div class="nav-link" onclick="App.route('members', this)">👥 الأعضاء</div>
-        <div class="nav-link" onclick="App.route('ranking', this)">🏆 الترتيب</div>
-        <div id="admin-links" class="hidden">
-            <div class="nav-link" onclick="App.route('audit', this)">📜 السجلات</div>
-            <div class="nav-link" style="color: var(--p-danger)" onclick="App.clearData()">⚠️ تهيئة</div>
-        </div>
-        <div class="user-brief" style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--p-border);">
-            <div id="u-name" style="font-weight: 700; font-size: 14px;"></div>
-            <div id="u-role" style="font-size: 11px; color: var(--p-sub);"></div>
-        </div>
-    </aside>
+<nav id="main-nav">
+    <button class="nav-btn active" onclick="System.route('view', this)">👥 عرض الطلائع</button>
+    <button class="nav-btn" onclick="System.route('ranking', this)">🏆 الترتيب العام</button>
+    <div id="admin-tools" class="hidden" style="display: contents;">
+        <button class="nav-btn" onclick="System.route('audit', this)">📜 سجل التدقيق</button>
+        <button class="nav-btn" style="color: var(--danger)" onclick="System.factoryReset()">⚠️ تهيئة</button>
+    </div>
+</nav>
 
-    <main>
-        <header>
-            <div id="view-title" style="font-weight: 700;">لوحة المعلومات</div>
-            <button class="btn btn-s" style="width: auto;" onclick="location.reload()">خروج</button>
-        </header>
+<div class="container" id="content">
+    </div>
 
-        <div id="render-target" class="content-padding">
+<div id="badge-modal" class="modal hidden">
+    <div class="modal-box">
+        <h3>منح وسام استحقاق</h3>
+        <input type="text" id="badge-search" placeholder="ابحث عن وسام (انضباط، قيادة، مهارات...)" oninput="System.filterBadges()">
+        <div id="badge-results" style="max-height: 200px; overflow-y: auto; background: var(--bg); border-radius: 8px; padding: 10px;">
             </div>
-    </main>
+        <button class="btn btn-d" style="width: 100%; margin-top: 15px;" onclick="System.closeModal()">إلغاء</button>
+    </div>
 </div>
 
 <script>
 /**
- * Core Logic - الإصدار السابع المؤسسي
- * معالجة الأخطاء ومنع الانهيار
+ * AWTAD SYSTEM V8 - CORE ENGINE
  */
-const App = (() => {
-    const firebaseConfig = {
+const System = (() => {
+    const config = {
         apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
         databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database().ref("awtad_sys_v7");
+    firebase.initializeApp(config);
+    const db = firebase.database().ref("awtad_v8");
 
-    let state = { user: null, users: {}, logs: [], tab: 'home' };
-    const ADMIN_KEYS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
+    let state = { me: null, users: {}, logs: [], tab: 'view', targetUser: null };
+    
+    // الأوسمة المسبقة (يمكن التوسع لـ 1000+)
+    const BADGE_LIBRARY = [
+        {id: 'b1', name: 'ملتزم', cat: 'انضباط'}, {id: 'b2', name: 'انضباط عالي', cat: 'انضباط'},
+        {id: 'b3', name: 'حضور كامل', cat: 'انضباط'}, {id: 'b4', name: 'متفوق', cat: 'إنجاز'},
+        {id: 'b5', name: 'قائد نشط', cat: 'قيادة'}, {id: 'b6', name: 'أفضل عضو', cat: 'إنجاز'},
+        {id: 'b7', name: 'مبادر', cat: 'مهارات'}, {id: 'b8', name: 'خبير إشعال نار', cat: 'كشفية'},
+        {id: 'b9', name: 'بناء خيمة', cat: 'كشفية'}, {id: 'b10', name: 'نشاط يومي', cat: 'نشاط'}
+    ];
+
+    const SUPER_ADMINS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
 
     return {
         init: () => {
@@ -113,150 +112,181 @@ const App = (() => {
                 const data = snap.val() || {};
                 state.users = data.users || {};
                 state.logs = Object.values(data.logs || {}).reverse();
-                if (state.user) App.render();
+                if (state.me) System.render();
             });
         },
 
-        validate: () => {
-            const pin = document.getElementById("pin-code").value;
-            const err = document.getElementById("auth-err");
-            
-            if (ADMIN_KEYS[pin]) {
-                state.user = { name: ADMIN_KEYS[pin], role: 'ADMIN', team: 'الإدارة العليا' };
+        login: () => {
+            const pin = document.getElementById("pin-entry").value;
+            if (SUPER_ADMINS[pin]) {
+                state.me = { name: SUPER_ADMINS[pin], role: 'SUPER' };
             } else {
-                const found = Object.entries(state.users).find(([id, u]) => u.pin === pin);
-                if (found) state.user = { ...found[1], id: found[0] };
+                const u = Object.entries(state.users).find(([id, user]) => user.pin === pin);
+                if (u) state.me = { ...u[1], id: u[0] };
             }
 
-            if (state.user) {
+            if (state.me) {
                 document.getElementById("auth-gate").classList.add("hidden");
-                document.getElementById("u-name").innerText = state.user.name;
-                document.getElementById("u-role").innerText = state.user.team;
-                if(state.user.role === 'ADMIN') document.getElementById("admin-links").classList.remove("hidden");
-                App.log("دخول للنظام", state.user.name);
-                App.render();
+                if (state.me.role === 'SUPER') document.getElementById("admin-tools").classList.remove("hidden");
+                System.log("دخول النظام", state.me.name);
+                System.render();
             } else {
-                err.innerText = "الرمز غير صحيح أو غير مفعل";
+                alert("رمز PIN غير صحيح");
             }
         },
 
         route: (t, el) => {
             state.tab = t;
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             if(el) el.classList.add('active');
-            App.render();
+            System.render();
         },
 
         render: () => {
-            const target = document.getElementById("render-target");
-            const title = document.getElementById("view-title");
-            target.innerHTML = "";
+            const container = document.getElementById("content");
+            container.innerHTML = "";
 
-            if (state.tab === 'home') {
-                title.innerText = "الملخص العام";
-                target.innerHTML = `
-                    <div class="grid">
-                        <div class="card">
-                            <div style="color:var(--p-sub); font-size:12px">إجمالي المسجلين</div>
-                            <div style="font-size:26px; font-weight:800; color:var(--p-accent)">${Object.keys(state.users).length}</div>
-                        </div>
-                        <div class="card">
-                            <div style="color:var(--p-sub); font-size:12px">حالة النظام</div>
-                            <div style="font-size:18px; font-weight:800; color:var(--p-success)">متصل ومؤمن</div>
-                        </div>
-                    </div>
-                    ${state.user.role === 'ADMIN' && Object.keys(state.users).length === 0 ? 
-                    `<button class="btn btn-p" style="margin-top:20px" onclick="App.seed()">توليد الهيكل التنظيمي الأول</button>` : ''}
-                `;
-            }
+            if (state.tab === 'view') {
+                const teams = ["طليعة 1", "طليعة 2", "طليعة 3", "طليعة 4"];
+                teams.forEach(tName => {
+                    const section = document.createElement('div');
+                    section.className = 'team-section';
+                    const members = Object.entries(state.users)
+                        .filter(([id, u]) => u.team === tName)
+                        .sort((a, b) => b[1].pts - a[1].pts);
 
-            if (state.tab === 'members') {
-                title.innerText = "إدارة شؤون الطلايع";
-                let html = `<div class="grid">`;
-                Object.entries(state.users).forEach(([id, u]) => {
-                    const isAdmin = state.user.role === 'ADMIN' || (state.user.role === 'LEADER' && state.user.team === u.team);
-                    html += `
-                        <div class="card">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <span class="badge">${u.team}</span>
-                                <b style="color:var(--p-gold)">${u.pts} نقطة</b>
+                    section.innerHTML = `
+                        <div class="team-header">
+                            <h2 style="margin:0">${tName}</h2>
+                            <span style="font-size:12px; color:var(--sub)">${members.length} أعضاء</span>
+                        </div>
+                        <div class="member-grid" id="grid-${tName}"></div>
+                    `;
+                    container.appendChild(section);
+                    
+                    const grid = section.querySelector(`#grid-${tName}`);
+                    members.forEach(([id, u]) => {
+                        const card = document.createElement('div');
+                        card.className = `member-card ${u.role === 'LEADER' ? 'leader' : ''}`;
+                        card.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; align-items:start">
+                                <div>
+                                    <h4 style="margin:0">${u.name}</h4>
+                                    <small style="color:var(--sub)">ID: ${id.split('_')[1]}</small>
+                                </div>
+                                <div class="pts-display">${u.pts}</div>
                             </div>
-                            <h3 style="margin:15px 0 5px 0; font-size:16px">${u.name}</h3>
-                            <div style="font-size:11px; color:var(--p-sub)">الرتبة: ${u.role === 'LEADER' ? 'قائد طليعة' : 'عضو'}</div>
-                            ${state.user.role === 'ADMIN' ? `<div style="font-size:10px; color:var(--p-accent); margin-top:5px">PIN: ${u.pin}</div>` : ''}
-                            ${isAdmin ? `<button class="btn btn-s" style="margin-top:15px; background:var(--p-accent)" onclick="App.updatePts('${id}')">تعديل النقاط</button>` : ''}
-                        </div>`;
+                            <div class="badge-list">${(u.badges || []).map(b => `<span class="badge-item">${b}</span>`).join('')}</div>
+                            ${state.me.role === 'SUPER' || (state.me.role === 'LEADER' && state.me.team === u.team) ? 
+                            `<div style="margin-top:15px; display:flex; gap:5px">
+                                <button class="btn btn-p" style="font-size:10px; flex:1" onclick="System.openBadgeModal('${id}')">منح وسام</button>
+                                <button class="btn btn-s" style="font-size:10px; flex:1; background:var(--border); color:white" onclick="System.editPoints('${id}')">النقاط</button>
+                                ${state.me.role === 'SUPER' ? `<button class="btn btn-d" style="font-size:10px; padding:5px" onclick="System.editUser('${id}')">⚙️</button>` : ''}
+                            </div>` : ''}
+                        `;
+                        grid.appendChild(card);
+                    });
                 });
-                target.innerHTML = html + `</div>`;
-            }
-
-            if (state.tab === 'ranking') {
-                title.innerText = "ترتيب الأداء العام";
-                const sorted = Object.values(state.users).sort((a,b) => b.pts - a.pts);
-                let html = `<div class="card" style="padding:0">`;
-                sorted.forEach((u, i) => {
-                    html += `<div style="padding:15px; border-bottom:1px solid var(--p-border); display:flex; justify-content:space-between">
-                        <span><b style="color:var(--p-accent)">#${i+1}</b> ${u.name}</span>
-                        <b>${u.pts}</b>
-                    </div>`;
-                });
-                target.innerHTML = html + `</div>`;
             }
 
             if (state.tab === 'audit') {
-                title.innerText = "سجل تدقيق العمليات";
-                let html = `<div class="card" style="padding:0">`;
-                state.logs.slice(0, 40).forEach(l => {
-                    html += `<div style="padding:10px 15px; border-bottom:1px solid var(--p-border); font-size:13px">
-                        <span style="color:var(--p-sub)">[${l.time}]</span> <b>${l.actor}</b>: ${l.action}
+                container.innerHTML = `<div class="member-card"><h3>سجل العمليات التدقيقي</h3><hr border="0" height="1" background="var(--border)">`;
+                state.logs.forEach(l => {
+                    container.innerHTML += `<div style="font-size:13px; padding:8px 0; border-bottom:1px solid #2d3748">
+                        <span style="color:var(--accent)">[${l.time}]</span> <b>${l.actor}</b>: ${l.action}
                     </div>`;
                 });
-                target.innerHTML = html + `</div>`;
+                container.innerHTML += `</div>`;
             }
         },
 
-        updatePts: (id) => {
-            const p = parseInt(prompt("أدخل قيمة التعديل (موجب أو سالب):"));
+        openBadgeModal: (id) => {
+            state.targetUser = id;
+            document.getElementById("badge-modal").classList.remove("hidden");
+            System.filterBadges();
+        },
+
+        filterBadges: () => {
+            const query = document.getElementById("badge-search").value.toLowerCase();
+            const results = document.getElementById("badge-results");
+            results.innerHTML = "";
+            BADGE_LIBRARY.filter(b => b.name.includes(query) || b.cat.includes(query)).forEach(b => {
+                const div = document.createElement('div');
+                div.style = "padding:10px; border-bottom:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between";
+                div.innerHTML = `<span>${b.name}</span> <small style="color:var(--accent)">${b.cat}</small>`;
+                div.onclick = () => System.assignBadge(b.name);
+                results.appendChild(div);
+            });
+        },
+
+        assignBadge: (badgeName) => {
+            const u = state.users[state.targetUser];
+            const badges = u.badges || [];
+            if (badges.includes(badgeName)) return alert("الوسام موجود مسبقاً لهذا العضو");
+            badges.push(badgeName);
+            db.child("users").child(state.targetUser).update({ badges });
+            System.log(`منح وسام [${badgeName}] لـ ${u.name}`, state.me.name);
+            System.closeModal();
+        },
+
+        editPoints: (id) => {
+            const p = parseInt(prompt("أدخل قيمة التعديل (مثال: 10 أو -5):"));
             if (isNaN(p)) return;
             const u = state.users[id];
             db.child("users").child(id).update({ pts: (u.pts || 0) + p });
-            App.log(`تعديل رصيد ${u.name} بـ (${p})`, state.user.name);
+            System.log(`تعديل رصيد ${u.name} بقيمة (${p})`, state.me.name);
         },
+
+        editUser: (id) => {
+            const u = state.users[id];
+            const newName = prompt("تعديل الاسم:", u.name);
+            const newPin = prompt("تعديل PIN (4 أرقام):", u.pin);
+            if (newName && newPin) {
+                db.child("users").child(id).update({ name: newName, pin: newPin });
+                System.log(`تعديل بيانات العضو ${u.name}`, state.me.name);
+            }
+        },
+
+        closeModal: () => document.getElementById("badge-modal").classList.add("hidden"),
 
         log: (action, actor) => {
             db.child("logs").push({ action, actor, time: new Date().toLocaleTimeString('ar-SA') });
         },
 
         seed: () => {
-            const data = {
+            const raw = {
                 "طليعة 1": ["الوليد الحازمي (ق)", "صالح حبتور", "حسن الشهري", "عزام خبراني", "يحي شراحيلي", "فهد المهيني", "زياد العجلاني", "يزيد خال", "غازي العجمي", "ريان جعام"],
                 "طليعة 2": ["حاتم خريزي (ق)", "ياسر ابو حيه", "محمد عسيري", "علي الغامدي", "فواز الشهراني", "اصيل العتيبي", "صالح الخثعمي", "غازي العنزي", "ابراهيم التليدي", "رياض الزهراني"],
                 "طليعة 3": ["راكان شراحيلي (ق)", "بسام قرادي", "بدر كعبي", "حسام الشهراني", "عبدالله قشاش", "عيسى الرشيدي", "عبدالعزيز القحطاني", "راشد الراشدي", "زايد القحطاني", "علي الشهراني"],
                 "طليعة 4": ["وضاح الصويلح (ق)", "مشعل القحطاني", "ناصر المطيري", "مبارك خميس", "عبدالله القرني", "راكان حوباني", "رائد حوباني", "فارس العمري", "محمد فقيه", "مشاري القحطاني"]
             };
-            let batch = {};
-            Object.entries(data).forEach(([t, m]) => {
-                m.forEach(name => {
-                    const id = "U_" + Math.random().toString(36).substr(2, 8);
-                    batch[id] = {
-                        name: name.replace("(ق)", "").trim(),
+            let users = {};
+            Object.entries(raw).forEach(([t, ms]) => {
+                ms.forEach(m => {
+                    const id = "U_" + Math.random().toString(36).substr(2, 6).toUpperCase();
+                    users[id] = {
+                        name: m.replace("(ق)", "").trim(),
                         team: t,
-                        role: name.includes("(ق)") ? 'LEADER' : 'MEMBER',
+                        role: m.includes("(ق)") ? 'LEADER' : 'MEMBER',
                         pts: 0,
-                        pin: Math.floor(1000 + Math.random()*9000).toString()
+                        badges: [],
+                        pin: Math.floor(1000 + Math.random()*8999).toString()
                     };
                 });
             });
-            db.child("users").set(batch);
+            db.child("users").set(users);
         },
 
-        clearData: () => {
-            if(confirm("سيتم حذف كافة البيانات المسجلة نهائياً. هل أنت متأكد؟")) db.set({users:{}, logs:{}});
+        factoryReset: () => {
+            if(confirm("سيتم تصفير النظام بالكامل. هل أنت متأكد؟")) {
+                db.set({users:{}, logs:{}});
+                System.seed();
+            }
         }
     };
 })();
 
-App.init();
+System.init();
 </script>
 </body>
 </html>
