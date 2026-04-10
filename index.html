@@ -3,144 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد الكشفي الآمن</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>منصة أوتاد لإدارة الكشافة | النسخة الاحترافية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
-        :root { --bg: #0b1220; --card: #111c33; --gold: #fbbf24; --blue: #3b82f6; --text: #e6eefc; }
-        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
-        body { margin: 0; background: var(--bg); color: var(--text); direction: rtl; padding: 10px; }
-        .box { background: var(--card); margin-bottom: 10px; padding: 15px; border-radius: 12px; border: 1px solid #1e293b; }
-        button, input { padding: 10px; border-radius: 8px; border: none; font-size: 16px; }
-        button { background: var(--blue); color: white; cursor: pointer; font-weight: bold; }
-        input { width: 100%; background: #0b1220; color: white; border: 1px solid #1e293b; text-align: center; margin-bottom: 10px; }
-        .hidden { display: none; }
-        .student-item { border-bottom: 1px solid #1e293b; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .badge-tag { background: rgba(251, 191, 36, 0.2); color: var(--gold); padding: 2px 8px; border-radius: 5px; font-size: 11px; margin-right: 5px; }
+        :root {
+            --bg: #070b14; --card: #10192d; --accent: #3b82f6; --gold: #fbbf24;
+            --danger: #ef4444; --success: #22c55e; --text: #f1f5f9;
+        }
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; line-height: 1.6; }
+        
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .box { background: var(--card); border-radius: 12px; border: 1px solid #1e293b; padding: 20px; margin-bottom: 15px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Auth Screen */
+        #auth-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1e293b 0%, #070b14 100%); }
+        .login-card { width: 90%; max-width: 400px; text-align: center; animation: fadeIn 0.5s ease; }
+        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #070b14; color: white; text-align: center; font-size: 1.2rem; margin: 15px 0; transition: 0.3s; }
+        input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+        
+        /* Dashboard Layout */
+        header { background: var(--card); padding: 15px 20px; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
+        .tab-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; border-bottom: 1px solid #1e293b; }
+        .tab-btn { background: transparent; color: #94a3b8; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: bold; }
+        .tab-btn.active { background: var(--accent); color: white; }
+        
+        /* Data Lists */
+        .list-item { padding: 15px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; animation: slideUp 0.3s ease; }
+        .list-item:last-child { border: none; }
+        .badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 900; margin-right: 5px; }
+        .role-super { background: var(--danger); }
+        .role-leader { background: var(--gold); color: #000; }
+        .role-member { background: var(--accent); }
+        
+        /* Buttons */
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-ghost { background: #1e293b; color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body>
 
-<div id="login" class="box" style="max-width:400px; margin: 15vh auto; text-align: center;">
-    <h2 style="color:var(--gold)">دخول نظام أوتاد</h2>
-    <input id="pin" type="password" placeholder="أدخل PIN (مثلاً 1111)">
-    <button onclick="login()" id="loginBtn" style="width:100%" disabled>جاري التحميل...</button>
-    <div id="err" style="color:#ef4444; margin-top:10px;"></div>
-</div>
+<section id="auth-screen">
+    <div class="login-card box">
+        <h1 style="color: var(--gold); margin:0;">أوتـاد 🛡️</h1>
+        <p style="color: #94a3b8; font-size: 0.9rem;">نظام الإدارة الموحد</p>
+        <div id="auth-loading" class="hidden">جاري التحقق...</div>
+        <div id="auth-ui">
+            <input type="password" id="pin-field" placeholder="أدخل الرمز السري" maxlength="4">
+            <button class="btn btn-primary" style="width: 100%" onclick="App.login()">دخول آمن</button>
+            <p id="login-err" style="color: var(--danger); font-size: 0.8rem; margin-top: 10px;"></p>
+        </div>
+    </div>
+</section>
 
-<div id="app" class="hidden" style="max-width:600px; margin:auto;">
-    <div class="box" style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 id="me" style="margin:0"></h3>
-        <button onclick="location.reload()" style="background:#ef4444; padding:5px 10px;">خروج</button>
-    </div>
-    <div id="controls" class="box hidden"></div>
-    <div class="box">
-        <h3>قائمة الطلاب والطلايع</h3>
-        <div id="content"></div>
-    </div>
-</div>
+<main id="main-app" class="hidden">
+    <header class="flex-between">
+        <div>
+            <span id="user-role-badge" class="badge"></span>
+            <strong id="user-display-name"></strong>
+        </div>
+        <button class="btn btn-ghost" onclick="location.reload()">خروج</button>
+    </header>
+
+    <nav class="tab-bar box">
+        <button class="tab-btn active" onclick="App.switchTab('members', this)">👥 الأعضاء</button>
+        <button class="tab-btn" onclick="App.switchTab('ranking', this)">🏆 الترتيب</button>
+        <button id="logs-tab-btn" class="tab-btn hidden" onclick="App.switchTab('logs', this)">📜 السجلات</button>
+        <button class="tab-btn" onclick="App.switchTab('profile', this)">👤 حسابي</button>
+    </nav>
+
+    <div id="tab-content" style="padding: 10px;">
+        </div>
+</main>
 
 <script>
-// 🔥 الربط المباشر مع Firebase الخاص بك
-const firebaseConfig = {
-    apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
-    databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
-};
+/**
+ * 🧠 نظام أوتاد - المحرك البرمجي V4
+ * تصميم: معايير الإنتاج الاحترافية
+ */
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database().ref("safe_system_v3");
+const App = (() => {
+    // 🔑 تهيئة Firebase بالبيانات التي قدمتها سابقاً
+    const firebaseConfig = {
+        apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
+        databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    
+    // 🏛️ State Management
+    let state = {
+        currentUser: null,
+        users: {},
+        logs: [],
+        ready: false,
+        activeTab: 'members'
+    };
 
-let data = {users:{}};
-let currentUser = null;
-let ready = false;
+    // 🔒 الصلاحيات (RBAC)
+    const ROLES = { SUPER: 'SUPER', LEADER: 'LEADER', MEMBER: 'MEMBER' };
+    const SUPER_PINS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
 
-// 👑 القيادة العليا
-const SUPER = {
-    "1111": {name: "عبدالله العرفه", role: "Super Admin"},
-    "2222": {name: "سلمان الصويلح", role: "Super Admin"},
-    "3333": {name: "معاذ الشنقيطي", role: "Super Admin"}
-};
+    // 🛠️ المحرك الداخلي
+    return {
+        init: () => {
+            db.ref("awtad_pro_v4").on("value", snapshot => {
+                const val = snapshot.val() || {};
+                state.users = val.users || {};
+                state.logs = val.logs || [];
+                state.ready = true;
+                if(state.currentUser) App.render();
+            });
+        },
 
-// 🛡️ الهيكلة الرسمية (قادة وأعضاء)
-const STRUCTURE = [
-    {team: "طليعة 1", leader: "الوليد الحازمي", members: ["صالح حبتور", "حسن الشهري", "عزام خبراني", "يحي شراحيلي", "فهد المهيني", "زياد العجلاني", "يزيد خال", "غازي العجمي", "ريان جعام"]},
-    {team: "طليعة 2", leader: "حاتم خريزي", members: ["ياسر ابو حيه", "محمد عسيري", "علي الغامدي", "فواز الشهراني", "اصيل العتيبي", "صالح الخثعمي", "غازي العنزي", "ابراهيم التليدي", "رياض الزهراني"]},
-    {team: "طليعة 3", leader: "راكان شراحيلي", members: ["بسام قرادي", "بدر كعبي", "حسام الشهراني", "عبدالله قشاش", "عيسى الرشيدي", "عبدالعزيز القحطاني", "راشد الراشدي", "زايد القحطاني", "علي الشهراني"]},
-    {team: "طليعة 4", leader: "وضاح الصويلح", members: ["مشعل القحطاني", "ناصر المطيري", "مبارك خميس", "عبدالله القرني", "راكان حوباني", "رائد حوباني", "فارس العمري", "محمد فقيه", "مشاري القحطاني"]}
-];
+        login: async () => {
+            const pin = document.getElementById("pin-field").value;
+            const err = document.getElementById("login-err");
+            err.innerText = "";
 
-function seed() {
-    if(Object.keys(data.users || {}).length > 0) return;
-    let newUsers = {};
-    STRUCTURE.forEach(group => {
-        // إضافة القائد أولاً
-        let leaderId = "L_" + group.leader.replace(/\s/g, '');
-        newUsers[leaderId] = { name: group.leader, team: group.team, role: "قائد طليعة", pts: 0, pin: Math.floor(1000 + Math.random()*9000).toString(), badges: [] };
-        
-        // إضافة الأعضاء
-        group.members.forEach(m => {
-            let mid = "U_" + m.replace(/\s/g, '');
-            newUsers[mid] = { name: m, team: group.team, role: "عضو", pts: 0, pin: Math.floor(1000 + Math.random()*9000).toString(), badges: [] };
-        });
-    });
-    db.child("users").set(newUsers);
-}
+            // 1. التحقق من القيادة العليا
+            if (SUPER_PINS[pin]) {
+                state.currentUser = { name: SUPER_PINS[pin], role: ROLES.SUPER, teamId: 'ALL' };
+            } 
+            // 2. التحقق من الأعضاء والقادة في القاعدة
+            else {
+                const found = Object.values(state.users).find(u => u.pin === pin);
+                if (found) state.currentUser = found;
+            }
 
-function login() {
-    let pin = document.getElementById("pin").value.trim();
-    let found = null;
+            if (state.currentUser) {
+                document.getElementById("auth-screen").classList.add("hidden");
+                document.getElementById("main-app").classList.remove("hidden");
+                if(state.currentUser.role === ROLES.SUPER) document.getElementById("logs-tab-btn").classList.remove("hidden");
+                App.render();
+                App.log('دخول للنظام', state.currentUser.name);
+            } else {
+                err.innerText = "فشل التحقق: الرمز السري غير صحيح";
+            }
+        },
 
-    if(SUPER[pin]) found = SUPER[pin];
-    else {
-        Object.values(data.users || {}).forEach(u => { if(u.pin === pin) found = u; });
-    }
+        switchTab: (tab, btn) => {
+            state.activeTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            App.render();
+        },
 
-    if(!found) { document.getElementById("err").innerText = "PIN خطأ!"; return; }
+        render: () => {
+            const container = document.getElementById("tab-content");
+            const user = state.currentUser;
+            document.getElementById("user-display-name").innerText = user.name;
+            const badge = document.getElementById("user-role-badge");
+            badge.innerText = user.role;
+            badge.className = `badge role-${user.role.toLowerCase()}`;
 
-    currentUser = found;
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-    if(currentUser.role === "Super Admin") document.getElementById("controls").classList.remove("hidden");
-    render();
-}
+            if (state.activeTab === 'members') {
+                let html = `<div class="box"><h3>إدارة المجموعة</h3>`;
+                const filteredUsers = Object.entries(state.users).filter(([id, u]) => {
+                    if(user.role === ROLES.SUPER) return true;
+                    if(user.role === ROLES.LEADER) return u.teamId === user.teamId;
+                    return u.pin === user.pin;
+                });
 
-function addPts(id) {
-    let v = parseInt(prompt("كم نقطة لـ " + data.users[id].name + "؟"));
-    if(!v || v <= 0) return;
-    let current = data.users[id].pts || 0;
-    db.child("users").child(id).update({ pts: current + v });
-}
+                filteredUsers.forEach(([id, u]) => {
+                    html += `
+                    <div class="list-item">
+                        <div>
+                            <strong>${u.name}</strong> <small style="display:block; opacity:0.6">${u.teamId}</small>
+                            ${user.role === ROLES.SUPER ? `<span style="color:var(--gold); font-size:11px">PIN: ${u.pin}</span>` : ''}
+                        </div>
+                        <div class="flex-between" style="gap:10px">
+                            <b style="color:var(--gold)">${u.points} ن</b>
+                            ${user.role !== ROLES.MEMBER ? `<button class="btn btn-primary" onclick="App.addPoints('${id}')">+</button>` : ''}
+                        </div>
+                    </div>`;
+                });
+                
+                if(user.role === ROLES.SUPER && filteredUsers.length === 0) {
+                    html += `<button class="btn btn-primary" style="width:100%" onclick="App.seed()">🔄 استيراد الهيكل التنظيمي</button>`;
+                }
+                
+                container.innerHTML = html + `</div>`;
+            }
 
-function render() {
-    document.getElementById("me").innerText = currentUser.name + " (" + currentUser.role + ")";
-    let html = "";
-    Object.entries(data.users || {}).forEach(([id, u]) => {
-        html += `<div class="student-item">
-            <div>
-                <b>${u.name}</b> <small style="opacity:0.6">${u.team}</small><br>
-                ${currentUser.role === 'Super Admin' ? `<span style="color:var(--gold); font-size:12px">PIN: ${u.pin}</span>` : ''}
-            </div>
-            <div>
-                <b style="color:var(--gold)">${u.pts} ن</b>
-                ${currentUser.role !== 'عضو' ? `<button onclick="addPts('${id}')" style="margin-right:10px; padding:2px 8px">+</button>` : ''}
-            </div>
-        </div>`;
-    });
-    document.getElementById("content").innerHTML = html;
+            if (state.activeTab === 'logs') {
+                let html = `<div class="box"><h3>سجل العمليات (Audit Trail)</h3>`;
+                state.logs.slice(0, 50).forEach(l => {
+                    html += `<div style="font-size:0.8rem; border-bottom:1px solid #1e293b; padding:5px 0">
+                        <span style="color:var(--accent)">[${l.time}]</span> <b>${l.actor}</b>: ${l.action}
+                    </div>`;
+                });
+                container.innerHTML = html + `</div>`;
+            }
+            
+            if(state.activeTab === 'ranking') {
+                let html = `<div class="box"><h3>الترتيب العالمي (Leaderboard)</h3>`;
+                const ranked = Object.values(state.users).sort((a,b) => b.points - a.points);
+                ranked.forEach((u, i) => {
+                    html += `<div class="list-item">
+                        <span>#${i+1} ${u.name}</span>
+                        <b style="color:var(--gold)">${u.points} ن</b>
+                    </div>`;
+                });
+                container.innerHTML = html + `</div>`;
+            }
+        },
 
-    if(currentUser.role === "Super Admin") {
-        document.getElementById("controls").innerHTML = `<button onclick="seed()">🔄 استيراد الأسماء</button> <button onclick="db.set({users:{}})" style="background:#ef4444">⚠️ تصفير كامل</button>`;
-    }
-}
+        addPoints: (userId) => {
+            const amount = parseInt(prompt("أدخل عدد النقاط (استخدم السالب للخصم):"));
+            if (isNaN(amount)) return;
+            
+            const u = state.users[userId];
+            const newPoints = (u.points || 0) + amount;
+            
+            db.ref(`awtad_pro_v4/users/${userId}`).update({ points: newPoints });
+            App.log(`تعديل نقاط (${amount})`, `للمستخدم: ${u.name}`);
+        },
 
-db.on("value", snap => {
-    data = snap.val() || {users:{}};
-    ready = true;
-    document.getElementById("loginBtn").innerText = "دخول";
-    document.getElementById("loginBtn").disabled = false;
-    if(currentUser) render();
-});
+        log: (action, actor) => {
+            const newLog = {
+                action, actor,
+                time: new Date().toLocaleTimeString('ar-SA')
+            };
+            db.ref("awtad_pro_v4/logs").push(newLog);
+        },
+
+        seed: () => {
+            if(!confirm("سيتم بناء الهيكل وتوليد PINs مشفرة. استمرار؟")) return;
+            const teams = {
+                "طليعة 1": ["الوليد الحازمي (ق)", "صالح حبتور", "حسن الشهري", "عزام خبراني", "يحي شراحيلي", "فهد المهيني", "زياد العجلاني", "يزيد خال", "غازي العجمي", "ريان جعام"],
+                "طليعة 2": ["حاتم خريزي (ق)", "ياسر ابو حيه", "محمد عسيري", "علي الغامدي", "فواز الشهراني", "اصيل العتيبي", "صالح الخثعمي", "غازي العنزي", "ابراهيم التليدي", "رياض الزهراني"],
+                "طليعة 3": ["راكان شراحيلي (ق)", "بسام قرادي", "بدر كعبي", "حسام الشهراني", "عبدالله قشاش", "عيسى الرشيدي", "عبدالعزيز القحطاني", "راشد الراشدي", "زايد القحطاني", "علي الشهراني"],
+                "طليعة 4": ["وضاح الصويلح (ق)", "مشعل القحطاني", "ناصر المطيري", "مبارك خميس", "عبدالله القرني", "راكان حوباني", "رائد حوباني", "فارس العمري", "محمد فقيه", "مشاري القحطاني"]
+            };
+
+            let users = {};
+            Object.entries(teams).forEach(([teamName, members]) => {
+                members.forEach(m => {
+                    const isLeader = m.includes("(ق)");
+                    const cleanName = m.replace("(ق)", "").trim();
+                    const id = "ID_" + Math.random().toString(36).substr(2, 9);
+                    users[id] = {
+                        name: cleanName,
+                        teamId: teamName,
+                        role: isLeader ? ROLES.LEADER : ROLES.MEMBER,
+                        points: 0,
+                        pin: (Math.floor(1000 + Math.random() * 9000)).toString(),
+                        createdAt: new Date().toISOString()
+                    };
+                });
+            });
+            db.ref("awtad_pro_v4/users").set(users);
+        }
+    };
+})();
+
+// تشغيل المحرك عند تحميل الصفحة
+window.onload = App.init;
 </script>
 </body>
 </html>
