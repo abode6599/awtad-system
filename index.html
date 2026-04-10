@@ -3,272 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة أوتاد لإدارة الكشافة | النسخة الاحترافية</title>
+    <title>AWTAD | المنصة السيادية للكشافة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
         :root {
-            --bg: #070b14; --card: #10192d; --accent: #3b82f6; --gold: #fbbf24;
-            --danger: #ef4444; --success: #22c55e; --text: #f1f5f9;
+            --bg-primary: #0B1220; --bg-secondary: #111C33; --border: #1E2A44;
+            --gold: #D4A017; --text-main: #E5E7EB; --text-sub: #94A3B8;
+            --danger: #DC2626; --success: #16A34A; --accent: #D4A017;
         }
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; line-height: 1.6; }
-        
-        /* Utility Classes */
-        .hidden { display: none !important; }
-        .box { background: var(--card); border-radius: 12px; border: 1px solid #1e293b; padding: 20px; margin-bottom: 15px; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; transition: all 0.2s ease; }
+        body { background: var(--bg-primary); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar Style */
+        #sidebar { width: 260px; background: var(--bg-secondary); border-left: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--gold); text-align: center; margin-bottom: 40px; letter-spacing: 2px; }
+        .nav-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: var(--text-sub); margin-bottom: 8px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .nav-item:hover, .nav-item.active { background: var(--border); color: var(--gold); }
+
+        /* Main Content area */
+        #wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: radial-gradient(circle at top right, #16203a 0%, #0B1220 100%); }
+        header { padding: 20px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(17, 28, 51, 0.8); backdrop-filter: blur(10px); sticky; top: 0; }
+
+        /* Cards and Grids */
+        .content-padding { padding: 30px 40px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 15px; padding: 20px; position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .card::before { content: ""; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--gold); opacity: 0; transition: 0.3s; }
+        .card:hover::before { opacity: 1; }
+
+        /* Leaderboard Specific */
+        .rank-badge { background: var(--gold); color: #000; padding: 2px 10px; border-radius: 50px; font-size: 12px; font-weight: 900; }
+        .pts-huge { font-size: 28px; font-weight: 900; color: var(--gold); }
+
         /* Auth Screen */
-        #auth-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1e293b 0%, #070b14 100%); }
-        .login-card { width: 90%; max-width: 400px; text-align: center; animation: fadeIn 0.5s ease; }
-        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #070b14; color: white; text-align: center; font-size: 1.2rem; margin: 15px 0; transition: 0.3s; }
-        input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
-        
-        /* Dashboard Layout */
-        header { background: var(--card); padding: 15px 20px; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
-        .tab-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; border-bottom: 1px solid #1e293b; }
-        .tab-btn { background: transparent; color: #94a3b8; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: bold; }
-        .tab-btn.active { background: var(--accent); color: white; }
-        
-        /* Data Lists */
-        .list-item { padding: 15px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; animation: slideUp 0.3s ease; }
-        .list-item:last-child { border: none; }
-        .badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 900; margin-right: 5px; }
-        .role-super { background: var(--danger); }
-        .role-leader { background: var(--gold); color: #000; }
-        .role-member { background: var(--accent); }
-        
+        #auth-overlay { position: fixed; inset: 0; background: var(--bg-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .auth-box { background: var(--bg-secondary); padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 350px; }
+        input { width: 100%; background: var(--bg-primary); border: 1px solid var(--border); color: white; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: center; font-size: 1.5rem; letter-spacing: 5px; }
+        input:focus { border-color: var(--gold); outline: none; }
+
         /* Buttons */
-        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-ghost { background: #1e293b; color: white; }
+        .btn { padding: 10px 25px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; background: var(--gold); color: #000; }
         .btn-danger { background: var(--danger); color: white; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Logs Timeline */
+        .log-item { border-right: 2px solid var(--border); padding: 0 15px 15px 0; position: relative; margin-right: 10px; }
+        .log-item::after { content: ""; position: absolute; top: 0; right: -6px; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; }
+
+        @media (max-width: 768px) { #sidebar { display: none; } .content-padding { padding: 20px; } }
     </style>
 </head>
 <body>
 
-<section id="auth-screen">
-    <div class="login-card box">
-        <h1 style="color: var(--gold); margin:0;">أوتـاد 🛡️</h1>
-        <p style="color: #94a3b8; font-size: 0.9rem;">نظام الإدارة الموحد</p>
-        <div id="auth-loading" class="hidden">جاري التحقق...</div>
-        <div id="auth-ui">
-            <input type="password" id="pin-field" placeholder="أدخل الرمز السري" maxlength="4">
-            <button class="btn btn-primary" style="width: 100%" onclick="App.login()">دخول آمن</button>
-            <p id="login-err" style="color: var(--danger); font-size: 0.8rem; margin-top: 10px;"></p>
+<div id="auth-overlay">
+    <div class="auth-box">
+        <div class="logo">AWTAD</div>
+        <p style="color: var(--text-sub)">نظام الإدارة السيادي</p>
+        <input type="password" id="pin-input" maxlength="4" placeholder="••••">
+        <button class="btn" style="width: 100%" onclick="Logic.login()">دخول الهيئة</button>
+        <p id="auth-err" style="color: var(--danger); margin-top: 15px; font-size: 13px;"></p>
+    </div>
+</div>
+
+<aside id="sidebar">
+    <div class="logo">أوتاد</div>
+    <div id="nav-list">
+        <div class="nav-item active" onclick="Logic.switchTab('dashboard')">🏠 لوحة التحكم</div>
+        <div class="nav-item" onclick="Logic.switchTab('members')">👥 الأعضاء والطلايع</div>
+        <div class="nav-item" onclick="Logic.switchTab('ranks')">🏆 سلم الترتيب</div>
+        <div id="admin-only-nav" class="hidden">
+            <div class="nav-item" onclick="Logic.switchTab('logs')">📜 سجل العمليات</div>
+            <div class="nav-item" style="color: var(--danger)" onclick="Logic.systemReset()">⚠️ تصفير النظام</div>
         </div>
     </div>
-</section>
+    <div style="margin-top: auto; padding: 10px; border-top: 1px solid var(--border);">
+        <div id="user-info-name" style="font-weight: 900; color: var(--gold);"></div>
+        <div id="user-info-role" style="font-size: 11px; color: var(--text-sub);"></div>
+    </div>
+</aside>
 
-<main id="main-app" class="hidden">
-    <header class="flex-between">
-        <div>
-            <span id="user-role-badge" class="badge"></span>
-            <strong id="user-display-name"></strong>
-        </div>
-        <button class="btn btn-ghost" onclick="location.reload()">خروج</button>
+<main id="wrapper">
+    <header>
+        <div id="page-title" style="font-weight: 900; font-size: 20px;">لوحة التحكم</div>
+        <div id="header-actions"></div>
     </header>
 
-    <nav class="tab-bar box">
-        <button class="tab-btn active" onclick="App.switchTab('members', this)">👥 الأعضاء</button>
-        <button class="tab-btn" onclick="App.switchTab('ranking', this)">🏆 الترتيب</button>
-        <button id="logs-tab-btn" class="tab-btn hidden" onclick="App.switchTab('logs', this)">📜 السجلات</button>
-        <button class="tab-btn" onclick="App.switchTab('profile', this)">👤 حسابي</button>
-    </nav>
-
-    <div id="tab-content" style="padding: 10px;">
+    <div id="main-content" class="content-padding">
         </div>
 </main>
 
 <script>
-/**
- * 🧠 نظام أوتاد - المحرك البرمجي V4
- * تصميم: معايير الإنتاج الاحترافية
- */
-
-const App = (() => {
-    // 🔑 تهيئة Firebase بالبيانات التي قدمتها سابقاً
+/** 🧠 النواة المركزية لنظام أوتاد **/
+const Logic = (() => {
     const firebaseConfig = {
         apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
         databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
     };
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    
-    // 🏛️ State Management
-    let state = {
-        currentUser: null,
-        users: {},
-        logs: [],
-        ready: false,
-        activeTab: 'members'
-    };
+    const db = firebase.database().ref("awtad_sovereign_v5");
 
-    // 🔒 الصلاحيات (RBAC)
-    const ROLES = { SUPER: 'SUPER', LEADER: 'LEADER', MEMBER: 'MEMBER' };
+    let state = { user: null, users: {}, logs: [], activeTab: 'dashboard' };
     const SUPER_PINS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
 
-    // 🛠️ المحرك الداخلي
     return {
         init: () => {
-            db.ref("awtad_pro_v4").on("value", snapshot => {
-                const val = snapshot.val() || {};
-                state.users = val.users || {};
-                state.logs = val.logs || [];
-                state.ready = true;
-                if(state.currentUser) App.render();
+            db.on("value", snap => {
+                const data = snap.val() || {};
+                state.users = data.users || {};
+                state.logs = Object.values(data.logs || {}).reverse();
+                if (state.user) Logic.render();
             });
         },
 
-        login: async () => {
-            const pin = document.getElementById("pin-field").value;
-            const err = document.getElementById("login-err");
-            err.innerText = "";
-
-            // 1. التحقق من القيادة العليا
+        login: () => {
+            const pin = document.getElementById("pin-input").value;
+            const err = document.getElementById("auth-err");
+            
             if (SUPER_PINS[pin]) {
-                state.currentUser = { name: SUPER_PINS[pin], role: ROLES.SUPER, teamId: 'ALL' };
-            } 
-            // 2. التحقق من الأعضاء والقادة في القاعدة
-            else {
-                const found = Object.values(state.users).find(u => u.pin === pin);
-                if (found) state.currentUser = found;
+                state.user = { name: SUPER_PINS[pin], role: 'SUPER', id: 'ADMIN' };
+            } else {
+                const found = Object.entries(state.users).find(([id, u]) => u.pin === pin);
+                if (found) state.user = { ...found[1], id: found[0] };
             }
 
-            if (state.currentUser) {
-                document.getElementById("auth-screen").classList.add("hidden");
-                document.getElementById("main-app").classList.remove("hidden");
-                if(state.currentUser.role === ROLES.SUPER) document.getElementById("logs-tab-btn").classList.remove("hidden");
-                App.render();
-                App.log('دخول للنظام', state.currentUser.name);
+            if (state.user) {
+                document.getElementById("auth-overlay").classList.add("hidden");
+                document.getElementById("user-info-name").innerText = state.user.name;
+                document.getElementById("user-info-role").innerText = state.user.role === 'SUPER' ? "القيادة العليا" : state.user.team;
+                if(state.user.role === 'SUPER') document.getElementById("admin-only-nav").classList.remove("hidden");
+                Logic.log("تسجيل دخول", state.user.name);
+                Logic.render();
             } else {
-                err.innerText = "فشل التحقق: الرمز السري غير صحيح";
+                err.innerText = "فشل التحقق: الرمز غير مصرح به";
             }
         },
 
-        switchTab: (tab, btn) => {
+        switchTab: (tab) => {
             state.activeTab = tab;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            App.render();
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            Logic.render();
         },
 
         render: () => {
-            const container = document.getElementById("tab-content");
-            const user = state.currentUser;
-            document.getElementById("user-display-name").innerText = user.name;
-            const badge = document.getElementById("user-role-badge");
-            badge.innerText = user.role;
-            badge.className = `badge role-${user.role.toLowerCase()}`;
+            const container = document.getElementById("main-content");
+            const title = document.getElementById("page-title");
+            container.innerHTML = "";
+
+            if (state.activeTab === 'dashboard') {
+                title.innerText = "لوحة التحكم الاستراتيجية";
+                container.innerHTML = `
+                    <div class="stats-grid">
+                        <div class="card">
+                            <div style="color:var(--text-sub)">إجمالي الأعضاء</div>
+                            <div class="pts-huge">${Object.keys(state.users).length}</div>
+                        </div>
+                        <div class="card">
+                            <div style="color:var(--text-sub)">متصدر الترتيب</div>
+                            <div class="pts-huge" style="font-size:18px">${Logic.getTopMember()?.name || 'لا يوجد'}</div>
+                        </div>
+                    </div>
+                    <div class="box" style="margin-top:20px">
+                        ${state.user.role === 'SUPER' && Object.keys(state.users).length === 0 ? 
+                        `<button class="btn" onclick="Logic.seed()">🔄 تفعيل هيكل الطلايع (36 عضو)</button>` : ''}
+                    </div>
+                `;
+            }
 
             if (state.activeTab === 'members') {
-                let html = `<div class="box"><h3>إدارة المجموعة</h3>`;
-                const filteredUsers = Object.entries(state.users).filter(([id, u]) => {
-                    if(user.role === ROLES.SUPER) return true;
-                    if(user.role === ROLES.LEADER) return u.teamId === user.teamId;
-                    return u.pin === user.pin;
-                });
-
-                filteredUsers.forEach(([id, u]) => {
+                title.innerText = "إدارة الطلايع والأعضاء";
+                let html = `<div class="stats-grid">`;
+                Object.entries(state.users).forEach(([id, u]) => {
                     html += `
-                    <div class="list-item">
-                        <div>
-                            <strong>${u.name}</strong> <small style="display:block; opacity:0.6">${u.teamId}</small>
-                            ${user.role === ROLES.SUPER ? `<span style="color:var(--gold); font-size:11px">PIN: ${u.pin}</span>` : ''}
-                        </div>
-                        <div class="flex-between" style="gap:10px">
-                            <b style="color:var(--gold)">${u.points} ن</b>
-                            ${user.role !== ROLES.MEMBER ? `<button class="btn btn-primary" onclick="App.addPoints('${id}')">+</button>` : ''}
-                        </div>
-                    </div>`;
+                        <div class="card">
+                            <div class="flex-between">
+                                <span class="rank-badge">${u.team}</span>
+                                <span class="pts-huge">${u.pts}</span>
+                            </div>
+                            <h3 style="margin:10px 0 5px 0">${u.name}</h3>
+                            <div style="font-size:12px; color:var(--text-sub)">PIN: ${state.user.role === 'SUPER' ? u.pin : '****'}</div>
+                            ${state.user.role === 'SUPER' || (state.user.role === 'LEADER' && state.user.team === u.team) ? 
+                            `<button class="btn" style="width:100%; margin-top:15px" onclick="Logic.addPts('${id}')">إدارة النقاط</button>` : ''}
+                        </div>`;
                 });
-                
-                if(user.role === ROLES.SUPER && filteredUsers.length === 0) {
-                    html += `<button class="btn btn-primary" style="width:100%" onclick="App.seed()">🔄 استيراد الهيكل التنظيمي</button>`;
-                }
-                
                 container.innerHTML = html + `</div>`;
             }
 
             if (state.activeTab === 'logs') {
-                let html = `<div class="box"><h3>سجل العمليات (Audit Trail)</h3>`;
-                state.logs.slice(0, 50).forEach(l => {
-                    html += `<div style="font-size:0.8rem; border-bottom:1px solid #1e293b; padding:5px 0">
-                        <span style="color:var(--accent)">[${l.time}]</span> <b>${l.actor}</b>: ${l.action}
-                    </div>`;
+                title.innerText = "سجل العمليات السيادي";
+                let html = `<div class="card">`;
+                state.logs.slice(0, 30).forEach(l => {
+                    html += `
+                        <div class="log-item">
+                            <span style="color:var(--gold)">[${l.time}]</span> <b>${l.actor}</b> ${l.action}
+                        </div>`;
                 });
                 container.innerHTML = html + `</div>`;
             }
-            
-            if(state.activeTab === 'ranking') {
-                let html = `<div class="box"><h3>الترتيب العالمي (Leaderboard)</h3>`;
-                const ranked = Object.values(state.users).sort((a,b) => b.points - a.points);
-                ranked.forEach((u, i) => {
-                    html += `<div class="list-item">
-                        <span>#${i+1} ${u.name}</span>
-                        <b style="color:var(--gold)">${u.points} ن</b>
-                    </div>`;
+
+            if (state.activeTab === 'ranks') {
+                title.innerText = "سلم الترتيب العام";
+                const sorted = Object.values(state.users).sort((a,b) => b.pts - a.pts);
+                let html = `<div class="card" style="padding:0">`;
+                sorted.forEach((u, i) => {
+                    html += `
+                        <div class="list-item" style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between">
+                            <span><b>#${i+1}</b> ${u.name} (${u.team})</span>
+                            <b style="color:var(--gold)">${u.pts} نقطة</b>
+                        </div>`;
                 });
                 container.innerHTML = html + `</div>`;
             }
         },
 
-        addPoints: (userId) => {
-            const amount = parseInt(prompt("أدخل عدد النقاط (استخدم السالب للخصم):"));
-            if (isNaN(amount)) return;
-            
-            const u = state.users[userId];
-            const newPoints = (u.points || 0) + amount;
-            
-            db.ref(`awtad_pro_v4/users/${userId}`).update({ points: newPoints });
-            App.log(`تعديل نقاط (${amount})`, `للمستخدم: ${u.name}`);
+        addPts: (id) => {
+            const val = parseInt(prompt("أدخل عدد النقاط (إضافة/خصم):"));
+            if (isNaN(val)) return;
+            const u = state.users[id];
+            db.child("users").child(id).update({ pts: (u.pts || 0) + val });
+            Logic.log(`عدل نقاط ${u.name} بمقدار (${val})`, state.user.name);
         },
 
         log: (action, actor) => {
-            const newLog = {
-                action, actor,
-                time: new Date().toLocaleTimeString('ar-SA')
-            };
-            db.ref("awtad_pro_v4/logs").push(newLog);
+            db.child("logs").push({ action, actor, time: new Date().toLocaleTimeString('ar-SA') });
         },
 
+        getTopMember: () => Object.values(state.users).sort((a,b) => b.pts - a.pts)[0],
+
         seed: () => {
-            if(!confirm("سيتم بناء الهيكل وتوليد PINs مشفرة. استمرار؟")) return;
-            const teams = {
+            const data = {
                 "طليعة 1": ["الوليد الحازمي (ق)", "صالح حبتور", "حسن الشهري", "عزام خبراني", "يحي شراحيلي", "فهد المهيني", "زياد العجلاني", "يزيد خال", "غازي العجمي", "ريان جعام"],
                 "طليعة 2": ["حاتم خريزي (ق)", "ياسر ابو حيه", "محمد عسيري", "علي الغامدي", "فواز الشهراني", "اصيل العتيبي", "صالح الخثعمي", "غازي العنزي", "ابراهيم التليدي", "رياض الزهراني"],
                 "طليعة 3": ["راكان شراحيلي (ق)", "بسام قرادي", "بدر كعبي", "حسام الشهراني", "عبدالله قشاش", "عيسى الرشيدي", "عبدالعزيز القحطاني", "راشد الراشدي", "زايد القحطاني", "علي الشهراني"],
                 "طليعة 4": ["وضاح الصويلح (ق)", "مشعل القحطاني", "ناصر المطيري", "مبارك خميس", "عبدالله القرني", "راكان حوباني", "رائد حوباني", "فارس العمري", "محمد فقيه", "مشاري القحطاني"]
             };
-
             let users = {};
-            Object.entries(teams).forEach(([teamName, members]) => {
+            Object.entries(data).forEach(([team, members]) => {
                 members.forEach(m => {
-                    const isLeader = m.includes("(ق)");
-                    const cleanName = m.replace("(ق)", "").trim();
-                    const id = "ID_" + Math.random().toString(36).substr(2, 9);
+                    const isL = m.includes("(ق)");
+                    const id = "U_" + Math.random().toString(36).substr(2, 7);
                     users[id] = {
-                        name: cleanName,
-                        teamId: teamName,
-                        role: isLeader ? ROLES.LEADER : ROLES.MEMBER,
-                        points: 0,
-                        pin: (Math.floor(1000 + Math.random() * 9000)).toString(),
-                        createdAt: new Date().toISOString()
+                        name: m.replace("(ق)", "").trim(),
+                        team: team,
+                        role: isL ? 'LEADER' : 'MEMBER',
+                        pts: 0,
+                        pin: Math.floor(1000 + Math.random()*9000).toString()
                     };
                 });
             });
-            db.ref("awtad_pro_v4/users").set(users);
+            db.child("users").set(users);
+        },
+
+        systemReset: () => {
+            if(confirm("سيتم تصفير كافة البيانات.. هل أنت متأكد؟")) db.set({users:{}, logs:{}});
         }
     };
 })();
 
-// تشغيل المحرك عند تحميل الصفحة
-window.onload = App.init;
+Logic.init();
 </script>
 </body>
 </html>
