@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWTAD V10.2 | السيادي</title>
+    <title>AWTAD V10.4 | السيادي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
@@ -20,43 +20,51 @@
         body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
         
         .marquee-container { background: var(--accent); color: white; padding: 5px 0; font-size: 13px; font-weight: 700; }
-        nav { background: var(--card); border-bottom: 2px solid var(--border); display: flex; overflow-x: auto; padding: 10px; gap: 8px; sticky; top: 0; z-index: 1000; }
+        nav { background: var(--card); border-bottom: 2px solid var(--border); display: flex; overflow-x: auto; padding: 10px; gap: 8px; position: sticky; top: 0; z-index: 1000; }
         .nav-btn { padding: 10px 15px; border-radius: 8px; border: none; background: var(--bg); color: var(--sub); cursor: pointer; font-weight: 700; white-space: nowrap; }
         .nav-btn.active { background: var(--accent); color: white; }
 
         .container { padding: 15px; max-width: 1200px; margin: auto; }
         .member-card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 15px; position: relative; cursor: pointer; margin-bottom: 10px; }
+        .leader-card { border-right: 5px solid var(--gold); background: rgba(251, 191, 36, 0.05); }
         .yellow-card { border: 2px solid var(--gold) !important; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0.7; } }
 
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 600px; border: 1px solid var(--accent); max-height: 85vh; overflow-y: auto; }
 
-        .admin-only { border: 1px dashed var(--danger); padding: 10px; margin-top: 10px; border-radius: 10px; background: rgba(239, 68, 68, 0.05); }
+        .admin-only { border: 1px dashed var(--danger); padding: 15px; margin-top: 15px; border-radius: 10px; background: rgba(239, 68, 68, 0.05); }
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
         .btn { padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; width: 100%; margin-top: 5px; }
         .btn-p { background: var(--accent); color: white; }
         .btn-s { background: var(--gold); color: black; }
         .hidden { display: none !important; }
+
+        .badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .badge-item { background: var(--bg); padding: 5px; border-radius: 5px; font-size: 11px; text-align: center; border: 1px solid var(--border); cursor: pointer; }
+        
+        .log-item { background: var(--card); border-right: 4px solid var(--accent); padding: 10px; margin-bottom: 8px; border-radius: 8px; font-size: 13px; }
+        .log-plus { border-right-color: var(--success); }
+        .log-minus { border-right-color: var(--danger); }
     </style>
 </head>
 <body>
 
 <div id="auth-gate" style="position:fixed; inset:0; background:var(--bg); z-index:5000; display:flex; align-items:center; justify-content:center;">
     <div style="width: 320px; text-align: center; padding: 30px; background: var(--card); border-radius: 20px; border: 1px solid var(--accent);">
-        <h2 style="color: var(--accent)">AWTAD V10.2</h2>
+        <h2 style="color: var(--accent)">AWTAD V10.4</h2>
         <input type="password" id="entry-pin" maxlength="4" placeholder="الرمز السري" style="text-align:center; letter-spacing:8px;">
-        <button class="btn btn-p" onclick="SysV10.login()">دخول</button>
-        <button id="factory-btn" class="btn btn-s" style="font-size:11px; margin-top:20px; background:var(--danger); color:white;" onclick="SysV10.factoryResetV10()">⚠️ تأسيس النظام (أول مرة)</button>
+        <button class="btn btn-p" onclick="SysV10.login()">دخول السيادي</button>
     </div>
 </div>
 
-<div class="marquee-container"><marquee>نظام أوتاد - تم تفعيل نظام الشورى والتكليفات الرسمية ومولد التقارير...</marquee></div>
+<div class="marquee-container"><marquee>نظام أوتاد النسخة 10.4 - تم تفعيل سجل العمليات (Logs) والتقارير الجماعية وإدارة العهدة والإنذارات...</marquee></div>
 
 <nav>
     <button class="nav-btn active" onclick="SysV10.route('view', this)">👥 الميدان</button>
-    <button class="nav-btn" onclick="SysV10.route('shura', this)">⚖️ الشورى</button>
-    <button class="nav-btn" onclick="SysV10.route('tasks', this)">📋 التكليفات</button>
+    <button class="nav-btn" onclick="SysV10.route('vote', this)">🗳️ التصويت</button>
+    <button class="nav-btn" onclick="SysV10.route('logs', this)">📜 السجلات</button>
+    <button class="nav-btn" onclick="SysV10.route('reports', this)">📄 التقارير</button>
     <button class="nav-btn" onclick="SysV10.toggleTheme()">☀️ النمط الميداني</button>
 </nav>
 
@@ -65,7 +73,18 @@
 <div id="dossier-modal" class="modal hidden">
     <div class="modal-content">
         <div id="dossier-data"></div>
-        <button class="btn btn-p" onclick="SysV10.closeModal()">إغلاق</button>
+        <button class="btn btn-p" onclick="SysV10.closeModal()">إغلاق الملف</button>
+    </div>
+</div>
+
+<div id="badge-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3>🏅 موسوعة الأوسمة والشارات</h3>
+        <input type="text" id="badge-search" placeholder="بحث عن وسام..." oninput="SysV10.searchBadges()">
+        <div id="badge-list" class="badge-grid"></div>
+        <input type="text" id="custom-badge" placeholder="إضافة وسام غير موجود..." style="margin-top:15px">
+        <button class="btn btn-s" onclick="SysV10.addCustomBadge()">إضافة وسام خاص</button>
+        <button class="btn btn-p" onclick="document.getElementById('badge-modal').classList.add('hidden')">إلغاء</button>
     </div>
 </div>
 
@@ -75,8 +94,9 @@ const SysV10 = (() => {
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database().ref("awtad_v10_prod");
 
-    let state = { user: null, members: {}, tab: 'view' };
+    let state = { user: null, members: {}, tab: 'view', logs: [], votes: {} };
     const ADMINS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
+    const BADGE_DB = ["المسعف", "الرسام", "المبرمج", "المؤذن", "الرياضي", "الطهي", "العقد والربطات", "النيران", "الرحالة", "التخييم"];
 
     return {
         login: async () => {
@@ -88,14 +108,14 @@ const SysV10 = (() => {
                 const found = Object.entries(members).find(([id, m]) => m.pin === pin);
                 if(found) state.user = { ...found[1], id: found[0] };
             }
-            if(state.user) {
-                document.getElementById("auth-gate").classList.add("hidden");
-                SysV10.initSync();
-            } else alert("الرمز خطأ");
+            if(state.user) { document.getElementById("auth-gate").classList.add("hidden"); SysV10.initSync(); }
+            else alert("الرمز غير صحيح.");
         },
 
         initSync: () => {
             db.child("members").on("value", snap => { state.members = snap.val() || {}; SysV10.render(); });
+            db.child("logs").limitToLast(50).on("value", snap => { state.logs = Object.values(snap.val() || {}).reverse(); SysV10.render(); });
+            db.child("votes").on("value", snap => { state.votes = snap.val() || {}; SysV10.render(); });
         },
 
         route: (t, el) => { state.tab = t; document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); SysV10.render(); },
@@ -104,68 +124,88 @@ const SysV10 = (() => {
             const root = document.getElementById("main-content"); root.innerHTML = "";
             if(state.tab === 'view') {
                 ["طليعة 1", "طليعة 2", "طليعة 3", "طليعة 4"].forEach(t => {
-                    const group = Object.entries(state.members).filter(([id, m]) => m.team === t).sort((a,b) => b[1].pts - a[1].pts);
-                    let html = `<div style="margin-bottom:20px"><h3>${t}</h3><div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:10px">`;
-                    group.forEach(([id, m]) => {
+                    const group = Object.entries(state.members).filter(([id, m]) => m.team === t);
+                    const sorted = [...group.filter(m => m[1].role === 'LEADER'), ...group.filter(m => m[1].role !== 'LEADER').sort((a,b) => b[1].pts - a[1].pts)];
+                    let html = `<div style="margin-bottom:25px"><h2>${t}</h2><div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px">`;
+                    sorted.forEach(([id, m]) => {
                         const hasYellow = m.yellowCard && (new Date() - new Date(m.yellowCard) < 86400000);
-                        html += `<div class="member-card ${hasYellow ? 'yellow-card' : ''}" onclick="SysV10.openDossier('${id}')">
+                        html += `<div class="member-card ${m.role === 'LEADER' ? 'leader-card' : ''} ${hasYellow ? 'yellow-card' : ''}" onclick="SysV10.openDossier('${id}')">
                             <div style="display:flex; justify-content:space-between">
-                                <div><b>${m.name}</b><br><small>${m.role === 'LEADER' ? '👑 قائد' : 'كشاف'}</small></div>
+                                <div><b>${m.name}</b><br><small>${m.role === 'LEADER' ? '👑 القائد' : 'كشاف'}</small></div>
                                 <div style="font-size:20px; font-weight:900; color:var(--gold)">${m.pts}</div>
                             </div></div>`;
                     });
                     root.innerHTML += html + `</div></div>`;
                 });
             }
-            if(state.tab === 'shura') { root.innerHTML = `<div style="background:var(--card); padding:20px; border-radius:15px;"><h3>⚖️ صندوق الشورى</h3><textarea id="shura-msg"></textarea><button class="btn btn-p" onclick="SysV10.sendShura()">إرسال</button></div>`; }
+            if(state.tab === 'logs') {
+                root.innerHTML = `<h3>📜 سجل العمليات</h3>` + state.logs.map(l => `
+                <div class="log-item ${l.type === 'plus' ? 'log-plus' : 'log-minus'}">
+                    <small style="color:var(--sub)">${l.time} - بواسطة: ${l.admin}</small><br>
+                    <b>${l.target}</b>: ${l.action} (${l.amount}) - <span style="color:var(--gold)">السبب: ${l.reason}</span>
+                </div>`).join('');
+            }
+            if(state.tab === 'reports') {
+                root.innerHTML = `<h3>📄 التقارير السيادية</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+                <button class="btn btn-p" onclick="SysV10.massReport('ALL')">تقرير المركز</button>
+                ${[1,2,3,4].map(n => `<button class="btn btn-s" onclick="SysV10.massReport('طليعة ${n}')">طليعة ${n}</button>`).join('')}
+                </div><textarea id="report-output" style="margin-top:20px; height:200px" readonly></textarea>`;
+            }
+            if(state.tab === 'vote') {
+                root.innerHTML = `<h3>🗳️ التصويت</h3><div style="background:var(--card); padding:20px; border-radius:15px">
+                <p>موضوع التصويت: هل تؤيد البرنامج المقترح؟</p>
+                <button class="btn btn-p" onclick="SysV10.castVote('نعم')">نعم</button>
+                <button class="btn btn-s" onclick="SysV10.castVote('لا')">لا</button>
+                ${state.user.role === 'SUPER' ? `<hr><p>النتائج: نعم (${Object.values(state.votes).filter(v=>v==='نعم').length}) | لا (${Object.values(state.votes).filter(v=>v==='لا').length})</p>` : ''}
+                </div>`;
+            }
         },
 
         openDossier: (id) => {
-            const m = state.members[id];
-            const content = document.getElementById("dossier-data");
-            content.innerHTML = `<h2>${m.name}</h2><p>النقاط: ${m.pts}</p><p>العهدة: ${m.inventory}</p>
+            state.activeId = id; const m = state.members[id];
+            document.getElementById("dossier-data").innerHTML = `
+                <h2>${m.name}</h2>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+                    <input type="text" placeholder="الجوال" value="${m.phone || ''}" onchange="SysV10.updateInfo('${id}', 'phone', this.value)">
+                    <input type="text" placeholder="الهوية" value="${m.nid || ''}" onchange="SysV10.updateInfo('${id}', 'nid', this.value)">
+                </div>
+                <p>النقاط: <b>${m.pts}</b> | العهدة: ${m.inventory}</p>
+                <div>${(m.badges || []).map(b => `<span style="background:var(--accent); padding:2px 6px; border-radius:10px; font-size:10px; margin:2px; display:inline-block">${b}</span>`).join('')}</div>
                 ${state.user.role === 'SUPER' ? `<div class="admin-only">
-                    <button class="btn btn-s" onclick="SysV10.toggleYellowCard('${id}')">تنبيه انضباطي</button>
-                    <button class="btn btn-p" onclick="SysV10.generateReport('${id}')">توليد تقرير رسمي</button>
-                    <textarea onchange="SysV10.saveNote('${id}', this.value)" placeholder="ملاحظات قيادية...">${m.notes || ''}</textarea>
+                    <input type="number" id="pts-amt" placeholder="الكمية" style="width:48%">
+                    <input type="text" id="pts-rsn" placeholder="السبب" style="width:48%">
+                    <div style="display:flex; gap:5px">
+                        <button class="btn btn-p" style="background:var(--success)" onclick="SysV10.modPts('${id}', 'plus')">+</button>
+                        <button class="btn btn-p" style="background:var(--danger)" onclick="SysV10.modPts('${id}', 'minus')">-</button>
+                    </div>
+                    <button class="btn btn-s" onclick="SysV10.showBadgeModal()">🏅 إضافة وسام</button>
+                    <button class="btn btn-p" onclick="SysV10.toggleYellowCard('${id}')">⚠️ إنذار</button>
+                    <textarea onchange="SysV10.updateInfo('${id}', 'notes', this.value)" placeholder="ملاحظات القيادة...">${m.notes || ''}</textarea>
                 </div>` : ''}`;
             document.getElementById("dossier-modal").classList.remove("hidden");
         },
 
-        toggleYellowCard: (id) => {
-            const val = state.members[id].yellowCard ? null : new Date().toISOString();
-            db.child("members").child(id).update({ yellowCard: val });
-        },
-
-        generateReport: (id) => {
+        modPts: (id, type) => {
+            const amt = parseInt(document.getElementById("pts-amt").value);
+            const rsn = document.getElementById("pts-rsn").value;
+            if(!amt || !rsn) return alert("اذكر الكمية والسبب!");
             const m = state.members[id];
-            const rep = `تقرير رسمي: ${m.name}\nالطليعة: ${m.team}\nالنقاط: ${m.pts}\nالحالة: ${m.yellowCard ? 'تنبيه' : 'منضبط'}`;
-            alert(rep);
+            const newPts = type === 'plus' ? m.pts + amt : m.pts - amt;
+            db.child("members").child(id).update({ pts: newPts });
+            db.child("logs").push({ admin: state.user.name, target: m.name, type, amount: amt, action: type==='plus'?"إضافة":"خصم", reason: rsn, time: new Date().toLocaleString('ar-SA') });
+            alert("تم التوثيق."); SysV10.closeModal();
         },
 
-        sendShura: () => { alert("تم الإرسال بنظام الشورى."); document.getElementById("shura-msg").value = ""; },
+        updateInfo: (id, field, val) => db.child("members").child(id).update({ [field]: val }),
+        toggleYellowCard: (id) => db.child("members").child(id).update({ yellowCard: state.members[id].yellowCard ? null : new Date().toISOString() }),
+        showBadgeModal: () => { document.getElementById("badge-modal").classList.remove("hidden"); SysV10.searchBadges(); },
+        searchBadges: () => { const q = document.getElementById("badge-search").value; document.getElementById("badge-list").innerHTML = BADGE_DB.filter(b=>b.includes(q)).map(b=>`<div class="badge-item" onclick="SysV10.assignBadge('${b}')">${b}</div>`).join(''); },
+        assignBadge: (b) => { const cur = state.members[state.activeId].badges || []; if(!cur.includes(b)) { cur.push(b); db.child("members").child(state.activeId).update({ badges: cur }); } document.getElementById("badge-modal").classList.add("hidden"); },
+        addCustomBadge: () => { const b = document.getElementById("custom-badge").value; if(b) SysV10.assignBadge(b); },
+        massReport: (t) => { let text = `تقرير (${t}):\n`; Object.values(state.members).filter(m=>t==='ALL'||m.team===t).forEach(m=>text+=`${m.name} | نقاط: ${m.pts} | أوسمة: ${(m.badges||[]).length}\n`); document.getElementById("report-output").value = text; },
+        castVote: (v) => { db.child("votes").child(state.user.name).set(v); alert("تم التصويت."); },
         toggleTheme: () => document.body.classList.toggle("light-mode"),
-        closeModal: () => document.getElementById("dossier-modal").classList.add("hidden"),
-
-        factoryResetV10: () => {
-            const pin = document.getElementById("entry-pin").value;
-            if(!ADMINS[pin]) return alert("تحتاج رمز المشرف!");
-            if(!confirm("سيتم تأسيس بيانات الـ 40 عضو الآن؟")) return;
-            const raw = {
-                "طليعة 1": ["الوليد الحازمي (ق)", "صالح حبتور", "حسن الشهري", "عزام خبراني", "يحي شراحيلي", "فهد المهيني", "زياد العجلاني", "يزيد خال", "غازي العجمي", "ريان جعام"],
-                "طليعة 2": ["حاتم خريزي (ق)", "ياسر ابو حيه", "محمد عسيري", "علي الغامدي", "فواز الشهراني", "اصيل العتيبي", "صالح الخثعمي", "غازي العنزي", "ابراهيم التليدي", "رياض الزهراني"],
-                "طليعة 3": ["راكان شراحيلي (ق)", "بسام قرادي", "بدر كعبي", "حسام الشهراني", "عبدالله قشاش", "عيسى الرشيدي", "عبدالعزيز القحطاني", "راشد الراشدي", "زايد القحطاني", "علي الشهراني"],
-                "طليعة 4": ["وضاح الصويلح (ق)", "مشعل القحطاني", "ناصر المطيري", "مبارك خميس", "عبدالله القرني", "راكان حوباني", "رائد حوباني", "فارس العمري", "محمد فقيه", "مشاري القحطاني"]
-            };
-            let batch = {};
-            Object.entries(raw).forEach(([t, ms]) => {
-                ms.forEach(m => {
-                    const id = "ID_" + Math.random().toString(36).substr(2, 6).toUpperCase();
-                    batch[id] = { name: m.replace("(ق)","").trim(), team: t, role: m.includes("(ق)")?'LEADER':'MEMBER', pts: 0, badges: [], inventory: "حقيبة كاملة", pin: "1234", notes: "" };
-                });
-            });
-            db.child("members").set(batch).then(() => alert("تم التأسيس!"));
-        }
+        closeModal: () => document.getElementById("dossier-modal").classList.add("hidden")
     };
 })();
 </script>
