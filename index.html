@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -10,452 +9,99 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
         :root {
-            --bg:       #060d1a;
-            --bg2:      #0c1829;
-            --card:     #0f2035;
-            --card2:    #162840;
-            --border:   #1e3a5a;
-            --gold:     #d4a017;
-            --gold2:    #f5c842;
-            --blue:     #1a5fa8;
-            --blue2:    #2272c3;
-            --text:     #e8f0fa;
-            --text2:    #8baac8;
-            --danger:   #c0272d;
-            --danger2:  #e03030;
-            --success:  #0d9e6e;
-            --success2: #12c78a;
+            --bg: #060d1a; --bg2: #0c1829; --card: #0f2035; --card2: #162840;
+            --border: #1e3a5a; --gold: #d4a017; --gold2: #f5c842;
+            --blue: #1a5fa8; --blue2: #2272c3; --text: #e8f0fa;
+            --text2: #8baac8; --danger: #c0272d; --danger2: #e03030;
+            --success: #0d9e6e; --success2: #12c78a;
         }
         * { font-family: 'Cairo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); direction: rtl; min-height: 100vh; }
+        body { background: var(--bg); color: var(--text); direction: rtl; min-height: 100vh; overflow-x: hidden; }
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: -1;
+            background: radial-gradient(ellipse 80% 40% at 20% 10%, rgba(26,95,168,0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(212,160,23,0.07) 0%, transparent 60%), var(--bg);
+        }
 
-```
-    /* ─── Animated background ─── */
-    body::before {
-        content: '';
-        position: fixed; inset: 0; z-index: -1;
-        background:
-            radial-gradient(ellipse 80% 40% at 20% 10%, rgba(26,95,168,0.12) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 50% at 80% 80%, rgba(212,160,23,0.07) 0%, transparent 60%),
-            var(--bg);
-    }
+        /* UI Elements */
+        #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .login-box { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 40px 35px; text-align: center; width: 100%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .login-logo { font-size: 50px; margin-bottom: 10px; }
+        .login-title { font-size: 28px; font-weight: 900; color: var(--gold); margin-bottom: 5px; }
+        .pin-input { width: 100%; background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 15px; color: white; text-align: center; font-size: 24px; letter-spacing: 10px; margin: 20px 0; }
+        .login-btn { width: 100%; background: var(--gold); color: var(--bg); border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        
+        #main-app { display: none; padding: 20px; max-width: 1000px; margin: auto; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: var(--card); padding: 15px 20px; border-radius: 15px; border: 1px solid var(--border); }
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--card2); padding: 15px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab { background: var(--card); border: 1px solid var(--border); color: var(--text2); padding: 10px 20px; border-radius: 10px; cursor: pointer; white-space: nowrap; }
+        .tab.active { background: var(--blue); color: white; border-color: var(--blue2); }
 
-    /* ─── LOGIN ─── */
-    #login-screen {
-        display: flex; align-items: center; justify-content: center;
-        min-height: 100vh; padding: 20px;
-    }
-    .login-box {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 40px 35px;
-        width: 100%; max-width: 380px;
-        text-align: center;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,160,23,0.1);
-        animation: fadeUp 0.6s ease;
-    }
-    .login-logo {
-        font-size: 56px; margin-bottom: 10px;
-        filter: drop-shadow(0 0 20px rgba(212,160,23,0.4));
-    }
-    .login-title {
-        font-family: 'Tajawal', sans-serif;
-        font-size: 32px; font-weight: 900;
-        background: linear-gradient(135deg, var(--gold2), var(--gold));
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        letter-spacing: 2px; margin-bottom: 5px;
-    }
-    .login-sub { color: var(--text2); font-size: 13px; margin-bottom: 30px; }
-    .pin-input {
-        width: 100%; padding: 14px 18px;
-        background: var(--bg2); color: var(--text);
-        border: 1px solid var(--border); border-radius: 12px;
-        font-size: 18px; letter-spacing: 6px; text-align: center;
-        outline: none; transition: 0.3s;
-        margin-bottom: 15px;
-    }
-    .pin-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,160,23,0.15); }
-    .login-btn {
-        width: 100%; padding: 14px;
-        background: linear-gradient(135deg, var(--blue), var(--blue2));
-        color: white; border: none; border-radius: 12px;
-        font-size: 16px; font-weight: 700; cursor: pointer;
-        transition: 0.2s; font-family: 'Cairo', sans-serif;
-    }
-    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,95,168,0.4); }
-    .login-error { color: var(--danger2); font-size: 13px; margin-top: 12px; min-height: 18px; }
-
-    /* ─── MAIN APP ─── */
-    #main-app { display: none; max-width: 860px; margin: auto; padding: 15px; }
-
-    /* ─── TOP BAR ─── */
-    .topbar {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px; padding: 14px 20px;
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 18px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .topbar-logo { font-size: 28px; }
-    .topbar-name { font-weight: 700; font-size: 15px; }
-    .topbar-role { font-size: 11px; color: var(--gold); }
-    .topbar-right { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    /* ─── STATS BAR ─── */
-    .stats-bar {
-        display: grid; grid-template-columns: repeat(4, 1fr);
-        gap: 12px; margin-bottom: 18px;
-    }
-    .stat-card {
-        background: var(--card); border: 1px solid var(--border);
-        border-radius: 14px; padding: 16px 12px; text-align: center;
-        transition: 0.2s;
-    }
-    .stat-card:hover { border-color: var(--gold); transform: translateY(-2px); }
-    .stat-num { font-size: 26px; font-weight: 900; color: var(--gold2); }
-    .stat-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
-
-    /* ─── TABS ─── */
-    .tabs {
-        display: flex; gap: 8px; margin-bottom: 18px;
-        background: var(--card); border: 1px solid var(--border);
-        border-radius: 14px; padding: 8px;
-    }
-    .tab {
-        flex: 1; padding: 11px 8px;
-        background: transparent; border: none;
-        color: var(--text2); border-radius: 10px;
-        cursor: pointer; font-weight: 600; font-size: 13px;
-        white-space: nowrap; transition: 0.2s;
-        font-family: 'Cairo', sans-serif;
-    }
-    .tab:hover { color: var(--text); background: var(--card2); }
-    .tab.active {
-        background: linear-gradient(135deg, var(--blue), var(--blue2));
-        color: white; box-shadow: 0 4px 12px rgba(26,95,168,0.35);
-    }
-
-    /* ─── CARDS ─── */
-    .card {
-        background: var(--card); border: 1px solid var(--border);
-        border-radius: 16px; padding: 20px;
-        margin-bottom: 16px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    }
-    .card-header {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 15px; padding-bottom: 12px;
-        border-bottom: 1px solid var(--border);
-    }
-    .card-title {
-        font-size: 16px; font-weight: 700; color: var(--gold);
-        display: flex; align-items: center; gap: 8px;
-    }
-    .platoon-count {
-        background: rgba(212,160,23,0.1); color: var(--gold);
-        border: 1px solid rgba(212,160,23,0.25);
-        padding: 3px 10px; border-radius: 20px; font-size: 12px;
-    }
-
-    /* ─── STUDENT ROW ─── */
-    .student-row {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 14px 16px; border-radius: 12px;
-        transition: 0.2s; margin-bottom: 6px;
-        background: var(--bg2); border: 1px solid transparent;
-    }
-    .student-row:hover { border-color: var(--border); background: var(--card2); }
-    .student-row:last-child { margin-bottom: 0; }
-    .student-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-    .student-meta { font-size: 11px; color: var(--text2); }
-    .student-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-    .badge-tag {
-        background: rgba(212,160,23,0.1); color: var(--gold);
-        border: 1px solid rgba(212,160,23,0.3);
-        padding: 2px 8px; border-radius: 5px; font-size: 10px;
-    }
-    .pts-display {
-        font-size: 30px; font-weight: 900; color: var(--gold2);
-        min-width: 70px; text-align: center; line-height: 1;
-    }
-    .pts-label { font-size: 10px; color: var(--text2); text-align: center; margin-top: 2px; }
-    .pts-negative { color: var(--danger2) !important; }
-    .student-actions { display: flex; flex-direction: column; gap: 5px; min-width: 100px; }
-
-    /* ─── BUTTONS ─── */
-    .btn {
-        padding: 8px 12px; border: none; border-radius: 8px;
-        cursor: pointer; font-weight: 700; font-size: 12px;
-        transition: 0.2s; font-family: 'Cairo', sans-serif;
-        text-align: center;
-    }
-    .btn:hover { transform: translateY(-1px); }
-    .btn-primary {
-        background: linear-gradient(135deg, var(--blue), var(--blue2));
-        color: white;
-    }
-    .btn-primary:hover { box-shadow: 0 5px 15px rgba(26,95,168,0.4); }
-    .btn-gold {
-        background: linear-gradient(135deg, #b8860b, var(--gold));
-        color: #000;
-    }
-    .btn-gold:hover { box-shadow: 0 5px 15px rgba(212,160,23,0.35); }
-    .btn-danger {
-        background: linear-gradient(135deg, var(--danger), var(--danger2));
-        color: white;
-    }
-    .btn-danger:hover { box-shadow: 0 5px 15px rgba(192,39,45,0.4); }
-    .btn-success {
-        background: linear-gradient(135deg, var(--success), var(--success2));
-        color: white;
-    }
-    .btn-success:hover { box-shadow: 0 5px 15px rgba(13,158,110,0.4); }
-    .btn-ghost {
-        background: transparent; color: var(--text2);
-        border: 1px solid var(--border);
-    }
-    .btn-ghost:hover { color: var(--text); border-color: var(--gold); }
-    .btn-sm { padding: 6px 10px; font-size: 11px; }
-    .btn-xs { padding: 4px 8px; font-size: 10px; border-radius: 6px; }
-
-    /* ─── RANKING ─── */
-    .rank-row {
-        display: flex; align-items: center; gap: 15px;
-        padding: 13px 16px; border-radius: 12px;
-        background: var(--bg2); border: 1px solid transparent;
-        margin-bottom: 6px; transition: 0.2s;
-    }
-    .rank-row:hover { border-color: var(--border); }
-    .rank-num {
-        font-size: 18px; font-weight: 900;
-        min-width: 32px; text-align: center;
-    }
-    .rank-1 { color: #ffd700; }
-    .rank-2 { color: #c0c0c0; }
-    .rank-3 { color: #cd7f32; }
-    .rank-other { color: var(--text2); }
-    .rank-info { flex: 1; }
-    .rank-name { font-weight: 700; font-size: 15px; }
-    .rank-platoon { font-size: 11px; color: var(--text2); margin-top: 2px; }
-    .rank-pts { font-size: 22px; font-weight: 900; color: var(--gold2); }
-    .rank-medal { font-size: 20px; }
-    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 6px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--gold), var(--gold2)); transition: width 0.6s ease; }
-
-    /* ─── LOGS ─── */
-    .log-item {
-        padding: 12px 16px; border-radius: 10px;
-        background: var(--bg2); border: 1px solid var(--border);
-        margin-bottom: 6px; font-size: 13px;
-    }
-    .log-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-    .log-admin { font-weight: 700; color: var(--blue2); }
-    .log-time { font-size: 11px; color: var(--text2); }
-    .log-target { color: var(--text); }
-    .log-val-pos { color: var(--success2); font-weight: 700; }
-    .log-val-neg { color: var(--danger2); font-weight: 700; }
-    .log-reason { font-size: 12px; color: var(--text2); margin-top: 3px; }
-
-    /* ─── MODAL ─── */
-    .modal {
-        display: none; position: fixed; z-index: 200;
-        inset: 0; background: rgba(0,0,0,0.75);
-        backdrop-filter: blur(4px);
-        align-items: center; justify-content: center;
-    }
-    .modal.show { display: flex; }
-    .modal-box {
-        background: var(--card); border: 1px solid var(--border);
-        border-radius: 20px; padding: 28px;
-        width: 90%; max-width: 420px;
-        box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-        animation: modalIn 0.25s ease;
-        position: relative;
-    }
-    .modal-title { font-size: 20px; font-weight: 900; color: var(--gold); margin-bottom: 20px; }
-    .modal-close {
-        position: absolute; top: 18px; left: 20px;
-        background: none; border: none; color: var(--text2);
-        font-size: 20px; cursor: pointer; line-height: 1;
-    }
-    .modal-close:hover { color: var(--text); }
-    .info-row {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 10px 0; border-bottom: 1px solid var(--border);
-        font-size: 14px;
-    }
-    .info-row:last-of-type { border-bottom: none; }
-    .info-label { color: var(--text2); }
-    .info-val { font-weight: 700; }
-
-    /* ─── PROMPT MODAL ─── */
-    .prompt-modal {
-        display: none; position: fixed; z-index: 300;
-        inset: 0; background: rgba(0,0,0,0.8);
-        backdrop-filter: blur(6px);
-        align-items: center; justify-content: center;
-    }
-    .prompt-modal.show { display: flex; }
-    .prompt-box {
-        background: var(--card); border: 1px solid var(--border);
-        border-radius: 20px; padding: 28px;
-        width: 90%; max-width: 400px;
-        box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-        animation: modalIn 0.25s ease;
-    }
-    .prompt-title { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
-    .prompt-input {
-        width: 100%; padding: 12px 15px;
-        background: var(--bg2); color: var(--text);
-        border: 1px solid var(--border); border-radius: 10px;
-        font-size: 15px; outline: none; margin-bottom: 12px;
-        font-family: 'Cairo', sans-serif; transition: 0.2s;
-    }
-    .prompt-input:focus { border-color: var(--gold); }
-    .prompt-actions { display: flex; gap: 8px; margin-top: 5px; }
-    .prompt-hint { font-size: 11px; color: var(--text2); margin-bottom: 10px; }
-
-    /* ─── EMPTY STATE ─── */
-    .empty-state { text-align: center; padding: 40px; color: var(--text2); }
-    .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
-
-    /* ─── SEARCH ─── */
-    .search-bar {
-        width: 100%; padding: 11px 16px;
-        background: var(--card); color: var(--text);
-        border: 1px solid var(--border); border-radius: 12px;
-        font-size: 14px; outline: none; margin-bottom: 16px;
-        font-family: 'Cairo', sans-serif; transition: 0.3s;
-    }
-    .search-bar:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,160,23,0.1); }
-
-    /* ─── SEPARATOR ─── */
-    .section-label {
-        font-size: 11px; font-weight: 700; color: var(--text2);
-        text-transform: uppercase; letter-spacing: 1px;
-        margin: 15px 0 8px; padding-right: 4px;
-    }
-
-    /* ─── TOAST ─── */
-    #toast {
-        position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-        background: var(--card2); border: 1px solid var(--border);
-        color: var(--text); padding: 12px 24px; border-radius: 30px;
-        font-size: 14px; font-weight: 600; z-index: 500;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        opacity: 0; transition: opacity 0.3s, bottom 0.3s;
-        pointer-events: none;
-    }
-    #toast.show { opacity: 1; bottom: 35px; }
-    #toast.success { border-color: var(--success2); color: var(--success2); }
-    #toast.error { border-color: var(--danger2); color: var(--danger2); }
-
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 600px) {
-        .stats-bar { grid-template-columns: repeat(2, 1fr); }
-        .student-row { flex-wrap: wrap; gap: 10px; }
-        .student-actions { flex-direction: row; min-width: auto; width: 100%; }
-        .tab { font-size: 11px; padding: 9px 5px; }
-    }
-</style>
-```
-
+        .student-row { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .btn { padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .btn-gold { background: var(--gold); color: #000; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+        
+        /* Modals */
+        .modal, .prompt-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal.show, .prompt-modal.show { display: flex; }
+        .modal-box, .prompt-box { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 20px; width: 100%; max-width: 450px; }
+        
+        #toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: var(--card2); border: 1px solid var(--border); padding: 12px 25px; border-radius: 30px; transition: 0.3s; z-index: 2000; }
+        #toast.show { bottom: 30px; }
+    </style>
 </head>
 <body>
-
-<!-- ═══════════════════════ LOGIN SCREEN ═══════════════════════ -->
 
 <div id="login-screen">
     <div class="login-box">
         <div class="login-logo">🛡️</div>
         <div class="login-title">أوتـاد</div>
-        <div class="login-sub">نظام الإدارة الكشفية الرسمي</div>
-        <input class="pin-input" type="password" id="access-pin" placeholder="● ● ● ●" maxlength="6"
-               onkeydown="if(event.key==='Enter') handleLogin()">
+        <input class="pin-input" type="password" id="access-pin" placeholder="••••" maxlength="6">
         <button class="login-btn" onclick="handleLogin()">تسجيل الدخول</button>
-        <div class="login-error" id="login-error"></div>
+        <div id="login-error" style="color: var(--danger); margin-top: 10px;"></div>
     </div>
 </div>
-
-<!-- ═══════════════════════ MAIN APP ═══════════════════════ -->
 
 <div id="main-app">
-
-```
-<!-- Top Bar -->
-<div class="topbar">
-    <div class="topbar-left">
-        <div class="topbar-logo">🛡️</div>
-        <div>
-            <div class="topbar-name" id="user-display"></div>
-            <div class="topbar-role" id="user-role-display"></div>
+    <div class="topbar">
+        <div id="user-display"></div>
+        <div style="display:flex; gap:10px;">
+            <div id="admin-btns" style="display:none; gap:10px;">
+                <button class="btn btn-gold" onclick="exportWhatsApp()">📱 تقرير</button>
+                <button class="btn btn-danger" onclick="confirmFullReset()">⚠️ تصفير</button>
+            </div>
+            <button class="btn btn-ghost" onclick="location.reload()">خروج</button>
         </div>
     </div>
-    <div class="topbar-right">
-        <div id="admin-btns" style="display:none; gap:8px; display:none;">
-            <button class="btn btn-gold btn-sm" onclick="exportWhatsApp()">📱 تقرير واتساب</button>
-            <button class="btn btn-danger btn-sm" onclick="confirmFullReset()">⚠️ تصفير عام</button>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="confirmLogout()">خروج</button>
+    <div class="stats-bar" id="stats-bar"></div>
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('list', this)">📋 الطلاب</button>
+        <button class="tab" onclick="switchTab('ranking', this)">🏆 الترتيب</button>
+        <button class="tab" onclick="switchTab('logs', this)">📄 السجل</button>
     </div>
+    <div id="content-area"></div>
 </div>
 
-<!-- Stats Bar -->
-<div class="stats-bar" id="stats-bar"></div>
-
-<!-- Tabs -->
-<div class="tabs">
-    <button class="tab active" id="tab-list"     onclick="switchTab('list', this)">📋 كشف الطلائع</button>
-    <button class="tab"        id="tab-ranking"  onclick="switchTab('ranking', this)">🏆 الترتيب العام</button>
-    <button class="tab"        id="tab-platoons" onclick="switchTab('platoons', this)">📊 إحصاء الطلائع</button>
-    <button class="tab"        id="tab-logs"     onclick="switchTab('logs', this)">📄 سجل العمليات</button>
-</div>
-
-<!-- Content -->
-<div id="content-area"></div>
-```
-
-</div>
-
-<!-- ═══════════════════════ INFO MODAL ═══════════════════════ -->
-
-<div id="infoModal" class="modal" onclick="if(event.target===this) closeInfoModal()">
-    <div class="modal-box">
-        <button class="modal-close" onclick="closeInfoModal()">✕</button>
-        <div class="modal-title" id="modalTitle"></div>
-        <div id="modalBody"></div>
-    </div>
-</div>
-
-<!-- ═══════════════════════ PROMPT MODAL ═══════════════════════ -->
-
-<div id="promptModal" class="prompt-modal" onclick="if(event.target===this) cancelPrompt()">
+<div id="promptModal" class="prompt-modal">
     <div class="prompt-box">
-        <div class="prompt-title" id="promptTitle"></div>
-        <div class="prompt-hint" id="promptHint"></div>
-        <input class="prompt-input" id="promptInput" onkeydown="if(event.key==='Enter') confirmPrompt()">
-        <div class="prompt-actions">
-            <button class="btn btn-primary" style="flex:1" onclick="confirmPrompt()">تأكيد</button>
+        <h3 id="promptTitle"></h3>
+        <p id="promptHint" style="font-size: 12px; color: var(--text2); margin-bottom: 10px;"></p>
+        <input class="pin-input" id="promptInput" style="letter-spacing: normal; font-size: 18px;">
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-gold" style="flex:1" onclick="confirmPrompt()">تأكيد</button>
             <button class="btn btn-ghost" style="flex:1" onclick="cancelPrompt()">إلغاء</button>
         </div>
     </div>
 </div>
 
-<!-- ═══════════════════════ TOAST ═══════════════════════ -->
-
 <div id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════
-//  FIREBASE CONFIG
-// ══════════════════════════════════════════════
+// CONFIG & DATA
 const firebaseConfig = {
     apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
     authDomain: "awtad-system.firebaseapp.com",
@@ -463,549 +109,133 @@ const firebaseConfig = {
     projectId: "awtad-system"
 };
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const awtadRef = database.ref('awtad_v5_official');
+const awtadRef = firebase.database().ref('awtad_v5_official');
 
-// ══════════════════════════════════════════════
-//  CONSTANTS
-// ══════════════════════════════════════════════
 const USERS = {
-    "8429": { name: "عبدالله العرفه",    role: "admin" },
-    "5173": { name: "سلمان الصويلح",     role: "admin" },
-    "9264": { name: "معاذ الشنقيطي",     role: "admin" },
-    "3058": { name: "الوليد الحازمي",    role: "leader", pid: 1 },
-    "6712": { name: "حاتم خريزي",        role: "leader", pid: 2 },
-    "4891": { name: "راكان شراحيلي",     role: "leader", pid: 3 },
-    "2537": { name: "وضاح الصويلح",      role: "leader", pid: 4 }
+    "1111": { name: "القائد عبدالله", role: "admin" },
+    "2222": { name: "عريف طليعة 1", role: "leader", pid: "p1" }
 };
 
 const PLATOONS = [
-    { id:1, name:"طليعة 1 🦅", short:"طليعة 1", members:["صالح حبتور","حسن الشهري","ريان جعام","غازي العجمي","يزيد خال","زياد العجلاني","فهد المهيني","يحي شراحيلي","عزام خبراني"] },
-    { id:2, name:"طليعة 2 🦁", short:"طليعة 2", members:["ياسر ابو حيه","محمد عسيري","رياض الزهراني","ابراهيم التليدي","غازي العنزي","صالح الخثعمي","اصيل العتيبي","فواز الشهراني","علي الغامدي"] },
-    { id:3, name:"طليعة 3 🐯", short:"طليعة 3", members:["بسام قرادي","علي الشهراني","زايد القحطاني","راشد الراشدي","عبدالعزيز القحطاني","عيسى الرشيدي","بدر كعبي","عبدالله قشاش","حسام الشهراني"] },
-    { id:4, name:"طليعة 4 🦊", short:"طليعة 4", members:["مشعل القحطاني","مشاري القحطاني","محمد فقيه","فارس العمري","رائد حوباني","راكان حوباني","عبدالله القرني","ناصر المطيري","مبارك خميس"] }
+    { id: "p1", name: "طليعة الصقور", short: "صقور", members: ["أحمد", "خالد", "محمد"] },
+    { id: "p2", name: "طليعة الذئاب", short: "ذئاب", members: ["سعد", "فهد", "فيصل"] }
 ];
 
-const BADGE_OPTIONS = [
-    { key:"حضور",      label:"⭐ وسام الحضور" },
-    { key:"انضباط",    label:"🎖️ وسام الانضباط" },
-    { key:"قيادة",     label:"👑 وسام القيادة" },
-    { key:"تميز",      label:"🏅 وسام التميز" },
-    { key:"خدمة",      label:"🤝 وسام الخدمة" },
-    { key:"إبداع",     label:"✨ وسام الإبداع" }
-];
-
-const POINTS_PRESETS = [
-    { label:"+5  حضور", val: 5 },
-    { label:"+10 أداء مميز", val: 10 },
-    { label:"+15 إنجاز", val: 15 },
-    { label:"-5  غياب", val: -5 },
-    { label:"-10 مخالفة", val: -10 }
-];
-
-// ══════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════
 let liveData = { students: {}, logs: [] };
 let currentUser = null;
-let currentTab  = 'list';
 let promptResolve = null;
 
-// ══════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════
-function getPlatoonOfStudent(name) {
-    for (const p of PLATOONS) if (p.members.includes(name)) return p;
-    return null;
-}
-function canEditStudent(name) {
-    if (!currentUser) return false;
-    if (currentUser.role === 'admin') return true;
-    const p = getPlatoonOfStudent(name);
-    return p && p.id === currentUser.pid;
-}
-function getStudent(name) {
-    return liveData.students?.[name] || { pts: 0, badges: [], phone: "غير مسجل", s_id: "-" };
-}
-function safeSet(data) {
-    return awtadRef.set(data).catch(err => showToast("خطأ في الحفظ: " + err.message, 'error'));
-}
-function nowAR() {
-    return new Date().toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' });
-}
-function pushLog(target, val, reason) {
-    if (!Array.isArray(liveData.logs)) liveData.logs = [];
-    liveData.logs.unshift({
-        admin: currentUser.name,
-        target, val, reason,
-        time: nowAR()
-    });
-    if (liveData.logs.length > 200) liveData.logs = liveData.logs.slice(0, 200);
-}
-
-// ══════════════════════════════════════════════
-//  TOAST
-// ══════════════════════════════════════════════
-let toastTimer;
-function showToast(msg, type = '') {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.className = 'show ' + type;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { el.className = ''; }, 3000);
-}
-
-// ══════════════════════════════════════════════
-//  PROMPT MODAL (replaces browser prompt)
-// ══════════════════════════════════════════════
-function showPrompt(title, hint = '', defaultVal = '', inputType = 'text') {
-    return new Promise(resolve => {
-        promptResolve = resolve;
-        document.getElementById('promptTitle').textContent = title;
-        document.getElementById('promptHint').textContent = hint;
-        const inp = document.getElementById('promptInput');
-        inp.value = defaultVal;
-        inp.type = inputType;
-        document.getElementById('promptModal').classList.add('show');
-        setTimeout(() => inp.focus(), 100);
-    });
-}
-function confirmPrompt() {
-    const val = document.getElementById('promptInput').value.trim();
-    document.getElementById('promptModal').classList.remove('show');
-    if (promptResolve) { promptResolve(val); promptResolve = null; }
-}
-function cancelPrompt() {
-    document.getElementById('promptModal').classList.remove('show');
-    if (promptResolve) { promptResolve(null); promptResolve = null; }
-}
-
-// ══════════════════════════════════════════════
-//  LOGIN
-// ══════════════════════════════════════════════
+// APP LOGIC
 function handleLogin() {
-    const pin = document.getElementById('access-pin').value.trim();
+    const pin = document.getElementById('access-pin').value;
     const user = USERS[pin];
-    if (!user) {
-        document.getElementById('login-error').textContent = '❌ الرمز غير صحيح، حاول مرة أخرى';
-        document.getElementById('access-pin').value = '';
-        return;
+    if (user) {
+        currentUser = user;
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        document.getElementById('user-display').innerHTML = `<b>${user.name}</b> <br> <small>${user.role}</small>`;
+        if(user.role === 'admin') document.getElementById('admin-btns').style.display = 'flex';
+        initSync();
+    } else {
+        document.getElementById('login-error').innerText = "الرمز خطأ يا بطل";
     }
-    currentUser = user;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main-app').style.display = 'block';
-    document.getElementById('user-display').textContent = currentUser.name;
-    document.getElementById('user-role-display').textContent = currentUser.role === 'admin' ? '🔑 مسؤول النظام' : '📋 قائد طليعة';
+}
 
-    const adminBtns = document.getElementById('admin-btns');
-    if (currentUser.role === 'admin') adminBtns.style.display = 'flex';
-
-    awtadRef.on('value', snap => {
-        const raw = snap.val() || {};
-        liveData = {
-            students: raw.students && typeof raw.students === 'object' ? raw.students : {},
-            logs: Array.isArray(raw.logs) ? raw.logs : []
-        };
-        renderStats();
+function initSync() {
+    awtadRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) liveData = data;
         render();
     });
 }
 
-function confirmLogout() {
-    if (confirm('تأكيد الخروج من النظام؟')) location.reload();
-}
-
-// ══════════════════════════════════════════════
-//  STATS BAR
-// ══════════════════════════════════════════════
-function renderStats() {
-    let totalStudents = 0, totalPts = 0, totalBadges = 0, activeToday = 0;
-    PLATOONS.forEach(p => {
-        p.members.forEach(m => {
-            totalStudents++;
-            const s = getStudent(m);
-            totalPts += (s.pts || 0);
-            totalBadges += (s.badges?.length || 0);
-        });
-    });
-    const logsToday = (liveData.logs || []).filter(l => {
-        try { return new Date(l.time).toDateString() === new Date().toDateString(); } catch { return false; }
-    }).length;
-
-    document.getElementById('stats-bar').innerHTML = `
-        <div class="stat-card">
-            <div class="stat-num">${totalStudents}</div>
-            <div class="stat-label">عدد الكشافة</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-num">${totalPts.toLocaleString()}</div>
-            <div class="stat-label">مجموع النقاط</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-num">${totalBadges}</div>
-            <div class="stat-label">الأوسمة الممنوحة</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-num">${liveData.logs.length}</div>
-            <div class="stat-label">إجمالي العمليات</div>
-        </div>
-    `;
-}
-
-// ══════════════════════════════════════════════
-//  TABS
-// ══════════════════════════════════════════════
-function switchTab(tab, el) {
-    currentTab = tab;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    if (el) el.classList.add('active');
-    render();
-}
-
-// ══════════════════════════════════════════════
-//  RENDER
-// ══════════════════════════════════════════════
 function render() {
     const area = document.getElementById('content-area');
     area.innerHTML = '';
-    if (currentTab === 'list')     renderList(area);
-    else if (currentTab === 'ranking')   renderRanking(area);
-    else if (currentTab === 'platoons')  renderPlatoons(area);
-    else if (currentTab === 'logs')      renderLogs(area);
-}
-
-// ─── LIST ───────────────────────────────────
-function renderList(area) {
-    // Search bar
-    area.innerHTML += `<input class="search-bar" id="search-input" placeholder="🔍 ابحث عن كشاف..." oninput="filterStudents(this.value)">`;
-
-    const wrapper = document.createElement('div');
-    wrapper.id = 'students-wrapper';
-    area.appendChild(wrapper);
-    renderStudents('');
-}
-
-function renderStudents(query) {
-    const wrapper = document.getElementById('students-wrapper');
-    if (!wrapper) return;
-    wrapper.innerHTML = '';
-    const q = query.trim().toLowerCase();
-
-    let found = false;
+    
+    // Default: List view
     PLATOONS.forEach(p => {
-        // Filter: leaders only see their platoon
-        if (currentUser.role !== 'admin' && currentUser.pid !== p.id) return;
+        const pHeader = document.createElement('h3');
+        pHeader.innerText = p.name;
+        pHeader.style.margin = "15px 0";
+        area.appendChild(pHeader);
 
-        const matching = p.members.filter(m => !q || m.toLowerCase().includes(q));
-        if (matching.length === 0) return;
-        found = true;
-
-        let html = `<div class="card">
-            <div class="card-header">
-                <div class="card-title">🏕️ ${p.name}</div>
-                <span class="platoon-count">${matching.length} كشاف</span>
-            </div>`;
-
-        matching.forEach(m => {
-            const s = getStudent(m);
-            const pts = s.pts || 0;
-            const ptsClass = pts < 0 ? 'pts-negative' : '';
-            const canEdit = canEditStudent(m);
-            const badgesHtml = (s.badges || []).map(b => `<span class="badge-tag">⭐ ${b}</span>`).join('');
-
-            html += `<div class="student-row" id="row-${CSS.escape(m)}">
-                <div style="flex:1; min-width:0;">
-                    <div class="student-name">${m}</div>
-                    <div class="student-meta">🪪 ${s.s_id || '-'} &nbsp;|&nbsp; 📞 ${s.phone || 'غير مسجل'}</div>
-                    ${badgesHtml ? `<div class="student-badges">${badgesHtml}</div>` : ''}
-                </div>
-                <div style="text-align:center; margin: 0 12px;">
-                    <div class="pts-display ${ptsClass}">${pts}</div>
-                    <div class="pts-label">نقطة</div>
-                </div>
-                ${canEdit ? `
-                <div class="student-actions">
-                    <button class="btn btn-primary btn-sm" onclick="doAddPoints('${m}')">+ نقاط</button>
-                    <button class="btn btn-gold btn-sm"    onclick="doEditData('${m}')">تعديل</button>
-                    <button class="btn btn-ghost btn-sm"   onclick="showInfo('${m}')">معلومات</button>
-                    <button class="btn btn-danger btn-xs"  onclick="doResetOne('${m}')">تصفير</button>
-                </div>` : `
-                <div class="student-actions">
-                    <button class="btn btn-ghost btn-sm" onclick="showInfo('${m}')">معلومات</button>
-                </div>`}
-            </div>`;
-        });
-
-        wrapper.innerHTML += html + '</div>';
-    });
-
-    if (!found) {
-        wrapper.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div>لا توجد نتائج لـ "${query}"</div></div>`;
-    }
-}
-
-function filterStudents(val) {
-    renderStudents(val);
-}
-
-// ─── RANKING ────────────────────────────────
-function renderRanking(area) {
-    let list = [];
-    PLATOONS.forEach(p => {
         p.members.forEach(m => {
-            list.push({ name: m, pts: getStudent(m).pts || 0, platoon: p.short });
-        });
-    });
-    list.sort((a, b) => b.pts - a.pts);
-
-    const maxPts = list[0]?.pts || 1;
-    const medals = ['🥇','🥈','🥉'];
-
-    let html = `<div class="card"><div class="card-header"><div class="card-title">🏆 الترتيب العام — الكشافة الـ ${list.length}</div></div>`;
-
-    list.forEach((st, i) => {
-        const rankClass = i < 3 ? `rank-${i+1}` : 'rank-other';
-        const medal = i < 3 ? medals[i] : '';
-        const pct = maxPts > 0 ? Math.max(0, (st.pts / maxPts) * 100) : 0;
-        html += `<div class="rank-row">
-            <div class="rank-num ${rankClass}">${medal || (i+1)}</div>
-            <div class="rank-info">
-                <div class="rank-name">${st.name}</div>
-                <div class="rank-platoon">${st.platoon}</div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-            </div>
-            <div class="rank-pts">${st.pts.toLocaleString()}</div>
-        </div>`;
-    });
-
-    area.innerHTML = html + '</div>';
-}
-
-// ─── PLATOONS STATS ─────────────────────────
-function renderPlatoons(area) {
-    let html = '<div class="card"><div class="card-header"><div class="card-title">📊 إحصاء الطلائع</div></div>';
-
-    let platoonStats = PLATOONS.map(p => {
-        const total = p.members.reduce((s, m) => s + (getStudent(m).pts || 0), 0);
-        const avg = total / p.members.length;
-        const badges = p.members.reduce((s, m) => s + (getStudent(m).badges?.length || 0), 0);
-        const leader = { 1:"الوليد الحازمي", 2:"حاتم خريزي", 3:"راكان شراحيلي", 4:"وضاح الصويلح" }[p.id] || '-';
-        return { ...p, total, avg, badges, leader };
-    });
-
-    // Sort by total
-    platoonStats.sort((a, b) => b.total - a.total);
-    const maxTotal = platoonStats[0]?.total || 1;
-
-    platoonStats.forEach((p, i) => {
-        const medals = ['🥇','🥈','🥉','🏅'];
-        const pct = maxTotal > 0 ? (p.total / maxTotal) * 100 : 0;
-        html += `<div class="rank-row" style="flex-direction:column; align-items:stretch; padding:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            const s = liveData.students?.[m] || { pts: 0 };
+            const row = document.createElement('div');
+            row.className = 'student-row';
+            row.innerHTML = `
+                <span>${m} (<b>${s.pts}</b> ن)</span>
                 <div>
-                    <span style="font-size:22px; margin-left:8px;">${medals[i]}</span>
-                    <span style="font-weight:800; font-size:16px;">${p.name}</span>
-                    <span style="font-size:12px; color:var(--text2); margin-right:8px;">| قائد: ${p.leader}</span>
+                    <button class="btn btn-gold" onclick="addPts('${m}')">+</button>
+                    <button class="btn btn-danger" onclick="resetPts('${m}')">🔄</button>
                 </div>
-                <div style="text-align:left;">
-                    <div style="font-size:22px; font-weight:900; color:var(--gold2);">${p.total.toLocaleString()} <span style="font-size:13px; color:var(--text2);">نقطة</span></div>
-                </div>
-            </div>
-            <div class="progress-bar" style="height:6px; margin-bottom:10px;"><div class="progress-fill" style="width:${pct}%"></div></div>
-            <div style="display:flex; gap:20px; font-size:13px; color:var(--text2);">
-                <span>👥 ${p.members.length} كشاف</span>
-                <span>📈 متوسط: ${p.avg.toFixed(1)}</span>
-                <span>⭐ ${p.badges} وسام</span>
-            </div>
-        </div>`;
+            `;
+            area.appendChild(row);
+        });
     });
-
-    area.innerHTML = html + '</div>';
 }
 
-// ─── LOGS ───────────────────────────────────
-function renderLogs(area) {
-    const logs = liveData.logs || [];
-    let html = `<div class="card">
-        <div class="card-header">
-            <div class="card-title">📄 سجل العمليات</div>
-            <span class="platoon-count">${logs.length} عملية</span>
-        </div>`;
+function addPts(name) {
+    showPrompt(`إضافة نقاط لـ ${name}`, "أدخل عدد النقاط").then(val => {
+        if (!val) return;
+        if (!liveData.students) liveData.students = {};
+        if (!liveData.students[name]) liveData.students[name] = { pts: 0 };
+        liveData.students[name].pts += parseInt(val);
+        pushLog(name, val, "تعديل يدوي");
+        awtadRef.set(liveData);
+        showToast("تم التحديث ✅");
+    });
+}
 
-    if (logs.length === 0) {
-        html += `<div class="empty-state"><div class="empty-icon">📭</div><div>لا توجد عمليات مسجلة بعد</div></div>`;
+function resetPts(name) {
+    if(confirm(`تصفير نقاط ${name}؟`)) {
+        liveData.students[name].pts = 0;
+        awtadRef.set(liveData);
+    }
+}
+
+function pushLog(target, val, reason) {
+    if (!liveData.logs) liveData.logs = [];
+    liveData.logs.unshift({ admin: currentUser.name, target, val, reason, time: new Date().toLocaleString('ar-SA') });
+}
+
+function switchTab(tab, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    // هنا تضيف منطق عرض الترتيب أو السجلات
+    if(tab === 'logs') {
+        const area = document.getElementById('content-area');
+        area.innerHTML = liveData.logs?.map(l => `<div class='student-row' style='font-size:12px'>${l.time}: ${l.admin} عدل لـ ${l.target} (${l.val})</div>`).join('') || 'لا سجلات';
     } else {
-        logs.slice(0, 60).forEach(l => {
-            const isPos = String(l.val).startsWith('+') || Number(l.val) > 0;
-            const valClass = isPos ? 'log-val-pos' : 'log-val-neg';
-            html += `<div class="log-item">
-                <div class="log-header">
-                    <span><span class="log-admin">${l.admin}</span> → <span class="log-target">${l.target}</span></span>
-                    <span class="${valClass}">${l.val}</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div class="log-reason">💬 ${l.reason}</div>
-                    <div class="log-time">🕐 ${l.time}</div>
-                </div>
-            </div>`;
-        });
+        render();
     }
-
-    area.innerHTML = html + '</div>';
 }
 
-// ══════════════════════════════════════════════
-//  ACTIONS
-// ══════════════════════════════════════════════
-async function doAddPoints(name) {
-    if (!canEditStudent(name)) return showToast('ليس لديك صلاحية', 'error');
-
-    // Show presets
-    let presetHtml = `<div class="card" style="position:fixed; z-index:400; bottom:20px; left:50%; transform:translateX(-50%); width:90%; max-width:380px; animation:modalIn 0.2s ease;">
-        <div class="card-header"><div class="card-title">إضافة / خصم نقاط — ${name}</div><button class="btn btn-ghost btn-xs" onclick="document.getElementById('preset-popup').remove()">✕</button></div>
-        <div class="section-label">اختر سريعاً:</div>
-        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;">
-            ${POINTS_PRESETS.map(p => `<button class="btn btn-${p.val>0?'success':'danger'} btn-sm" onclick="applyPreset('${name}', ${p.val}, document.getElementById('preset-popup'))">${p.label}</button>`).join('')}
-        </div>
-        <div class="section-label">أو أدخل يدوياً:</div>
-        <div style="display:flex; gap:8px; align-items:center;">
-            <input class="prompt-input" id="custom-pts-input" type="number" placeholder="مثال: 10 أو -5" style="flex:1; margin:0;">
-            <button class="btn btn-primary" onclick="applyCustomPts('${name}', document.getElementById('preset-popup'))">تأكيد</button>
-        </div>
-    </div>`;
-
-    let popup = document.createElement('div');
-    popup.id = 'preset-popup';
-    popup.innerHTML = presetHtml;
-    document.body.appendChild(popup);
-    // move inner card out
-    const inner = popup.querySelector('.card');
-    popup.appendChild(inner);
-    setTimeout(() => document.getElementById('custom-pts-input')?.focus(), 100);
-}
-
-async function applyPreset(name, val, popup) {
-    const reason = await showPrompt(`سبب التعديل على ${name}`, `${val > 0 ? '+' : ''}${val} نقطة`);
-    if (popup) popup.remove();
-    if (reason === null || reason === '') { showToast('تم الإلغاء', ''); return; }
-    applyPoints(name, val, reason);
-}
-
-async function applyCustomPts(name, popup) {
-    const raw = document.getElementById('custom-pts-input')?.value;
-    const val = parseInt(raw);
-    if (isNaN(val) || val === 0) { showToast('أدخل رقماً صحيحاً', 'error'); return; }
-    const reason = await showPrompt(`سبب التعديل على ${name}`, `${val > 0 ? '+' : ''}${val} نقطة`);
-    if (popup) popup.remove();
-    if (reason === null || reason === '') { showToast('تم الإلغاء', ''); return; }
-    applyPoints(name, val, reason);
-}
-
-function applyPoints(name, val, reason) {
-    if (!liveData.students[name]) liveData.students[name] = { pts: 0, badges: [], phone: "-", s_id: "-" };
-    liveData.students[name].pts = (liveData.students[name].pts || 0) + val;
-    pushLog(name, val > 0 ? `+${val}` : String(val), reason);
-    safeSet(liveData).then(() => showToast(`✅ تم: ${val > 0 ? '+' : ''}${val} نقطة لـ ${name}`, 'success'));
-}
-
-async function doEditData(name) {
-    if (!canEditStudent(name)) return showToast('ليس لديك صلاحية', 'error');
-    const s = getStudent(name);
-    if (!liveData.students[name]) liveData.students[name] = { pts: 0, badges: [], phone: "-", s_id: "-" };
-
-    const newID = await showPrompt('رقم الطالب', 'اتركه فارغاً للإبقاء على القيم الحالية', s.s_id === '-' ? '' : s.s_id);
-    if (newID === null) return;
-
-    const newPH = await showPrompt('رقم الجوال', '', s.phone === 'غير مسجل' ? '' : s.phone);
-    if (newPH === null) return;
-
-    const badgeLabels = BADGE_OPTIONS.map(b => b.label).join('\n');
-    const badgePick = await showPrompt('منح وسام (اختياري)', BADGE_OPTIONS.map(b => b.key).join(' - '));
-
-    if (newID.trim()) liveData.students[name].s_id = newID.trim();
-    if (newPH.trim()) liveData.students[name].phone = newPH.trim();
-
-    if (badgePick && badgePick.trim()) {
-        const match = BADGE_OPTIONS.find(b => b.key === badgePick.trim() || b.label.includes(badgePick.trim()));
-        if (match) {
-            if (!liveData.students[name].badges) liveData.students[name].badges = [];
-            if (!liveData.students[name].badges.includes(match.key)) {
-                liveData.students[name].badges.push(match.key);
-                pushLog(name, 'وسام', `منح وسام: ${match.key}`);
-                showToast(`⭐ وسام "${match.key}" ممنوح لـ ${name}`, 'success');
-            } else {
-                showToast('الوسام ممنوح سابقاً', '');
-            }
-        } else {
-            showToast('اسم الوسام غير صحيح، لم يُضف', 'error');
-        }
-    }
-
-    safeSet(liveData).then(() => showToast('✅ تم حفظ بيانات ' + name, 'success'));
-}
-
-function doResetOne(name) {
-    if (!canEditStudent(name)) return showToast('ليس لديك صلاحية', 'error');
-    if (!confirm(`⚠️ هل أنت متأكد من تصفير نقاط ${name}؟\n(لن يُحذف السجل أو الأوسمة)`)) return;
-    if (!liveData.students[name]) return;
-    const old = liveData.students[name].pts;
-    liveData.students[name].pts = 0;
-    pushLog(name, `تصفير (كان ${old})`, 'تصفير يدوي');
-    safeSet(liveData).then(() => showToast(`🔄 تم تصفير نقاط ${name}`, ''));
-}
-
-// ── INFO MODAL ──
-function showInfo(name) {
-    const s = getStudent(name);
-    const platoon = getPlatoonOfStudent(name);
-    const badgesHtml = (s.badges || []).length
-        ? s.badges.map(b => `<span class="badge-tag">⭐ ${b}</span>`).join(' ')
-        : '<span style="color:var(--text2)">لا يوجد</span>';
-
-    document.getElementById('modalTitle').textContent = name;
-    document.getElementById('modalBody').innerHTML = `
-        <div class="info-row"><span class="info-label">الطليعة</span><span class="info-val">${platoon?.short || '-'}</span></div>
-        <div class="info-row"><span class="info-label">رقم الطالب</span><span class="info-val">${s.s_id || '-'}</span></div>
-        <div class="info-row"><span class="info-label">رقم الجوال</span><span class="info-val">${s.phone || 'غير مسجل'}</span></div>
-        <div class="info-row"><span class="info-label">إجمالي النقاط</span><span class="info-val" style="color:var(--gold2); font-size:20px;">${s.pts || 0}</span></div>
-        <div class="info-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
-            <span class="info-label">الأوسمة</span>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">${badgesHtml}</div>
-        </div>
-    `;
-    document.getElementById('infoModal').classList.add('show');
-}
-function closeInfoModal() { document.getElementById('infoModal').classList.remove('show'); }
-
-// ── FULL RESET (admin only) ──
-function confirmFullReset() {
-    if (currentUser.role !== 'admin') return;
-    const code = prompt('أدخل كلمة التأكيد: RESET');
-    if (code !== 'RESET') { showToast('تم الإلغاء', ''); return; }
-    awtadRef.set({
-        students: {},
-        logs: [{ admin: currentUser.name, target: 'النظام', val: 'تصفير عام', reason: 'بداية عام جديد', time: nowAR() }]
-    }).then(() => showToast('✅ تم تصفير النظام', 'success'));
-}
-
-// ── EXPORT ──
-function exportWhatsApp() {
-    const date = new Date().toLocaleDateString('ar-SA');
-    let t = `*🛡️ تقرير نظام أوتاد الكشفي*\n📅 ${date}\n${'─'.repeat(30)}\n`;
-
-    PLATOONS.forEach(p => {
-        const total = p.members.reduce((s, m) => s + (getStudent(m).pts || 0), 0);
-        t += `\n*${p.name}* — مجموع: ${total} نقطة\n`;
-        const sorted = [...p.members].sort((a,b) => (getStudent(b).pts||0) - (getStudent(a).pts||0));
-        sorted.forEach((m, i) => {
-            t += `${i+1}. ${m}: ${getStudent(m).pts||0} نقطة\n`;
-        });
+// PROMPT MODAL HELPER
+function showPrompt(title, hint) {
+    return new Promise(resolve => {
+        promptResolve = resolve;
+        document.getElementById('promptTitle').innerText = title;
+        document.getElementById('promptHint').innerText = hint;
+        document.getElementById('promptModal').classList.add('show');
     });
+}
+function confirmPrompt() {
+    const v = document.getElementById('promptInput').value;
+    document.getElementById('promptModal').classList.remove('show');
+    if(promptResolve) promptResolve(v);
+}
+function cancelPrompt() {
+    document.getElementById('promptModal').classList.remove('show');
+    if(promptResolve) promptResolve(null);
+}
 
-    t += `\n${'─'.repeat(30)}\n📊 أُعدّ بواسطة نظام أوتاد`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(t)}`);
+function showToast(m) {
+    const t = document.getElementById('toast');
+    t.innerText = m; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
 }
 </script>
-
 </body>
 </html>
