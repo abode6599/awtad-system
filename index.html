@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة أوتاد الكشفية - النسخة السيادية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>نظام أوتاد - الإصدار القيادي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        :root { --primary: #2563eb; --success: #16a34a; --danger: #dc2626; --bg: #0f172a; --card: #1e293b; }
+        :root { --primary: #3b82f6; --success: #22c55e; --danger: #ef4444; --bg: #0f172a; --card: #1e293b; }
         * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
-        body { margin: 0; background: var(--bg); color: white; direction: rtl; padding-bottom: 50px; }
-        .container { max-width: 700px; margin: auto; padding: 15px; }
-        .header-main { background: var(--card); padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary); margin-bottom: 15px; text-align: center; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
-        .stat-box { background: var(--card); padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #334155; }
-        .stat-val { display: block; font-size: 18px; font-weight: bold; color: var(--primary); }
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #334155; }
-        .platoon-header { color: var(--primary); font-weight: 700; border-right: 4px solid var(--primary); padding-right: 10px; margin: 0 0 15px; display: flex; justify-content: space-between; }
-        .member-row { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #334155; }
-        .controls { display: flex; gap: 8px; align-items: center; }
-        input, select, textarea { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; font-size: 14px; }
-        .btn-info { background: #475569; width: 35px; height: 35px; border-radius: 6px; border: none; cursor: pointer; color: white; }
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
-        .modal-content { background: var(--card); width: 100%; max-width: 500px; padding: 20px; border-radius: 15px; max-height: 90vh; overflow-y: auto; }
-        .badge-pill { background: #2563eb33; border: 1px solid var(--primary); font-size: 10px; padding: 2px 6px; border-radius: 4px; margin: 2px; display: inline-block; }
+        body { margin: 0; background: var(--bg); color: #f8fafc; direction: rtl; padding: 10px; }
+        .container { max-width: 600px; margin: auto; }
+        .header-box { background: var(--card); padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary); text-align: center; margin-bottom: 15px; }
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+        .stat-item { background: var(--card); padding: 10px; border-radius: 10px; text-align: center; font-size: 12px; border: 1px solid #334155; }
+        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; }
+        .platoon-title { color: var(--primary); font-weight: bold; border-right: 4px solid var(--primary); padding-right: 10px; margin-bottom: 15px; font-size: 16px; }
+        .member-row { display: flex; align-items: center; justify-content: space-between; background: #ffffff05; padding: 12px; border-radius: 10px; margin-bottom: 8px; }
+        .badge-tag { font-size: 9px; background: var(--primary); padding: 1px 5px; border-radius: 4px; margin-left: 3px; }
+        .controls { display: flex; gap: 5px; }
+        select { background: #334155; color: white; border: none; padding: 5px; border-radius: 5px; font-size: 12px; }
+        .btn-tool { background: #475569; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        .modal-content { background: var(--card); width: 100%; max-width: 450px; padding: 20px; border-radius: 15px; max-height: 85vh; overflow-y: auto; }
+        input { width: 100%; padding: 10px; background: #334155; border: 1px solid #475569; color: white; border-radius: 8px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -36,148 +36,110 @@
 
         const CONFIG = {
             admins: { "333": "عبدالله العرفه", "202021": "سلمان الصويلح", "202030": "معاذ الشنقيطي" },
-            leaders: [
-                { id: "L1", name: "الوليد الحازمي", title: "قائد طليعة 1", pId: 1 },
-                { id: "L2", name: "حاتم خريزي", title: "قائد طليعة 2", pId: 2 },
-                { id: "L3", name: "راكان شراحيلي", title: "قائد طليعة 3", pId: 3 },
-                { id: "L4", name: "وضاح الصويلح", title: "قائد طليعة 4", pId: 4 }
-            ],
             platoons: [
                 { id: 1, name: "طليعة 1", members: ["صالح حبتور", "حسن الشهري", "ريان جعام", "غازي العجمي", "يزيد خال", "زياد العجلاني", "فهد المهيني", "يحي شراحيلي", "عزام خبراني"] },
                 { id: 2, name: "طليعة 2", members: ["ياسر ابو حيه", "محمد عسيري", "رياض الزهراني", "ابراهيم التليدي", "غازي العنزي", "صالح الخثعمي", "اصيل العتيبي", "فواز الشهراني", "علي الغامدي"] },
                 { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
                 { id: 4, name: "طليعة 4", members: ["مشعل القحطاني", "مشاري القحطاني", "محمد فقيه", "فارس العمري", "رائد حوباني", "راكان حوباني", "عبدالله القرني", "ناصر المطيري", "مبارك خميس"] }
             ],
-            badgesList: ["وسام الخدمة", "وسام الهواية", "وسام الرياضي", "وسام المسامر", "وسام البيئة"],
-            behavior: { excellence: ["انضباط مثالي", "مبادرة", "هندام متكامل"], violations: ["تأخر", "إهمال هندام", "عدم انضباط"] }
+            leaders: ["الوليد الحازمي (ق1)", "حاتم خريزي (ق2)", "راكان شراحيلي (ق3)", "وضاح الصويلح (ق4)"],
+            badges: ["وسام الخدمة", "وسام الهواية", "وسام الرياضي", "وسام المسامر"]
         };
 
         function App() {
             const [user, setUser] = useState(null);
             const [pin, setPin] = useState("");
-            const [db, setDb] = useState({});
+            const [data, setData] = useState({});
             const [editId, setEditId] = useState(null);
 
             useEffect(() => {
-                const saved = localStorage.getItem("awtad_pro_v16");
-                if (saved) setDb(JSON.parse(saved));
+                const saved = localStorage.getItem("awtad_v17");
+                if (saved) setData(JSON.parse(saved));
             }, []);
 
-            const updateDb = (id, field, val) => {
-                const newDb = { ...db, [id]: { ...(db[id] || { badges: [], logs: [] }), [field]: val } };
-                setDb(newDb);
-                localStorage.setItem("awtad_pro_v16", JSON.stringify(newDb));
-            };
-
-            const toggleBadge = (id, badge) => {
-                let current = db[id]?.badges || [];
-                if (current.includes(badge)) current = current.filter(b => b !== badge);
-                else current = [...current, badge];
-                updateDb(id, "badges", current);
+            const save = (id, field, val) => {
+                const updated = { ...data, [id]: { ...(data[id] || { badges: [] }), [field]: val } };
+                setData(updated);
+                localStorage.setItem("awtad_v17", JSON.stringify(updated));
             };
 
             if (!user) return (
-                <div className="container" style={{paddingTop: "20vh"}}>
-                    <div className="header-main"><h1>نظام أوتاد الكشفي</h1></div>
-                    <div className="card">
-                        <input type="password" placeholder="رمز الدخول" value={pin} onChange={e => setPin(e.target.value)} />
-                        <button onClick={() => CONFIG.admins[pin] ? setUser({id: pin, name: CONFIG.admins[pin], role: 'admin'}) : alert("خطأ")}>دخول</button>
-                    </div>
+                <div className="container" style={{paddingTop: '80px'}}>
+                    <div className="header-box"><h2>نظام أوتاد الكشفي</h2><p>الدخول للقيادة العليا</p></div>
+                    <input type="password" placeholder="رمز الدخول" value={pin} onChange={e=>setPin(e.target.value)} />
+                    <button style={{width:'100%', padding:'12px', background:var(--primary), border:'none', color:'white', borderRadius:'10px'}} onClick={() => CONFIG.admins[pin] ? setUser({id: pin, name: CONFIG.admins[pin]}) : alert("خطأ")}>دخول</button>
                 </div>
             );
 
             return (
                 <div className="container">
-                    <div className="header-main">
+                    <div className="header-box">
                         <h3>{user.name}</h3>
-                        <p>لوحة التحكم العليا</p>
+                        <p>عريف أول الوحدة - مدرسة القاسم</p>
                     </div>
 
-                    <div className="stats-grid">
-                        <div className="stat-box"><span className="stat-val">40</span>أعضاء</div>
-                        <div className="stat-box"><span className="stat-val">4</span>طلايع</div>
-                        <div className="stat-box"><span className="stat-val">100%</span>نشط</div>
+                    <div className="stats-row">
+                        <div className="stat-item"><b>40</b><br/>كشاف</div>
+                        <div className="stat-item"><b>4</b><br/>طلايع</div>
+                        <div className="stat-item"><b>نشط</b><br/>الحالة</div>
                     </div>
 
-                    {/* قسم إدارة القادة */}
-                    <div className="card" style={{borderRight: "4px solid var(--danger)"}}>
-                        <h4 className="platoon-header">إدارة قادة الطلايع</h4>
+                    <div className="card" style={{borderColor: var(--danger)}}>
+                        <div className="platoon-title" style={{color: var(--danger), borderColor: var(--danger)}}>قادة الطلايع</div>
                         {CONFIG.leaders.map(l => (
-                            <div key={l.id} className="member-row">
-                                <div>
-                                    <div style={{fontWeight: 'bold'}}>{l.name}</div>
-                                    <div style={{fontSize: '10px', color: '#94a3b8'}}>{l.title}</div>
-                                </div>
-                                <div className="controls">
-                                    <button className="btn-info" onClick={() => setEditId(l.id)}>ℹ️</button>
-                                </div>
+                            <div key={l} className="member-row">
+                                <span>{data[l]?.name || l}</span>
+                                <button className="btn-tool" onClick={() => setEditId(l)}>ℹ️</button>
                             </div>
                         ))}
                     </div>
 
-                    {/* عرض الطلايع */}
                     {CONFIG.platoons.map(p => (
                         <div key={p.id} className="card">
-                            <h4 className="platoon-header">{p.name}</h4>
+                            <div className="platoon-title">{p.name}</div>
                             {p.members.map(m => (
                                 <div key={m} className="member-row">
                                     <div style={{flex: 1}}>
-                                        <div>{db[m]?.name || m}</div>
-                                        <div>{(db[m]?.badges || []).map(b => <span key={b} className="badge-pill">{b}</span>)}</div>
+                                        <div>{data[m]?.name || m}</div>
+                                        <div>{(data[m]?.badges || []).map(b => <span key={b} className="badge-tag">{b}</span>)}</div>
                                     </div>
                                     <div className="controls">
-                                        <select onChange={(e) => updateDb(m, "status", e.target.value)} value={db[m]?.status || "حاضر"}>
-                                            <option>حاضر</option>
-                                            <option>غائب</option>
-                                            <option>متأخر</option>
+                                        <select onChange={e => save(m, "status", e.target.value)} value={data[m]?.status || "حاضر"}>
+                                            <option>حاضر</option><option>غائب</option><option>متأخر</option>
                                         </select>
-                                        <button className="btn-info" onClick={() => setEditId(m)}>ℹ️</button>
+                                        <button className="btn-tool" onClick={() => setEditId(m)}>ℹ️</button>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ))}
 
-                    {/* نافذة التعديل والمعلومات (الخزانة والسجل) */}
                     {editId && (
                         <div className="modal">
                             <div className="modal-content">
-                                <h3>الملف الكشفي: {db[editId]?.name || editId}</h3>
+                                <h3>ملف: {data[editId]?.name || editId}</h3>
                                 <label>الاسم الرسمي</label>
-                                <input value={db[editId]?.name || (CONFIG.leaders.find(l=>l.id===editId)?.name || editId)} onChange={e => updateDb(editId, "name", e.target.value)} />
-                                
+                                <input value={data[editId]?.name || editId} onChange={e => save(editId, "name", e.target.value)} />
                                 <label>رقم الهوية</label>
-                                <input placeholder="10 أرقام" value={db[editId]?.nationalId || ""} onChange={e => updateDb(editId, "nationalId", e.target.value)} />
-                                
+                                <input placeholder="10 أرقام" value={data[editId]?.idNum || ""} onChange={e => save(editId, "idNum", e.target.value)} />
                                 <label>رقم الجوال</label>
-                                <input placeholder="05xxxx" value={db[editId]?.phone || ""} onChange={e => updateDb(editId, "phone", e.target.value)} />
-
-                                <hr style={{borderColor: '#334155', margin: '15px 0'}} />
-                                <h4>خزانة الأوسمة</h4>
-                                <div style={{display: 'flex', flexWrap: 'wrap', gap: '5px'}}>
-                                    {CONFIG.badgesList.map(b => (
-                                        <button key={b} 
-                                                style={{width: 'auto', fontSize: '11px', background: db[editId]?.badges?.includes(b) ? var(--success) : '#334155'}}
-                                                onClick={() => toggleBadge(editId, b)}>{b}</button>
+                                <input placeholder="05xxxx" value={data[editId]?.phone || ""} onChange={e => save(editId, "phone", e.target.value)} />
+                                
+                                <h4>الأوسمة</h4>
+                                <div style={{display:'flex', flexWrap:'wrap', gap:'5px'}}>
+                                    {CONFIG.badges.map(b => (
+                                        <button key={b} style={{fontSize:'10px', padding:'5px', background: data[editId]?.badges?.includes(b) ? var(--success) : '#334155', color:'white', border:'none', borderRadius:'5px'}}
+                                                onClick={() => {
+                                                    let bgs = data[editId]?.badges || [];
+                                                    bgs = bgs.includes(b) ? bgs.filter(x => x !== b) : [...bgs, b];
+                                                    save(editId, "badges", bgs);
+                                                }}>{b}</button>
                                     ))}
                                 </div>
-
-                                <hr style={{borderColor: '#334155', margin: '15px 0'}} />
-                                <h4>سجل السلوك</h4>
-                                <select onChange={e => updateDb(editId, "logs", [...(db[editId]?.logs || []), {t: e.target.value, d: new Date().toLocaleDateString()}])}>
-                                    <option value="">رصد تميز/مخالفة...</option>
-                                    <optgroup label="تميز">{CONFIG.behavior.excellence.map(x => <option key={x} value={x}>{x}</option>)}</optgroup>
-                                    <optgroup label="مخالفة">{CONFIG.behavior.violations.map(v => <option key={v} value={v}>{v}</option>)}</optgroup>
-                                </select>
-                                <div style={{maxHeight: '100px', overflowY: 'auto', fontSize: '11px', color: '#94a3b8'}}>
-                                    {(db[editId]?.logs || []).map((l, i) => <div key={i}>• {l.d}: {l.t}</div>)}
-                                </div>
-
-                                <button onClick={() => setEditId(null)} style={{marginTop: '20px', background: var(--success)}}>حفظ وإغلاق</button>
+                                <button onClick={() => setEditId(null)} style={{marginTop:'20px', width:'100%', padding:'10px', background:var(--success), border:'none', color:'white', borderRadius:'10px'}}>حفظ وإغلاق</button>
                             </div>
                         </div>
                     )}
-                    <button onClick={() => setUser(null)} style={{background: var(--danger)}}>خروج</button>
                 </div>
             );
         }
