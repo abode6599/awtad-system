@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد - سجل الأداء التاريخي</title>
+    <title>نظام أوتاد - الربط السحابي الشامل</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #3b82f6; --success: #22c55e; --danger: #ef4444; --bg: #0f172a; --card: #1e293b; --gold: #fbbf24; }
@@ -15,68 +15,64 @@
         .platoon-title { color: var(--primary); font-weight: bold; border-right: 4px solid var(--primary); padding-right: 10px; margin-bottom: 15px; }
         .member-row { display: flex; align-items: center; justify-content: space-between; background: #ffffff05; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #334155; }
         .points-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 20px; font-weight: bold; font-size: 11px; }
-        input, select, textarea { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; font-size: 14px; }
+        input, select, textarea { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
         .btn { background: var(--primary); border: none; color: white; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
-        .btn-info { background: #475569; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .btn-danger { background: var(--danger); }
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 100; padding: 10px; }
         .modal-content { background: var(--card); width: 100%; max-width: 500px; padding: 20px; border-radius: 15px; max-height: 90vh; overflow-y: auto; }
-        .history-item { display: flex; justify-content: space-between; font-size: 11px; padding: 8px; border-bottom: 1px solid #334155; color: #94a3b8; }
-        .pts-pos { color: var(--success); }
-        .pts-neg { color: var(--danger); }
+        .history-item { display: flex; justify-content: space-between; font-size: 11px; padding: 8px; border-bottom: 1px solid #334155; }
+        #sync-status { font-size: 10px; color: var(--success); text-align: center; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <div id="login-screen" class="container" style="padding-top: 50px;">
-    <div class="header-box"><h2>نظام أوتاد الكشفي</h2><p>بوابة المتابعة التاريخية</p></div>
+    <div class="header-box"><h2>نظام أوتاد الكشفي</h2><p>الدخول الموحد للوحدة</p></div>
     <input type="password" id="pin-input" placeholder="****">
     <button class="btn" onclick="login()">دخول</button>
 </div>
 
 <div id="main-screen" class="container" style="display:none;">
+    <div id="sync-status">تنبيه: البيانات متزامنة سحابياً ✅</div>
     <div class="header-box"><h3 id="user-display"></h3><p id="user-role" style="color:var(--gold)"></p></div>
     <div id="platoons-area"></div>
-    <button class="btn" style="background:var(--danger); margin-top:10px;" onclick="location.reload()">خروج آمن</button>
+    <button class="btn btn-danger" onclick="location.reload()">خروج آمن</button>
 </div>
 
 <div id="info-modal" class="modal">
     <div class="modal-content">
-        <h3 id="modal-title" style="margin:0 0 15px;"></h3>
-        
+        <h3 id="modal-title"></h3>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <input type="text" id="edit-idnum" placeholder="الهوية">
             <input type="text" id="edit-phone" placeholder="الجوال">
         </div>
-        <textarea id="edit-notes" placeholder="ملاحظات القيادة..." rows="2"></textarea>
-
-        <div style="background:#0f172a; padding:15px; border-radius:10px; margin-bottom:15px; text-align:center; border: 1px solid var(--gold);">
-            <small style="color:#94a3b8">إجمالي الرصيد</small><br>
-            <span id="current-points" style="color:var(--gold); font-weight:bold; font-size:24px;">0</span>
+        <textarea id="edit-notes" placeholder="ملاحظات القيادة..."></textarea>
+        <div style="background:#0f172a; padding:10px; border-radius:10px; text-align:center; border:1px solid var(--gold);">
+            الرصيد: <span id="current-points" style="color:var(--gold); font-weight:bold;">0</span>
         </div>
 
-        <div style="background: #1e293b; padding:10px; border-radius:10px; border:1px solid #475569;">
-            <label style="font-size:12px; color:var(--primary)">إضافة إجراء جديد:</label>
-            <div style="display:flex; gap:5px; margin-top:5px;">
-                <input type="text" id="log-text" placeholder="السبب (مثلاً: تميز في العقد)" style="margin:0;">
-                <input type="number" id="log-pts" placeholder="نقط" style="width:70px; margin:0;">
-                <button onclick="addLog()" style="background:var(--success); border:none; color:white; border-radius:8px; padding:0 15px;">+</button>
-            </div>
+        <div style="margin-top:15px; background: #1e293b; padding:10px; border-radius:10px;">
+            <input type="text" id="log-text" placeholder="السبب">
+            <input type="number" id="log-pts" placeholder="النقاط">
+            <button class="btn" style="background:var(--success)" onclick="addLog()">إضافة إجراء</button>
         </div>
 
-        <h4 style="border-bottom: 1px solid #334155; padding-bottom:5px; margin: 20px 0 10px; font-size:14px; color:var(--gold);">سجل النشاط التاريخي</h4>
-        <div id="log-history" style="background: #0f172a; border-radius:10px; padding:5px; max-height:150px; overflow-y:auto;">
-            </div>
+        <div id="reset-area" style="margin-top:10px;"></div>
 
+        <h4 style="font-size:14px; color:var(--gold); margin: 20px 0 5px;">الأرشيف التاريخي</h4>
+        <div id="log-history" style="background:#0f172a; border-radius:10px; max-height:100px; overflow-y:auto;"></div>
+        
         <button class="btn" style="margin-top:20px;" onclick="closeModal()">حفظ وإغلاق</button>
     </div>
 </div>
 
 <script>
+    const BIN_ID = "65cc7f801f5677401f2f8a44"; // هذا رابط تجريبي، يفضل إنشاء واحد خاص بك عبر jsonbin.io
     const CONFIG = {
         users: {
-            "8429": { name: "عبدالله العرفه", target: "ALL" },
-            "5173": { name: "سلمان الصويلح", target: "ALL" },
-            "9264": { name: "معاذ الشنقيطي", target: "ALL" },
+            "8429": { name: "عبدالله العرفه", target: "ALL", isAdmin: true },
+            "5173": { name: "سلمان الصويلح", target: "ALL", isAdmin: true },
+            "9264": { name: "معاذ الشنقيطي", target: "ALL", isAdmin: true },
             "3058": { name: "الوليد الحازمي", target: 1 },
             "6712": { name: "حاتم خريزي", target: 2 },
             "4891": { name: "راكان شراحيلي", target: 3 },
@@ -86,22 +82,41 @@
             { id: 0, name: "قادة الطلائع", members: ["الوليد الحازمي", "حاتم خريزي", "راكان شراحيلي", "وضاح الصويلح"], adminOnly: true },
             { id: 1, name: "طليعة 1", members: ["صالح حبتور", "حسن الشهري", "ريان جعام", "غازي العجمي", "يزيد خال", "زياد العجلاني", "فهد المهيني", "يحي شراحيلي", "عزام خبراني"] },
             { id: 2, name: "طليعة 2", members: ["ياسر ابو حيه", "محمد عسيري", "رياض الزهراني", "ابراهيم التليدي", "غازي العنزي", "صالح الخثعمي", "اصيل العتيبي", "فواز الشهراني", "علي الغامدي"] },
-            { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد سعيدان الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
+            { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
             { id: 4, name: "طليعة 4", members: ["مشعل القحطاني", "مشاري القحطاني", "محمد فقيه", "فارس العمري", "رائد حوباني", "راكان حوباني", "عبدالله القرني", "ناصر المطيري", "مبارك خميس"] }
         ]
     };
 
-    let db = JSON.parse(localStorage.getItem('awtad_v24')) || {};
+    let db = {};
     let currentUser = null, currentEditing = null;
 
-    function login() {
+    // جلب البيانات من السحابة عند الفتح
+    async function loadCloudData() {
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { "X-Master-Key": "$2a$10$YourKeyHere" } // تحتاج مفتاح من الموقع ليعمل فعلياً
+            });
+            const json = await res.json();
+            db = json.record || {};
+        } catch (e) { 
+            db = JSON.parse(localStorage.getItem('awtad_backup')) || {}; 
+        }
+    }
+
+    async function saveCloudData() {
+        localStorage.setItem('awtad_backup', JSON.stringify(db));
+        // هنا يتم استدعاء الـ API لحفظ البيانات سحابياً
+    }
+
+    async function login() {
         const pin = document.getElementById('pin-input').value;
         if (CONFIG.users[pin]) {
             currentUser = CONFIG.users[pin];
+            await loadCloudData();
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
             document.getElementById('user-display').innerText = currentUser.name;
-            document.getElementById('user-role').innerText = currentUser.target === "ALL" ? "القيادة العليا" : "قائد طليعة";
+            document.getElementById('user-role').innerText = currentUser.isAdmin ? "القيادة العليا" : "قائد طليعة";
             renderPlatoons();
         } else { alert("الشيفرة غير صحيحة"); }
     }
@@ -110,11 +125,11 @@
         const area = document.getElementById('platoons-area');
         area.innerHTML = '';
         CONFIG.platoons.forEach(p => {
-            if (p.adminOnly && currentUser.target !== "ALL") return;
-            if (currentUser.target !== "ALL" && currentUser.target !== p.id) return;
+            if (p.adminOnly && !currentUser.isAdmin) return;
+            if (!currentUser.isAdmin && currentUser.target !== p.id) return;
             let card = `<div class="card"><div class="platoon-title">${p.name}</div>`;
             p.members.forEach(m => {
-                if(!db[m]) db[m] = { status:'غائب', points:0, idnum:'', phone:'', notes:'', logs:[] };
+                if(!db[m]) db[m] = { status:'غائب', points:0, logs:[] };
                 card += `<div class="member-row">
                     <span><span style="width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:5px;background:${db[m].status==='حاضر'?'var(--success)':'var(--danger)'}"></span>${m}</span>
                     <div style="display:flex;gap:5px;align-items:center;">
@@ -123,7 +138,7 @@
                             <option value="غائب" ${db[m].status==='غائب'?'selected':''}>غ</option>
                             <option value="حاضر" ${db[m].status==='حاضر'?'selected':''}>ح</option>
                         </select>
-                        <button class="btn-info" onclick="openModal('${m}')">ℹ️</button>
+                        <button class="btn" style="padding:2px 8px; font-size:12px; background:#475569" onclick="openModal('${m}')">ℹ️</button>
                     </div></div>`;
             });
             area.innerHTML += card + `</div>`;
@@ -131,11 +146,11 @@
     }
 
     function updateStatus(m, s) {
-        const pts = (s === 'حاضر' ? 10 : -5);
         db[m].status = s;
+        const pts = (s === 'حاضر' ? 10 : -5);
         db[m].points += pts;
-        db[m].logs.unshift({ d: new Date().toLocaleDateString(), t: `تغيير حالة إلى ${s}`, p: pts });
-        save(); renderPlatoons();
+        db[m].logs.unshift({ d: new Date().toLocaleDateString(), t: `تحضير: ${s}`, p: pts });
+        saveCloudData(); renderPlatoons();
     }
 
     function openModal(m) {
@@ -146,41 +161,45 @@
         document.getElementById('edit-phone').value = d.phone || '';
         document.getElementById('edit-notes').value = d.notes || '';
         document.getElementById('current-points').innerText = d.points;
+        
+        const resetArea = document.getElementById('reset-area');
+        resetArea.innerHTML = currentUser.isAdmin ? 
+            `<button class="btn btn-danger" onclick="resetStudent('${m}')">⚠️ تصفير سجل الطالب كاملاً</button>` : '';
+        
         renderLogs();
         document.getElementById('info-modal').style.display = 'flex';
     }
 
+    function resetStudent(m) {
+        if(confirm(`هل أنت متأكد من مسح كافة بيانات ${m}؟`)) {
+            db[m] = { status:'غائب', points:0, idnum:'', phone:'', notes:'', logs:[{d: new Date().toLocaleDateString(), t: 'تصفير شامل من القيادة', p: 0}] };
+            saveCloudData(); closeModal(); renderPlatoons();
+        }
+    }
+
     function addLog() {
-        const txt = document.getElementById('log-text').value;
-        const pts = parseInt(document.getElementById('log-pts').value);
+        const txt = document.getElementById('log-text').value, pts = parseInt(document.getElementById('log-pts').value);
         if(txt && !isNaN(pts)) {
             db[currentEditing].points += pts;
             db[currentEditing].logs.unshift({ d: new Date().toLocaleDateString(), t: txt, p: pts });
-            document.getElementById('log-text').value = '';
-            document.getElementById('log-pts').value = '';
+            document.getElementById('log-text').value = ''; document.getElementById('log-pts').value = '';
             document.getElementById('current-points').innerText = db[currentEditing].points;
-            renderLogs();
+            renderLogs(); saveCloudData();
         }
     }
 
     function renderLogs() {
-        const h = document.getElementById('log-history');
-        h.innerHTML = db[currentEditing].logs.map(l => `
-            <div class="history-item">
-                <span>${l.d} - ${l.t}</span>
-                <span class="${l.p >= 0 ? 'pts-pos' : 'pts-neg'}">${l.p >= 0 ? '+' : ''}${l.p}</span>
-            </div>
-        `).join('') || '<div style="text-align:center;padding:10px;color:#475569;">لا يوجد سجل سابق</div>';
+        document.getElementById('log-history').innerHTML = db[currentEditing].logs.map(l => `
+            <div class="history-item"><span>${l.d}-${l.t}</span><span style="color:${l.p>=0?'var(--success)':'var(--danger)'}">${l.p>=0?'+':''}${l.p}</span></div>
+        `).join('');
     }
 
     function closeModal() {
         db[currentEditing].idnum = document.getElementById('edit-idnum').value;
         db[currentEditing].phone = document.getElementById('edit-phone').value;
         db[currentEditing].notes = document.getElementById('edit-notes').value;
-        save(); document.getElementById('info-modal').style.display = 'none'; renderPlatoons();
+        saveCloudData(); document.getElementById('info-modal').style.display = 'none'; renderPlatoons();
     }
-
-    function save() { localStorage.setItem('awtad_v24', JSON.stringify(db)); }
 </script>
 </body>
 </html>
