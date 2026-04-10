@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد - التشفير العشوائي</title>
+    <title>نظام أوتاد - سجل الأداء التاريخي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #3b82f6; --success: #22c55e; --danger: #ef4444; --bg: #0f172a; --card: #1e293b; --gold: #fbbf24; }
@@ -12,45 +12,62 @@
         .container { max-width: 600px; margin: auto; }
         .header-box { background: var(--card); padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary); text-align: center; margin-bottom: 15px; }
         .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; }
+        .platoon-title { color: var(--primary); font-weight: bold; border-right: 4px solid var(--primary); padding-right: 10px; margin-bottom: 15px; }
         .member-row { display: flex; align-items: center; justify-content: space-between; background: #ffffff05; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #334155; }
         .points-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 20px; font-weight: bold; font-size: 11px; }
-        input, select { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        input, select, textarea { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; font-size: 14px; }
         .btn { background: var(--primary); border: none; color: white; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-        .modal-content { background: var(--card); width: 100%; max-width: 450px; padding: 20px; border-radius: 15px; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
+        .btn-info { background: #475569; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 100; padding: 10px; }
+        .modal-content { background: var(--card); width: 100%; max-width: 500px; padding: 20px; border-radius: 15px; max-height: 90vh; overflow-y: auto; }
+        .history-item { display: flex; justify-content: space-between; font-size: 11px; padding: 8px; border-bottom: 1px solid #334155; color: #94a3b8; }
+        .pts-pos { color: var(--success); }
+        .pts-neg { color: var(--danger); }
     </style>
 </head>
 <body>
 
-<div id="login-screen" class="container" style="padding-top: 80px;">
-    <div class="header-box"><h2>نظام أوتاد الكشفي</h2><p>أدخل شيفرة الدخول الرباعية</p></div>
+<div id="login-screen" class="container" style="padding-top: 50px;">
+    <div class="header-box"><h2>نظام أوتاد الكشفي</h2><p>بوابة المتابعة التاريخية</p></div>
     <input type="password" id="pin-input" placeholder="****">
-    <button class="btn" onclick="login()">تحقق من الهوية</button>
+    <button class="btn" onclick="login()">دخول</button>
 </div>
 
 <div id="main-screen" class="container" style="display:none;">
-    <div class="header-box">
-        <h3 id="user-display"></h3>
-        <p id="user-role" style="color:var(--gold)"></p>
-    </div>
+    <div class="header-box"><h3 id="user-display"></h3><p id="user-role" style="color:var(--gold)"></p></div>
     <div id="platoons-area"></div>
     <button class="btn" style="background:var(--danger); margin-top:10px;" onclick="location.reload()">خروج آمن</button>
 </div>
 
 <div id="info-modal" class="modal">
     <div class="modal-content">
-        <h3 id="modal-title"></h3>
-        <div style="background:#0f172a; padding:10px; border-radius:10px; margin-bottom:15px; text-align:center;">
-            رصيد النقاط: <span id="current-points" style="color:var(--gold); font-weight:bold;">0</span>
+        <h3 id="modal-title" style="margin:0 0 15px;"></h3>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <input type="text" id="edit-idnum" placeholder="الهوية">
+            <input type="text" id="edit-phone" placeholder="الجوال">
         </div>
-        <label>سجل السلوك والتميز</label>
-        <select id="log-select">
-            <option value="">اختر الإجراء...</option>
-            <option value="تميز">تميز (+15)</option>
-            <option value="مخالفة">مخالفة (-10)</option>
-        </select>
-        <button class="btn" style="background:var(--success)" onclick="closeModal()">تحديث الملف</button>
+        <textarea id="edit-notes" placeholder="ملاحظات القيادة..." rows="2"></textarea>
+
+        <div style="background:#0f172a; padding:15px; border-radius:10px; margin-bottom:15px; text-align:center; border: 1px solid var(--gold);">
+            <small style="color:#94a3b8">إجمالي الرصيد</small><br>
+            <span id="current-points" style="color:var(--gold); font-weight:bold; font-size:24px;">0</span>
+        </div>
+
+        <div style="background: #1e293b; padding:10px; border-radius:10px; border:1px solid #475569;">
+            <label style="font-size:12px; color:var(--primary)">إضافة إجراء جديد:</label>
+            <div style="display:flex; gap:5px; margin-top:5px;">
+                <input type="text" id="log-text" placeholder="السبب (مثلاً: تميز في العقد)" style="margin:0;">
+                <input type="number" id="log-pts" placeholder="نقط" style="width:70px; margin:0;">
+                <button onclick="addLog()" style="background:var(--success); border:none; color:white; border-radius:8px; padding:0 15px;">+</button>
+            </div>
+        </div>
+
+        <h4 style="border-bottom: 1px solid #334155; padding-bottom:5px; margin: 20px 0 10px; font-size:14px; color:var(--gold);">سجل النشاط التاريخي</h4>
+        <div id="log-history" style="background: #0f172a; border-radius:10px; padding:5px; max-height:150px; overflow-y:auto;">
+            </div>
+
+        <button class="btn" style="margin-top:20px;" onclick="closeModal()">حفظ وإغلاق</button>
     </div>
 </div>
 
@@ -66,16 +83,16 @@
             "2537": { name: "وضاح الصويلح", target: 4 }
         },
         platoons: [
+            { id: 0, name: "قادة الطلائع", members: ["الوليد الحازمي", "حاتم خريزي", "راكان شراحيلي", "وضاح الصويلح"], adminOnly: true },
             { id: 1, name: "طليعة 1", members: ["صالح حبتور", "حسن الشهري", "ريان جعام", "غازي العجمي", "يزيد خال", "زياد العجلاني", "فهد المهيني", "يحي شراحيلي", "عزام خبراني"] },
             { id: 2, name: "طليعة 2", members: ["ياسر ابو حيه", "محمد عسيري", "رياض الزهراني", "ابراهيم التليدي", "غازي العنزي", "صالح الخثعمي", "اصيل العتيبي", "فواز الشهراني", "علي الغامدي"] },
-            { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
+            { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد سعيدان الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
             { id: 4, name: "طليعة 4", members: ["مشعل القحطاني", "مشاري القحطاني", "محمد فقيه", "فارس العمري", "رائد حوباني", "راكان حوباني", "عبدالله القرني", "ناصر المطيري", "مبارك خميس"] }
         ]
     };
 
-    let db = JSON.parse(localStorage.getItem('awtad_v22')) || {};
-    let currentUser = null;
-    let currentEditing = null;
+    let db = JSON.parse(localStorage.getItem('awtad_v24')) || {};
+    let currentUser = null, currentEditing = null;
 
     function login() {
         const pin = document.getElementById('pin-input').value;
@@ -86,60 +103,84 @@
             document.getElementById('user-display').innerText = currentUser.name;
             document.getElementById('user-role').innerText = currentUser.target === "ALL" ? "القيادة العليا" : "قائد طليعة";
             renderPlatoons();
-        } else { alert("الشيفرة خاطئة!"); }
+        } else { alert("الشيفرة غير صحيحة"); }
     }
 
     function renderPlatoons() {
         const area = document.getElementById('platoons-area');
         area.innerHTML = '';
         CONFIG.platoons.forEach(p => {
+            if (p.adminOnly && currentUser.target !== "ALL") return;
             if (currentUser.target !== "ALL" && currentUser.target !== p.id) return;
-            let card = `<div class="card"><div style="color:var(--primary); font-weight:bold; margin-bottom:10px;">${p.name}</div>`;
+            let card = `<div class="card"><div class="platoon-title">${p.name}</div>`;
             p.members.forEach(m => {
-                if(!db[m]) db[m] = { status: 'غائب', points: 0 };
-                card += `
-                    <div class="member-row">
-                        <span><span class="status-dot" style="background:${db[m].status==='حاضر'?'var(--success)':'var(--danger)'}"></span>${m}</span>
-                        <div style="display:flex; gap:5px; align-items:center;">
-                            <span class="points-badge">${db[m].points} ن</span>
-                            <select style="width:70px; padding:2px; margin:0;" onchange="updateStatus('${m}', this.value)">
-                                <option value="غائب" ${db[m].status==='غائب'?'selected':''}>غ</option>
-                                <option value="حاضر" ${db[m].status==='حاضر'?'selected':''}>ح</option>
-                            </select>
-                            <button style="background:#475569; border:none; color:white; padding:5px; border-radius:5px;" onclick="openModal('${m}')">ℹ️</button>
-                        </div>
-                    </div>`;
+                if(!db[m]) db[m] = { status:'غائب', points:0, idnum:'', phone:'', notes:'', logs:[] };
+                card += `<div class="member-row">
+                    <span><span style="width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:5px;background:${db[m].status==='حاضر'?'var(--success)':'var(--danger)'}"></span>${m}</span>
+                    <div style="display:flex;gap:5px;align-items:center;">
+                        <span class="points-badge">${db[m].points}</span>
+                        <select style="width:65px;padding:2px;font-size:11px;" onchange="updateStatus('${m}', this.value)">
+                            <option value="غائب" ${db[m].status==='غائب'?'selected':''}>غ</option>
+                            <option value="حاضر" ${db[m].status==='حاضر'?'selected':''}>ح</option>
+                        </select>
+                        <button class="btn-info" onclick="openModal('${m}')">ℹ️</button>
+                    </div></div>`;
             });
-            card += `</div>`;
-            area.innerHTML += card;
+            area.innerHTML += card + `</div>`;
         });
     }
 
     function updateStatus(m, s) {
+        const pts = (s === 'حاضر' ? 10 : -5);
         db[m].status = s;
-        db[m].points += (s === 'حاضر' ? 10 : -5);
-        save();
-        renderPlatoons();
+        db[m].points += pts;
+        db[m].logs.unshift({ d: new Date().toLocaleDateString(), t: `تغيير حالة إلى ${s}`, p: pts });
+        save(); renderPlatoons();
     }
 
     function openModal(m) {
         currentEditing = m;
+        const d = db[m];
         document.getElementById('modal-title').innerText = m;
-        document.getElementById('current-points').innerText = db[m].points;
+        document.getElementById('edit-idnum').value = d.idnum || '';
+        document.getElementById('edit-phone').value = d.phone || '';
+        document.getElementById('edit-notes').value = d.notes || '';
+        document.getElementById('current-points').innerText = d.points;
+        renderLogs();
         document.getElementById('info-modal').style.display = 'flex';
     }
 
-    function closeModal() {
-        const type = document.getElementById('log-select').value;
-        if(type === "تميز") db[currentEditing].points += 15;
-        if(type === "مخالفة") db[currentEditing].points -= 10;
-        document.getElementById('log-select').value = "";
-        save();
-        document.getElementById('info-modal').style.display = 'none';
-        renderPlatoons();
+    function addLog() {
+        const txt = document.getElementById('log-text').value;
+        const pts = parseInt(document.getElementById('log-pts').value);
+        if(txt && !isNaN(pts)) {
+            db[currentEditing].points += pts;
+            db[currentEditing].logs.unshift({ d: new Date().toLocaleDateString(), t: txt, p: pts });
+            document.getElementById('log-text').value = '';
+            document.getElementById('log-pts').value = '';
+            document.getElementById('current-points').innerText = db[currentEditing].points;
+            renderLogs();
+        }
     }
 
-    function save() { localStorage.setItem('awtad_v22', JSON.stringify(db)); }
+    function renderLogs() {
+        const h = document.getElementById('log-history');
+        h.innerHTML = db[currentEditing].logs.map(l => `
+            <div class="history-item">
+                <span>${l.d} - ${l.t}</span>
+                <span class="${l.p >= 0 ? 'pts-pos' : 'pts-neg'}">${l.p >= 0 ? '+' : ''}${l.p}</span>
+            </div>
+        `).join('') || '<div style="text-align:center;padding:10px;color:#475569;">لا يوجد سجل سابق</div>';
+    }
+
+    function closeModal() {
+        db[currentEditing].idnum = document.getElementById('edit-idnum').value;
+        db[currentEditing].phone = document.getElementById('edit-phone').value;
+        db[currentEditing].notes = document.getElementById('edit-notes').value;
+        save(); document.getElementById('info-modal').style.display = 'none'; renderPlatoons();
+    }
+
+    function save() { localStorage.setItem('awtad_v24', JSON.stringify(db)); }
 </script>
 </body>
 </html>
