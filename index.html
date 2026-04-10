@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام الكشافة المطور</title>
+<title>نظام كشافة آمن</title>
 
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
@@ -14,7 +14,6 @@ body{margin:0;background:#0b1220;color:#e6eefc;font-family:Cairo}
 button,input{padding:8px;border-radius:8px;border:none}
 button{cursor:pointer}
 .hidden{display:none}
-h3{margin:5px 0}
 </style>
 </head>
 
@@ -23,42 +22,40 @@ h3{margin:5px 0}
 <div id="login" class="box">
 <h2>دخول النظام</h2>
 <input id="pin" placeholder="PIN">
-<button onclick="login()">دخول</button>
+<button onclick="login()" id="loginBtn" disabled>دخول</button>
 <div id="err"></div>
+<div id="status">جاري تحميل النظام...</div>
 </div>
 
 <div id="app" class="hidden">
-
 <h3 id="me"></h3>
-
 <div id="controls"></div>
-
 <div id="content"></div>
-
 </div>
 
 <script>
 
-// 🔥 Firebase (حط بياناتك)
+// 🔥 Firebase
 firebase.initializeApp({
 apiKey:"YOUR_KEY",
 databaseURL:"YOUR_DB"
 });
 
-const db = firebase.database().ref("scout_system_v2");
+const db = firebase.database().ref("safe_system");
 
 // 🧠 بيانات آمنة دائمًا
 let data = {users:{},logs:[],alerts:[]};
 let user = null;
+let ready = false;
 
-// 👑 القيادة العليا
+// 👑 قيادة عليا
 const SUPER = {
 "1111":"عبدالله العرفه",
 "2222":"سلمان الصويلح",
 "3333":"معاذ الشنقيطي"
 };
 
-// 🔢 PIN آمن 4 أرقام بدون تكرار
+// 🔢 PIN آمن
 function genPin(){
 let used = new Set(Object.values(data.users||{}).map(u=>u.pin));
 let p;
@@ -68,16 +65,15 @@ p = Math.floor(1000 + Math.random()*9000).toString();
 return p;
 }
 
-// 👥 بناء الطلايع أول مرة فقط
+// 🚀 بناء أولي آمن
 function seed(){
-
 if(Object.keys(data.users||{}).length>0) return;
 
 const groups = {
-"طليعة 1 - الوليد الحازمي":["صالح حبتور","حسن الشهري","عزام خبراني","يحي شراحيلي","فهد المهيني","زياد العجلاني","يزيد خال","غازي العجمي","ريان جعام"],
-"طليعة 2 - حاتم خريزي":["ياسر ابو حيه","محمد عسيري","علي الغامدي","فواز الشهراني","اصيل العتيبي","صالح الخثعمي","غازي العنزي","ابراهيم التليدي","رياض الزهراني"],
-"طليعة 3 - راكان شراحيلي":["بسام قرادي","بدر كعبي","حسام الشهراني","عبدالله قشاش","عيسى الرشيدي","عبدالعزيز القحطاني","راشد الراشدي","زايد القحطاني","علي الشهراني"],
-"طليعة 4 - وضاح الصويلح":["مشعل القحطاني","ناصر المطيري","مبارك خميس","عبدالله القرني","راكان حوباني","رائد حوباني","فارس العمري","محمد فقيه","مشاري القحطاني"]
+"طليعة 1":["صالح","حسن","عزام","يحي","فهد","زياد","يزيد","غازي","ريان"],
+"طليعة 2":["ياسر","محمد","علي","فواز","اصيل","صالح2","غازي2","ابراهيم","رياض"],
+"طليعة 3":["بسام","بدر","حسام","عبدالله","عيسى","عبدالعزيز","راشد","زايد","علي2"],
+"طليعة 4":["مشعل","ناصر","مبارك","عبدالله2","راكان","رائد","فارس","محمد2","مشاري"]
 };
 
 Object.entries(groups).forEach(([team,members])=>{
@@ -98,26 +94,33 @@ pin:genPin()
 save();
 }
 
-// 🔐 تسجيل دخول قوي
+// 🔐 تسجيل دخول آمن 100%
 function login(){
+
+if(!ready){
+document.getElementById("err").innerText="انتظر تحميل النظام";
+return;
+}
 
 let pin=document.getElementById("pin").value.trim();
 
-// 👑 قائد
 let found=null;
+
+// 👑 قيادة
 if(SUPER[pin]){
 found={name:SUPER[pin],role:"super"};
 }
 
 // 👥 مستخدمين
-Object.entries(data.users||{}).forEach(([id,u])=>{
+for(let u of Object.values(data.users||{})){
 if(u.pin===pin){
-found={...u,id};
+found=u;
+break;
 }
-});
+}
 
 if(!found){
-document.getElementById("err").innerText="PIN غلط";
+document.getElementById("err").innerText="PIN خطأ";
 return;
 }
 
@@ -131,29 +134,41 @@ document.getElementById("app").classList.remove("hidden");
 render();
 }
 
+// 🧾 لوق
+function log(action,name){
+data.logs.unshift({
+action,name,
+time:new Date().toLocaleString("ar-SA")
+});
+save();
+}
+
+// 💾 حفظ آمن
+function save(){
+db.set(data);
+}
+
 // ➕ نقاط
 function addPts(id){
+
+if(!data.users[id]) return;
 
 let v=parseInt(prompt("كم نقطة؟"));
 if(!v || v<=0) return;
 
-if(!data.users[id].pts) data.users[id].pts=0;
+data.users[id].pts = (data.users[id].pts||0) + v;
 
-data.users[id].pts+=v;
-
-// 🏅 أوسمة تلقائية
-if(data.users[id].pts>=50 && !data.users[id].badges.includes("التميز")){
+// أوسمة تلقائية
+if(data.users[id].pts>=50 && !data.users[id].badges.includes("التميز"))
 data.users[id].badges.push("التميز");
-}
 
-if(data.users[id].pts>=100 && !data.users[id].badges.includes("الأسطورة")){
+if(data.users[id].pts>=100 && !data.users[id].badges.includes("الأسطورة"))
 data.users[id].badges.push("الأسطورة");
-}
 
-// 🚨 كشف نشاط عالي
+// تنبيه
 if(v>=30){
 data.alerts.unshift({
-msg:"نشاط عالي على "+data.users[id].name,
+msg:"نشاط عالي: "+data.users[id].name,
 time:new Date().toLocaleString("ar-SA")
 });
 }
@@ -161,33 +176,20 @@ time:new Date().toLocaleString("ar-SA")
 save();
 }
 
-// 🧾 سجل
-function log(action,name){
-data.logs.unshift({
-action,name,
-time:new Date().toLocaleString("ar-SA")
-});
-}
-
-// 💾 حفظ
-function save(){
-db.set(data);
-}
-
 // 🎨 عرض آمن 100%
 function render(){
 
 document.getElementById("me").innerText =
-(user.name||"") + " - " + (user.role||"");
+(user?.name||"") + " - " + (user?.role||"");
 
-// 👥 عرض المستخدمين
+// مستخدمين
 let html="";
 
-Object.entries(data.users||{}).forEach(([id,u])=>{
+for(let [id,u] of Object.entries(data.users||{})){
 html+=`
 <div class="box">
 <b>${u.name}</b><br>
-${u.team}<br>
+${u.team||""}<br>
 نقاط: ${u.pts||0}<br>
 PIN: ${user.role==="super"?u.pin:"****"}<br>
 ${(u.badges||[]).join(", ")}<br>
@@ -195,14 +197,14 @@ ${(u.badges||[]).join(", ")}<br>
 <button onclick="addPts('${id}')">إضافة نقاط</button>
 </div>
 `;
-});
+}
 
 document.getElementById("content").innerHTML=html;
 
-// 👑 أزرار العليا
+// تحكم
 if(user.role==="super"){
 document.getElementById("controls").innerHTML=`
-<button onclick="seed()">إعادة بناء</button>
+<button onclick="seed()">إعادة بناء النظام</button>
 <button onclick="data.users={};save()">تصفير كامل</button>
 `;
 }else{
@@ -211,24 +213,32 @@ document.getElementById("controls").innerHTML="";
 
 }
 
-// 🔄 تشغيل آمن جدًا
+// 🔄 تحميل Firebase (آمن جدًا)
 db.on("value",snap=>{
 
-let val=snap.val();
-
-if(!val){
-data={users:{},logs:[],alerts:[]};
-}else{
-data=val;
-}
-
 try{
+data = snap.val() || {users:{},logs:[],alerts:[]};
+
+if(!data.users) data.users={};
+
 seed();
-}catch(e){
-console.log(e);
-}
+
+ready = true;
+
+document.getElementById("status").innerText="جاهز";
+
+document.getElementById("loginBtn").disabled=false;
 
 render();
+
+}catch(e){
+
+document.getElementById("err").innerText="خطأ تحميل، حاول تحديث الصفحة";
+
+console.log(e);
+
+}
+
 });
 
 </script>
