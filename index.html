@@ -2,16 +2,19 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>نظام الكشافة</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام الكشافة المطور</title>
 
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
 <style>
-body{background:#0b1220;color:#e5ecf5;font-family:Cairo;margin:0}
+body{margin:0;background:#0b1220;color:#e6eefc;font-family:Cairo}
 .box{background:#111c33;margin:10px;padding:12px;border-radius:10px}
-button{padding:6px 10px;border-radius:8px;border:none;cursor:pointer}
+button,input{padding:8px;border-radius:8px;border:none}
+button{cursor:pointer}
 .hidden{display:none}
+h3{margin:5px 0}
 </style>
 </head>
 
@@ -28,20 +31,23 @@ button{padding:6px 10px;border-radius:8px;border:none;cursor:pointer}
 
 <h3 id="me"></h3>
 
+<div id="controls"></div>
+
 <div id="content"></div>
 
 </div>
 
 <script>
 
-// 🔥 Firebase
+// 🔥 Firebase (حط بياناتك)
 firebase.initializeApp({
 apiKey:"YOUR_KEY",
 databaseURL:"YOUR_DB"
 });
 
-const db = firebase.database().ref("scout_v1");
+const db = firebase.database().ref("scout_system_v2");
 
+// 🧠 بيانات آمنة دائمًا
 let data = {users:{},logs:[],alerts:[]};
 let user = null;
 
@@ -52,19 +58,20 @@ const SUPER = {
 "3333":"معاذ الشنقيطي"
 };
 
-// 🧠 توليد PIN
+// 🔢 PIN آمن 4 أرقام بدون تكرار
 function genPin(){
-let used = new Set(Object.values(data.users).map(u=>u.pin));
+let used = new Set(Object.values(data.users||{}).map(u=>u.pin));
 let p;
 do{
-p=Math.floor(1000+Math.random()*9000).toString();
+p = Math.floor(1000 + Math.random()*9000).toString();
 }while(used.has(p));
 return p;
 }
 
-// 👥 بناء النظام أول مرة
+// 👥 بناء الطلايع أول مرة فقط
 function seed(){
-if(Object.keys(data.users).length>0) return;
+
+if(Object.keys(data.users||{}).length>0) return;
 
 const groups = {
 "طليعة 1 - الوليد الحازمي":["صالح حبتور","حسن الشهري","عزام خبراني","يحي شراحيلي","فهد المهيني","زياد العجلاني","يزيد خال","غازي العجمي","ريان جعام"],
@@ -73,13 +80,13 @@ const groups = {
 "طليعة 4 - وضاح الصويلح":["مشعل القحطاني","ناصر المطيري","مبارك خميس","عبدالله القرني","راكان حوباني","رائد حوباني","فارس العمري","محمد فقيه","مشاري القحطاني"]
 };
 
-Object.entries(groups).forEach(([team, members])=>{
-members.forEach(m=>{
+Object.entries(groups).forEach(([team,members])=>{
+members.forEach(name=>{
 let id="U"+Math.random();
 
 data.users[id]={
-name:m,
-team:team,
+name,
+team,
 role:"member",
 pts:0,
 badges:[],
@@ -91,28 +98,31 @@ pin:genPin()
 save();
 }
 
-// 🔐 دخول
+// 🔐 تسجيل دخول قوي
 function login(){
+
 let pin=document.getElementById("pin").value.trim();
 
+// 👑 قائد
 let found=null;
-
-// 👑 قيادة
 if(SUPER[pin]){
 found={name:SUPER[pin],role:"super"};
 }
 
 // 👥 مستخدمين
-Object.entries(data.users).forEach(([id,u])=>{
-if(u.pin===pin) found={...u,id};
+Object.entries(data.users||{}).forEach(([id,u])=>{
+if(u.pin===pin){
+found={...u,id};
+}
 });
 
 if(!found){
-document.getElementById("err").innerText="خطأ";
+document.getElementById("err").innerText="PIN غلط";
 return;
 }
 
 user=found;
+
 log("login",user.name);
 
 document.getElementById("login").classList.add("hidden");
@@ -123,21 +133,40 @@ render();
 
 // ➕ نقاط
 function addPts(id){
-let v=parseInt(prompt("كم؟"));
-if(isNaN(v))return;
+
+let v=parseInt(prompt("كم نقطة؟"));
+if(!v || v<=0) return;
+
+if(!data.users[id].pts) data.users[id].pts=0;
 
 data.users[id].pts+=v;
 
+// 🏅 أوسمة تلقائية
+if(data.users[id].pts>=50 && !data.users[id].badges.includes("التميز")){
+data.users[id].badges.push("التميز");
+}
+
+if(data.users[id].pts>=100 && !data.users[id].badges.includes("الأسطورة")){
+data.users[id].badges.push("الأسطورة");
+}
+
+// 🚨 كشف نشاط عالي
 if(v>=30){
-data.alerts.unshift({msg:"نشاط عالي",time:new Date().toLocaleString("ar-SA")});
+data.alerts.unshift({
+msg:"نشاط عالي على "+data.users[id].name,
+time:new Date().toLocaleString("ar-SA")
+});
 }
 
 save();
 }
 
-// 🧾 لوق
+// 🧾 سجل
 function log(action,name){
-data.logs.unshift({action,name,time:new Date().toLocaleString("ar-SA")});
+data.logs.unshift({
+action,name,
+time:new Date().toLocaleString("ar-SA")
+});
 }
 
 // 💾 حفظ
@@ -145,33 +174,60 @@ function save(){
 db.set(data);
 }
 
-// 🎨 عرض
+// 🎨 عرض آمن 100%
 function render(){
 
-document.getElementById("me").innerText=user.name+" - "+user.role;
+document.getElementById("me").innerText =
+(user.name||"") + " - " + (user.role||"");
 
-// 👥 عرض
+// 👥 عرض المستخدمين
 let html="";
 
-Object.entries(data.users).forEach(([id,u])=>{
+Object.entries(data.users||{}).forEach(([id,u])=>{
 html+=`
 <div class="box">
-${u.name}<br>
+<b>${u.name}</b><br>
 ${u.team}<br>
-نقاط: ${u.pts}<br>
+نقاط: ${u.pts||0}<br>
 PIN: ${user.role==="super"?u.pin:"****"}<br>
-<button onclick="addPts('${id}')">نقاط</button>
-</div>`;
+${(u.badges||[]).join(", ")}<br>
+
+<button onclick="addPts('${id}')">إضافة نقاط</button>
+</div>
+`;
 });
 
 document.getElementById("content").innerHTML=html;
 
+// 👑 أزرار العليا
+if(user.role==="super"){
+document.getElementById("controls").innerHTML=`
+<button onclick="seed()">إعادة بناء</button>
+<button onclick="data.users={};save()">تصفير كامل</button>
+`;
+}else{
+document.getElementById("controls").innerHTML="";
 }
 
-// 🔄 تشغيل أول مرة
+}
+
+// 🔄 تشغيل آمن جدًا
 db.on("value",snap=>{
-data=snap.val()||data;
+
+let val=snap.val();
+
+if(!val){
+data={users:{},logs:[],alerts:[]};
+}else{
+data=val;
+}
+
+try{
 seed();
+}catch(e){
+console.log(e);
+}
+
 render();
 });
 
