@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة أوتاد الكشفية | النسخة السحابية المزامنة</title>
+    <title>منصة أوتاد الكشفية | المزامنة السحابية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
@@ -47,11 +47,11 @@
 </div>
 
 <script>
-    // بيانات "الكنز" حقك يا عبدالله - تم تحديثها ببياناتك الجديدة
+    // دمجت لك الرابط الجديد مع بياناتك القديمة كاملة هنا 👇
     const firebaseConfig = {
       apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
       authDomain: "awtad-system.firebaseapp.com",
-      databaseURL: "https://awtad-system-default-rtdb.firebaseio.com", // تأكد من الرابط في صفحة Realtime Database
+      databaseURL: "https://awtad-system-default-rtdb.firebaseio.com", 
       projectId: "awtad-system",
       storageBucket: "awtad-system.firebasestorage.app",
       messagingSenderId: "503288041701",
@@ -64,7 +64,7 @@
     const database = firebase.database();
     const awtadRef = database.ref('scouting_data');
 
-    // الصلاحيات والرموز
+    // الرموز والصلاحيات
     const USERS = {
         "8429": {name:"عبدالله العرفه", type:"admin"},
         "5173": {name:"سلمان الصويلح", type:"admin"},
@@ -98,13 +98,13 @@
             document.getElementById('welcome-msg').innerText = sessionUser.name;
             document.getElementById('user-role').innerText = sessionUser.type === 'admin' ? "القيادة العليا" : (sessionUser.type === 'leader' ? "قائد طليعة" : "مشاهدة (طالب)");
             
-            // الاستماع الحي للبيانات
+            // المزامنة اللحظية
             awtadRef.on('value', (snapshot) => {
                 liveData = snapshot.val() || {};
                 renderDashboard();
             });
         } else {
-            alert("الرمز السري غير صحيح يا بطل!");
+            alert("الرمز السري غير صحيح!");
         }
     }
 
@@ -137,7 +137,7 @@
     function changePoints(name, val) {
         if(!liveData[name]) liveData[name] = 0;
         liveData[name] += val;
-        awtadRef.set(liveData); // تحديث السحابة فوراً
+        awtadRef.set(liveData); 
     }
 
     function safeReset(name) {
@@ -145,7 +145,7 @@
             liveData[name] = 0;
             awtadRef.set(liveData);
         } else {
-            alert("الرمز خطأ، العمليات مسجلة!");
+            alert("الرمز خطأ!");
         }
     }
 </script>
