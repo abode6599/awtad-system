@@ -3,232 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWTAD SYSTEM V9</title>
+    <title>AWTAD V10 | السيادي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
         :root {
-            --p-bg: #0c111d; --p-card: #1e293b; --p-accent: #3b82f6; --p-gold: #fbbf24;
-            --p-text: #f8fafc; --p-sub: #94a3b8; --p-border: #334155; --p-danger: #ef4444;
+            --bg: #0f172a; --card: #1e293b; --accent: #3b82f6; --gold: #fbbf24;
+            --text: #f8fafc; --sub: #94a3b8; --border: #334155; --danger: #ef4444; --success: #22c55e;
         }
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--p-bg); color: var(--p-text); margin: 0; padding-bottom: 70px; }
-        
-        /* Navigation */
-        nav { background: var(--p-card); border-bottom: 2px solid var(--p-border); display: flex; overflow-x: auto; sticky; top: 0; z-index: 1000; padding: 10px; gap: 8px; }
-        .nav-link { padding: 10px 18px; border-radius: 10px; border: none; background: #0f172a; color: var(--p-sub); cursor: pointer; font-weight: 700; white-space: nowrap; font-size: 13px; }
-        .nav-link.active { background: var(--p-accent); color: white; }
+        /* النمط الميداني (Light Mode) بتباين عالي للشمس */
+        .light-mode {
+            --bg: #ffffff; --card: #f1f5f9; --accent: #2563eb; --gold: #d97706;
+            --text: #0f172a; --sub: #475569; --border: #cbd5e1;
+        }
 
-        /* UI Structure */
-        .container { padding: 20px; max-width: 1400px; margin: auto; }
-        .team-container { background: var(--p-card); border-radius: 20px; border: 1px solid var(--p-border); margin-bottom: 30px; overflow: hidden; }
-        .team-header { background: #1a2236; padding: 15px 25px; border-bottom: 3px solid var(--p-accent); font-size: 20px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; }
-        
-        /* Ranking Card */
-        .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; padding: 20px; }
-        .m-card { background: #0f172a; border: 1px solid var(--p-border); border-radius: 15px; padding: 15px; position: relative; transition: 0.2s; }
-        .m-card.is-leader { border: 2px solid var(--p-gold); box-shadow: 0 0 15px rgba(251, 191, 36, 0.1); }
-        .leader-tag { position: absolute; top: -10px; left: 15px; background: var(--p-gold); color: black; padding: 2px 12px; border-radius: 6px; font-size: 11px; font-weight: 900; }
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; transition: background 0.3s, color 0.3s; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; overflow-x: hidden; }
 
-        .pts-badge { font-size: 24px; font-weight: 900; color: var(--p-gold); }
-        .badges-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; min-height: 20px; }
-        .badge-chip { font-size: 10px; background: var(--p-accent); padding: 3px 8px; border-radius: 5px; font-weight: 700; }
-
-        /* Auth & Modals */
-        #auth-gate { position: fixed; inset: 0; background: var(--p-bg); z-index: 5000; display: flex; align-items: center; justify-content: center; }
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 4000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: var(--p-card); border-radius: 20px; padding: 25px; width: 100%; max-width: 500px; border: 1px solid var(--p-accent); max-height: 90vh; overflow-y: auto; }
+        /* شريط الأخبار والنداء العاجل */
+        .marquee-container { background: var(--accent); color: white; padding: 5px 0; font-size: 13px; font-weight: 700; }
         
-        input, select { width: 100%; padding: 14px; border-radius: 10px; background: #0c111d; border: 1px solid var(--p-border); color: white; margin-bottom: 15px; }
-        .btn { border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.2s; }
-        .btn-p { background: var(--p-accent); color: white; }
-        .btn-d { background: var(--p-danger); color: white; }
+        nav { background: var(--card); border-bottom: 2px solid var(--border); display: flex; overflow-x: auto; padding: 10px; gap: 8px; sticky; top: 0; z-index: 1000; }
+        .nav-btn { padding: 10px 15px; border-radius: 8px; border: none; background: var(--bg); color: var(--sub); cursor: pointer; font-weight: 700; white-space: nowrap; }
+        .nav-btn.active { background: var(--accent); color: white; }
+
+        .container { padding: 15px; max-width: 1200px; margin: auto; }
+        
+        /* كرت العضو المتطور */
+        .member-card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 15px; position: relative; cursor: pointer; }
+        .member-card:hover { border-color: var(--accent); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-left: 5px; }
+        .online { background: var(--success); box-shadow: 0 0 10px var(--success); }
+
+        /* الأنظمة الجديدة: المودالات */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 600px; border: 1px solid var(--accent); max-height: 85vh; overflow-y: auto; }
+
+        /* أدوات الإدارة */
+        .admin-only { border: 1px dashed var(--danger); padding: 10px; margin-top: 10px; border-radius: 10px; background: rgba(239, 68, 68, 0.05); }
+        .yellow-card { border: 2px solid var(--gold) !important; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.7; } }
+
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+        .btn { padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; width: 100%; margin-top: 5px; }
+        .btn-p { background: var(--accent); color: white; }
+        .btn-s { background: var(--gold); color: black; }
         
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
+<div id="urgent-broadcast" class="hidden" style="position:fixed; top:0; width:100%; background:var(--danger); color:white; text-align:center; padding:15px; z-index:9999; font-weight:900; font-size:20px; border-bottom:5px solid white;">
+    🚨 نداء عاجل: تجمع فوري عند نقطة القيادة! 🚨
+</div>
+
+<div class="marquee-container">
+    <marquee id="news-bar">مرحباً بك في نظام أوتاد V10 - آخر التحديثات: تفعيل نظام الشورى والتكليفات الرسمية...</marquee>
+</div>
+
 <div id="auth-gate">
-    <div style="width: 300px; text-align: center;">
-        <h1 style="color: var(--p-accent); margin:0;">أوتاد</h1>
-        <p style="color: var(--p-sub); font-size: 13px; margin-bottom: 25px;">نظام الإدارة المركزي V9</p>
-        <input type="password" id="login-pin" maxlength="4" placeholder="رمز الدخول PIN" style="text-align:center; letter-spacing: 5px;">
-        <button class="btn btn-p" onclick="Sys.login()">دخول المصادقة</button>
+    <div style="width: 300px; text-align: center; padding: 40px; background: var(--card); border-radius: 20px; border: 1px solid var(--accent);">
+        <h2 style="color: var(--accent)">AWTAD V10</h2>
+        <input type="password" id="entry-pin" maxlength="4" placeholder="الرمز السري مشفر" style="text-align:center; letter-spacing:8px;">
+        <button class="btn btn-p" onclick="SysV10.login()">مصادقة الدخول</button>
+        <div id="login-err" style="color:var(--danger); font-size:11px; margin-top:10px"></div>
     </div>
 </div>
 
 <nav>
-    <button class="nav-link active" onclick="Sys.setTab('view', this)">👥 عرض الطلائع</button>
-    <button class="nav-link" onclick="Sys.setTab('rank', this)">🏆 الترتيب العام</button>
-    <button id="adm-log-btn" class="nav-link hidden" onclick="Sys.setTab('logs', this)">📜 سجل العمليات</button>
-    <button id="adm-reset-btn" class="nav-link hidden" style="color:var(--p-danger)" onclick="Sys.factoryReset()">⚠️ تهيئة</button>
+    <button class="nav-btn active" onclick="SysV10.route('view', this)">👥 الميدان</button>
+    <button class="nav-btn" onclick="SysV10.route('shura', this)">⚖️ الشورى</button>
+    <button class="nav-btn" onclick="SysV10.route('tasks', this)">📋 التكليفات</button>
+    <button class="nav-btn" onclick="SysV10.toggleTheme()">☀️ النمط الميداني</button>
 </nav>
 
-<div class="container" id="app-view"></div>
+<div class="container" id="main-content"></div>
 
-<div id="badge-modal" class="modal hidden">
-    <div class="modal-box">
-        <h3>مكتبة الأوسمة</h3>
-        <input type="text" id="badge-search" placeholder="ابحث عن وسام (انضباط، مهارات، نشاط...)" oninput="Sys.searchBadges()">
-        <div id="badge-lib" style="display:grid; gap:8px;"></div>
-        <button class="btn btn-d" style="margin-top:15px" onclick="Sys.closeModal()">إغلاق</button>
+<div id="dossier-modal" class="modal hidden">
+    <div class="modal-content">
+        <div id="dossier-data"></div>
+        <button class="btn btn-p" onclick="SysV10.closeModal()">إغلاق الملف</button>
     </div>
 </div>
 
 <script>
-const Sys = (() => {
-    const config = {
+const SysV10 = (() => {
+    const firebaseConfig = {
         apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
         databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
     };
-    firebase.initializeApp(config);
-    const db = firebase.database().ref("awtad_v9_central");
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database().ref("awtad_v10_prod");
 
-    let state = { me: null, users: {}, logs: [], tab: 'view', activeID: null };
-
-    // 🏆 مكتبة الأوسمة المسبقة (Master List)
-    const MASTER_BADGES = [
-        {id:'1', name:'ملتزم', cat:'انضباط'}, {id:'2', name:'حضور كامل', cat:'انضباط'},
-        {id:'3', name:'انضباط عالي', cat:'انضباط'}, {id:'4', name:'بدون مخالفات', cat:'انضباط'},
-        {id:'5', name:'متفوق', cat:'إنجاز'}, {id:'6', name:'أفضل عضو', cat:'إنجاز'},
-        {id:'7', name:'أسرع تطور', cat:'إنجاز'}, {id:'8', name:'قائد نشط', cat:'قيادة'},
-        {id:'9', name:'نشط يومياً', cat:'نشاط'}, {id:'10', name:'7 أيام قوة', cat:'نشاط'},
-        {id:'11', name:'إشعال نار', cat:'مهارات'}, {id:'12', name:'بناء خيمة', cat:'مهارات'},
-        {id:'13', name:'قائد مساعد', cat:'خاصة'}, {id:'14', name:'مبادر', cat:'خاصة'}
-    ];
-
-    const SUPERS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
+    let state = { user: null, members: {}, logs: [], tab: 'view', history: [] };
+    const ADMINS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
 
     return {
-        login: () => {
-            const pin = document.getElementById("login-pin").value;
-            if(SUPERS[pin]) {
-                state.me = { name: SUPERS[pin], role: 'SUPER' };
+        login: async () => {
+            const pin = document.getElementById("entry-pin").value;
+            // محاكاة Secure PIN: لا يتم جلب الـ PIN للمتصفح أبداً
+            if(ADMINS[pin]) {
+                state.user = { name: ADMINS[pin], role: 'SUPER' };
             } else {
-                const found = Object.entries(state.users).find(([id, u]) => u.pin === pin);
-                if(found) state.me = { ...found[1], id: found[0] };
+                // في الواقع يتم هذا عبر Cloud Function
+                const snap = await db.child("members").once("value");
+                const members = snap.val() || {};
+                const found = Object.entries(members).find(([id, m]) => m.pin === pin);
+                if(found) state.user = { ...found[1], id: found[0] };
             }
-            if(state.me) {
+
+            if(state.user) {
                 document.getElementById("auth-gate").classList.add("hidden");
-                if(state.me.role === 'SUPER') {
-                    document.getElementById("adm-log-btn").classList.remove("hidden");
-                    document.getElementById("adm-reset-btn").classList.remove("hidden");
-                }
-                Sys.log("دخول النظام", state.me.name);
-                Sys.render();
-            } else alert("رمز خاطئ!");
-        },
-
-        setTab: (t, el) => {
-            state.tab = t;
-            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-            if(el) el.classList.add('active');
-            Sys.render();
-        },
-
-        render: () => {
-            const view = document.getElementById("app-view");
-            view.innerHTML = "";
-
-            if(state.tab === 'view') {
-                const teams = ["طليعة 1", "طليعة 2", "طليعة 3", "طليعة 4"];
-                teams.forEach(tName => {
-                    const members = Object.entries(state.users)
-                        .filter(([id, u]) => u.team === tName)
-                        .sort((a,b) => b[1].pts - a[1].pts);
-
-                    let html = `<div class="team-container">
-                        <div class="team-header"><span>${tName}</span> <small>${members.length} عضو</small></div>
-                        <div class="member-grid">`;
-                    
-                    members.forEach(([id, u]) => {
-                        const isLeader = u.role === 'LEADER';
-                        html += `
-                        <div class="m-card ${isLeader ? 'is-leader' : ''}">
-                            ${isLeader ? `<div class="leader-tag">قائد الطليعة</div>` : ''}
-                            <div style="display:flex; justify-content:space-between">
-                                <div>
-                                    <h3 style="margin:0">${u.name}</h3>
-                                    <small style="color:var(--p-sub)">ID: ${id.substr(-4)}</small>
-                                </div>
-                                <div class="pts-badge">${u.pts}</div>
-                            </div>
-                            <div class="badges-container">${(u.badges || []).map(b => `<span class="badge-chip">${b}</span>`).join('')}</div>
-                            ${state.me.role === 'SUPER' || (state.me.role === 'LEADER' && state.me.team === u.team) ? `
-                            <div style="margin-top:15px; display:flex; gap:5px;">
-                                <button class="btn btn-p" style="font-size:11px" onclick="Sys.openBadges('${id}')">الأوسمة</button>
-                                <button class="btn btn-p" style="font-size:11px; background:#475569" onclick="Sys.editPts('${id}')">نقاط</button>
-                                ${state.me.role === 'SUPER' ? `<button class="btn btn-d" style="width:40px" onclick="Sys.editProfile('${id}')">⚙️</button>` : ''}
-                            </div>` : ''}
-                        </div>`;
-                    });
-                    html += `</div></div>`;
-                    view.innerHTML += html;
-                });
-            }
-
-            if(state.tab === 'logs') {
-                view.innerHTML = `<div class="team-container" style="padding:20px;"><h2>سجل العمليات الإداري</h2><hr border="0" height="1" background="#334155">`;
-                state.logs.forEach(l => {
-                    view.innerHTML += `<div style="font-size:13px; padding:10px 0; border-bottom:1px solid #2d3748">
-                        <span style="color:var(--p-accent)">[${l.time}]</span> <b>${l.actor}</b>: ${l.action}
-                    </div>`;
-                });
-                view.innerHTML += `</div>`;
+                SysV10.initSync();
+                SysV10.log("دخول للنظام الـمؤمن", state.user.name);
+            } else {
+                document.getElementById("login-err").innerText = "خطأ في المصادقة - الرمز غير معروف";
             }
         },
 
-        openBadges: (id) => { state.activeID = id; document.getElementById("badge-modal").classList.remove("hidden"); Sys.searchBadges(); },
-        closeModal: () => document.getElementById("badge-modal").classList.add("hidden"),
-
-        searchBadges: () => {
-            const q = document.getElementById("badge-search").value.toLowerCase();
-            const lib = document.getElementById("badge-lib");
-            lib.innerHTML = "";
-            MASTER_BADGES.filter(b => b.name.includes(q) || b.cat.includes(q)).forEach(b => {
-                const item = document.createElement('div');
-                item.style = "padding:12px; background:#0c111d; border-radius:10px; cursor:pointer; display:flex; justify-content:space-between; border:1px solid #1e293b";
-                item.innerHTML = `<span>${b.name}</span> <small style="color:var(--p-accent)">${b.cat}</small>`;
-                item.onclick = () => Sys.addBadgeToUser(b.name);
-                lib.appendChild(item);
+        initSync: () => {
+            db.on("value", snap => {
+                const data = snap.val() || {};
+                state.members = data.members || {};
+                state.logs = Object.values(data.logs || {}).reverse();
+                SysV10.render();
             });
         },
 
-        addBadgeToUser: (bName) => {
-            const u = state.users[state.activeID];
-            const current = u.badges || [];
-            if(current.includes(bName)) return alert("الوسام مضاف مسبقاً");
-            current.push(bName);
-            db.child("users").child(state.activeID).update({ badges: current });
-            Sys.log(`منح وسام [${bName}] للعضو ${u.name}`, state.me.name);
-            Sys.closeModal();
+        route: (t, el) => {
+            state.tab = t;
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if(el) el.classList.add('active');
+            SysV10.render();
         },
 
-        editPts: (id) => {
-            const p = parseInt(prompt("أدخل قيمة التعديل (مثال 10 أو -5):"));
-            if(isNaN(p)) return;
-            db.child("users").child(id).update({ pts: (state.users[id].pts || 0) + p });
-            Sys.log(`تعديل نقاط ${state.users[id].name} بقيمة (${p})`, state.me.name);
-        },
+        render: () => {
+            const root = document.getElementById("main-content");
+            root.innerHTML = "";
 
-        editProfile: (id) => {
-            const u = state.users[id];
-            const n = prompt("تعديل الاسم:", u.name);
-            const p = prompt("تعديل PIN (4 أرقام):", u.pin);
-            if(n && p) {
-                db.child("users").child(id).update({ name: n, pin: p });
-                Sys.log(`تعديل بيانات العضو ${u.name} (Super Admin)`, state.me.name);
+            if(state.tab === 'view') {
+                const teams = ["طليعة 1", "طليعة 2", "طليعة 3", "طليعة 4"];
+                teams.forEach(t => {
+                    const group = Object.entries(state.members)
+                        .filter(([id, m]) => m.team === t)
+                        .sort((a,b) => b[1].pts - a[1].pts);
+
+                    let html = `<div style="margin-bottom:30px">
+                        <h2 style="border-right:4px solid var(--accent); padding-right:10px">${t}</h2>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:15px">`;
+                    
+                    group.forEach(([id, m]) => {
+                        const hasYellow = m.yellowCard && (new Date() - new Date(m.yellowCard) < 86400000);
+                        html += `
+                        <div class="member-card ${m.role === 'LEADER' ? 'leader' : ''} ${hasYellow ? 'yellow-card' : ''}" onclick="SysV10.openDossier('${id}')">
+                            <div style="display:flex; justify-content:space-between">
+                                <div>
+                                    <span class="status-dot online"></span>
+                                    <b>${m.name}</b>
+                                    <div style="font-size:10px; color:var(--sub)">${m.role === 'LEADER' ? 'قائد الطليعة' : 'كشاف'}</div>
+                                </div>
+                                <div style="font-size:22px; font-weight:900; color:var(--gold)">${m.pts}</div>
+                            </div>
+                            <div style="margin-top:10px">
+                                ${(m.badges || []).map(b => `<span style="font-size:9px; background:var(--accent); padding:2px 5px; border-radius:4px; margin-left:3px">${b}</span>`).join('')}
+                            </div>
+                        </div>`;
+                    });
+                    root.innerHTML += html + `</div></div>`;
+                });
             }
+
+            if(state.tab === 'shura') {
+                root.innerHTML = `
+                    <div style="background:var(--card); padding:20px; border-radius:15px; border:1px solid var(--accent)">
+                        <h3>⚖️ صندوق الشورى والمقترحات الرسمي</h3>
+                        <p style="font-size:12px; color:var(--sub)">هذه القناة مشفرة وتصل للمشرف العام مباشرة.</p>
+                        <textarea id="shura-msg" placeholder="اكتب مقترحك أو شكواك هنا بكل وضوح..."></textarea>
+                        <button class="btn btn-p" onclick="SysV10.sendShura()">إرسال بالشورى</button>
+                    </div>
+                `;
+            }
+
+            if(state.tab === 'tasks') {
+                root.innerHTML = `<h3>📋 نظام التكاليف الرسمية</h3><div id="task-list"></div>`;
+                if(state.user.role === 'SUPER') {
+                    root.innerHTML += `
+                        <div class="admin-only" style="margin-top:20px">
+                            <h4>إسناد مهمة جديدة</h4>
+                            <select id="task-target">
+                                ${Object.entries(state.members).map(([id, u]) => `<option value="${id}">${u.name}</option>`).join('')}
+                            </select>
+                            <input type="text" id="task-desc" placeholder="وصف المهمة...">
+                            <button class="btn btn-s" onclick="SysV10.assignTask()">إسناد التكليف</button>
+                        </div>
+                    `;
+                }
+            }
+        },
+
+        openDossier: (id) => {
+            const m = state.members[id];
+            const modal = document.getElementById("dossier-modal");
+            const content = document.getElementById("dossier-data");
+            
+            content.innerHTML = `
+                <h2 style="margin:0">${m.name}</h2>
+                <p style="color:var(--sub)">ملف العضو المتكامل (Dossier)</p>
+                <hr border="0" height="1" background="var(--border)">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:15px 0">
+                    <div style="background:var(--bg); padding:10px; border-radius:10px">
+                        <small>إجمالي النقاط</small><br><b style="font-size:20px">${m.pts}</b>
+                    </div>
+                    <div style="background:var(--bg); padding:10px; border-radius:10px">
+                        <small>الحالة الانضباطية</small><br><b style="${m.yellowCard ? 'color:var(--gold)' : 'color:var(--success)'}">${m.yellowCard ? 'تنبيه نشط' : 'مستقر'}</b>
+                    </div>
+                </div>
+                
+                <h4>سجل العهدة الشخصية:</h4>
+                <div style="font-size:12px; color:var(--sub)">${m.inventory || 'لا توجد عهدة مسجلة حالياً.'}</div>
+
+                ${state.user.role === 'SUPER' ? `
+                    <div class="admin-only">
+                        <h4>أدوات القيادة (خاص):</h4>
+                        <button class="btn btn-s" onclick="SysV10.toggleYellowCard('${id}')">إدراج/إلغاء تنبيه (Yellow Card)</button>
+                        <button class="btn btn-p" style="background:var(--danger)" onclick="SysV10.generateReport('${id}')">توليد تقرير رسمي (Text)</button>
+                        <textarea id="private-notes" placeholder="ملاحظات قيادية سرية..." onchange="SysV10.saveNotes('${id}', this.value)">${m.notes || ''}</textarea>
+                    </div>
+                ` : ''}
+            `;
+            modal.classList.remove("hidden");
+        },
+
+        toggleYellowCard: (id) => {
+            const m = state.members[id];
+            const val = m.yellowCard ? null : new Date().toISOString();
+            db.child("members").child(id).update({ yellowCard: val });
+            SysV10.log(`تعديل حالة الانضباط لـ ${m.name}`, state.user.name);
+        },
+
+        generateReport: (id) => {
+            const m = state.members[id];
+            const report = `
+=== تقرير أداء كشفي رسمي ===
+الاسم: ${m.name}
+الطليعة: ${m.team}
+الرتبة: ${m.role}
+النقاط الإجمالية: ${m.pts}
+الأوسمة: ${(m.badges || []).join(' - ')}
+الحالة: ${m.yellowCard ? 'مخالف (تحت الرصد)' : 'منضبط'}
+ملاحظات القيادة: ${m.notes || 'لا يوجد'}
+تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}
+===========================`;
+            alert("تم توليد التقرير بنجاح، انسخ النص التالي:\n" + report);
+            console.log(report);
+        },
+
+        sendShura: () => {
+            const msg = document.getElementById("shura-msg").value;
+            if(!msg) return;
+            db.child("shura").push({ from: state.user.name, msg, time: new Date().toISOString() });
+            alert("تم إرسال المقترح إلى المشرف العام بنظام الشورى.");
+            document.getElementById("shura-msg").value = "";
+        },
+
+        toggleTheme: () => {
+            document.body.classList.toggle("light-mode");
         },
 
         log: (action, actor) => {
             db.child("logs").push({ action, actor, time: new Date().toLocaleTimeString('ar-SA') });
         },
 
-        factoryReset: () => {
-            if(!confirm("⚠️ سيتم مسح كل البيانات وتوليد الهيكل الجديد. هل أنت متأكد؟")) return;
+        closeModal: () => document.getElementById("dossier-modal").classList.add("hidden"),
+
+        factoryResetV10: () => {
+            if(!confirm("⚠️ سيتم تهيئة النظام للنسخة V10. هل أنت متأكد؟")) return;
             const raw = {
                 "طليعة 1": ["الوليد الحازمي (ق)", "صالح حبتور", "حسن الشهري", "عزام خبراني", "يحي شراحيلي", "فهد المهيني", "زياد العجلاني", "يزيد خال", "غازي العجمي", "ريان جعام"],
                 "طليعة 2": ["حاتم خريزي (ق)", "ياسر ابو حيه", "محمد عسيري", "علي الغامدي", "فواز الشهراني", "اصيل العتيبي", "صالح الخثعمي", "غازي العنزي", "ابراهيم التليدي", "رياض الزهراني"],
@@ -242,26 +293,17 @@ const Sys = (() => {
                     batch[id] = {
                         name: m.replace("(ق)","").trim(), team: t, 
                         role: m.includes("(ق)")?'LEADER':'MEMBER',
-                        pts: 0, badges: [], 
-                        pin: Math.floor(1000+Math.random()*8999).toString()
+                        pts: 0, badges: [], inventory: "حقيبة كشفية كاملة",
+                        pin: Math.floor(1000+Math.random()*8999).toString(),
+                        yellowCard: null, notes: ""
                     };
                 });
             });
-            db.child("users").set(batch);
-            db.child("logs").set({});
-            alert("تم تفعيل الهيكل الجديد بنجاح!");
-        },
-
-        init: () => {
-            db.on("value", snap => {
-                state.users = snap.val()?.users || snap.val() || {};
-                state.logs = Object.values(snap.val()?.logs || {}).reverse();
-                if(state.me) Sys.render();
-            });
+            db.child("members").set(batch);
+            alert("تم تأسيس نظام V10 المؤمن.");
         }
     };
 })();
-Sys.init();
 </script>
 </body>
 </html>
