@@ -1,241 +1,97 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد الكشفي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-    <style>
-        :root {
-            --bg: #060d1a; --bg2: #0c1829; --card: #0f2035; --card2: #162840;
-            --border: #1e3a5a; --gold: #d4a017; --gold2: #f5c842;
-            --blue: #1a5fa8; --blue2: #2272c3; --text: #e8f0fa;
-            --text2: #8baac8; --danger: #c0272d; --danger2: #e03030;
-            --success: #0d9e6e; --success2: #12c78a;
-        }
-        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); direction: rtl; min-height: 100vh; overflow-x: hidden; }
-        body::before {
-            content: ''; position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(ellipse 80% 40% at 20% 10%, rgba(26,95,168,0.12) 0%, transparent 60%),
-                        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(212,160,23,0.07) 0%, transparent 60%), var(--bg);
-        }
-
-        /* UI Elements */
-        #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .login-box { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 40px 35px; text-align: center; width: 100%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .login-logo { font-size: 50px; margin-bottom: 10px; }
-        .login-title { font-size: 28px; font-weight: 900; color: var(--gold); margin-bottom: 5px; }
-        .pin-input { width: 100%; background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 15px; color: white; text-align: center; font-size: 24px; letter-spacing: 10px; margin: 20px 0; }
-        .login-btn { width: 100%; background: var(--gold); color: var(--bg); border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; }
-        
-        #main-app { display: none; padding: 20px; max-width: 1000px; margin: auto; }
-        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: var(--card); padding: 15px 20px; border-radius: 15px; border: 1px solid var(--border); }
-        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: var(--card2); padding: 15px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-        .tab { background: var(--card); border: 1px solid var(--border); color: var(--text2); padding: 10px 20px; border-radius: 10px; cursor: pointer; white-space: nowrap; }
-        .tab.active { background: var(--blue); color: white; border-color: var(--blue2); }
-
-        .student-row { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .btn { padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px; }
-        .btn-gold { background: var(--gold); color: #000; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
-        
-        /* Modals */
-        .modal, .prompt-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal.show, .prompt-modal.show { display: flex; }
-        .modal-box, .prompt-box { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 20px; width: 100%; max-width: 450px; }
-        
-        #toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: var(--card2); border: 1px solid var(--border); padding: 12px 25px; border-radius: 30px; transition: 0.3s; z-index: 2000; }
-        #toast.show { bottom: 30px; }
-    </style>
-</head>
-<body>
-
-<div id="login-screen">
-    <div class="login-box">
-        <div class="login-logo">🛡️</div>
-        <div class="login-title">أوتـاد</div>
-        <input class="pin-input" type="password" id="access-pin" placeholder="••••" maxlength="6">
-        <button class="login-btn" onclick="handleLogin()">تسجيل الدخول</button>
-        <div id="login-error" style="color: var(--danger); margin-top: 10px;"></div>
-    </div>
-</div>
-
-<div id="main-app">
-    <div class="topbar">
-        <div id="user-display"></div>
-        <div style="display:flex; gap:10px;">
-            <div id="admin-btns" style="display:none; gap:10px;">
-                <button class="btn btn-gold" onclick="exportWhatsApp()">📱 تقرير</button>
-                <button class="btn btn-danger" onclick="confirmFullReset()">⚠️ تصفير</button>
-            </div>
-            <button class="btn btn-ghost" onclick="location.reload()">خروج</button>
-        </div>
-    </div>
-    <div class="stats-bar" id="stats-bar"></div>
-    <div class="tabs">
-        <button class="tab active" onclick="switchTab('list', this)">📋 الطلاب</button>
-        <button class="tab" onclick="switchTab('ranking', this)">🏆 الترتيب</button>
-        <button class="tab" onclick="switchTab('logs', this)">📄 السجل</button>
-    </div>
-    <div id="content-area"></div>
-</div>
-
-<div id="promptModal" class="prompt-modal">
-    <div class="prompt-box">
-        <h3 id="promptTitle"></h3>
-        <p id="promptHint" style="font-size: 12px; color: var(--text2); margin-bottom: 10px;"></p>
-        <input class="pin-input" id="promptInput" style="letter-spacing: normal; font-size: 18px;">
-        <div style="display:flex; gap:10px;">
-            <button class="btn btn-gold" style="flex:1" onclick="confirmPrompt()">تأكيد</button>
-            <button class="btn btn-ghost" style="flex:1" onclick="cancelPrompt()">إلغاء</button>
-        </div>
-    </div>
-</div>
-
-<div id="toast"></div>
-
 <script>
-// CONFIG & DATA
-const firebaseConfig = {
-    apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
-    authDomain: "awtad-system.firebaseapp.com",
-    databaseURL: "https://awtad-system-default-rtdb.firebaseio.com",
-    projectId: "awtad-system"
-};
-firebase.initializeApp(firebaseConfig);
-const awtadRef = firebase.database().ref('awtad_v5_official');
 
-const USERS = {
-    "1111": { name: "القائد عبدالله", role: "admin" },
-    "2222": { name: "عريف طليعة 1", role: "leader", pid: "p1" }
+// 🔥 تطوير البيانات
+let data = {
+  users:{},
+  logs:[],
+  access:[],
+  alerts:[]
 };
 
-const PLATOONS = [
-    { id: "p1", name: "طليعة الصقور", short: "صقور", members: ["أحمد", "خالد", "محمد"] },
-    { id: "p2", name: "طليعة الذئاب", short: "ذئاب", members: ["سعد", "فهد", "فيصل"] }
-];
-
-let liveData = { students: {}, logs: [] };
-let currentUser = null;
-let promptResolve = null;
-
-// APP LOGIC
-function handleLogin() {
-    const pin = document.getElementById('access-pin').value;
-    const user = USERS[pin];
-    if (user) {
-        currentUser = user;
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-        document.getElementById('user-display').innerHTML = `<b>${user.name}</b> <br> <small>${user.role}</small>`;
-        if(user.role === 'admin') document.getElementById('admin-btns').style.display = 'flex';
-        initSync();
-    } else {
-        document.getElementById('login-error').innerText = "الرمز خطأ يا بطل";
-    }
+// 🧠 مستويات
+function getLevel(pts){
+  if(pts>=100) return "أسطورة";
+  if(pts>=50) return "محترف";
+  if(pts>=20) return "متقدم";
+  return "مبتدئ";
 }
 
-function initSync() {
-    awtadRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) liveData = data;
-        render();
+// 🏅 أوسمة تلقائية
+function autoBadges(user){
+  if(user.pts>=50 && !user.badges.includes("التميز"))
+    user.badges.push("التميز");
+
+  if(user.pts>=100 && !user.badges.includes("الأسطورة"))
+    user.badges.push("الأسطورة");
+}
+
+// 🚨 كشف التلاعب
+function detectAbuse(val,target){
+  if(val>=30){
+    data.alerts.unshift({
+      msg:`نشاط مشبوه على ${target}`,
+      time:new Date().toLocaleString("ar-SA")
     });
+  }
 }
 
-function render() {
-    const area = document.getElementById('content-area');
-    area.innerHTML = '';
-    
-    // Default: List view
-    PLATOONS.forEach(p => {
-        const pHeader = document.createElement('h3');
-        pHeader.innerText = p.name;
-        pHeader.style.margin = "15px 0";
-        area.appendChild(pHeader);
+// ➕ نقاط
+function addPts(id){
+  let v = parseInt(prompt("كم؟"));
+  if(isNaN(v) || v<=0) return;
 
-        p.members.forEach(m => {
-            const s = liveData.students?.[m] || { pts: 0 };
-            const row = document.createElement('div');
-            row.className = 'student-row';
-            row.innerHTML = `
-                <span>${m} (<b>${s.pts}</b> ن)</span>
-                <div>
-                    <button class="btn btn-gold" onclick="addPts('${m}')">+</button>
-                    <button class="btn btn-danger" onclick="resetPts('${m}')">🔄</button>
-                </div>
-            `;
-            area.appendChild(row);
-        });
-    });
+  data.users[id].pts += v;
+
+  autoBadges(data.users[id]);
+  detectAbuse(v,data.users[id].name);
+
+  log(user.name,"نقاط",data.users[id].name,v);
+  save();
 }
 
-function addPts(name) {
-    showPrompt(`إضافة نقاط لـ ${name}`, "أدخل عدد النقاط").then(val => {
-        if (!val) return;
-        if (!liveData.students) liveData.students = {};
-        if (!liveData.students[name]) liveData.students[name] = { pts: 0 };
-        liveData.students[name].pts += parseInt(val);
-        pushLog(name, val, "تعديل يدوي");
-        awtadRef.set(liveData);
-        showToast("تم التحديث ✅");
-    });
+// 📊 تحليل
+function getStats(){
+  let users = Object.values(data.users);
+
+  let top = users.sort((a,b)=>b.pts-a.pts)[0];
+  return {
+    best: top?.name || "-",
+    pts: top?.pts || 0
+  };
 }
 
-function resetPts(name) {
-    if(confirm(`تصفير نقاط ${name}؟`)) {
-        liveData.students[name].pts = 0;
-        awtadRef.set(liveData);
-    }
+// 🎨 عرض متطور
+function renderAdvanced(){
+
+let html="";
+
+Object.entries(data.users).forEach(([id,u])=>{
+html+=`
+<div class="box">
+<b>${u.name}</b><br>
+المستوى: ${getLevel(u.pts)}<br>
+النقاط: ${u.pts}<br>
+الأوسمة: ${u.badges.join(", ")}<br>
+
+<button onclick="addPts('${id}')">إضافة نقاط</button>
+${user.role==="super"?`<button onclick="changePin('${id}')">PIN</button>`:""}
+</div>
+`;
+});
+
+document.getElementById("users").innerHTML=html;
+
+// 🚨 عرض التنبيهات
+if(user.role==="super"){
+document.getElementById("alerts").innerHTML =
+data.alerts.map(a=>a.msg+" - "+a.time).join("<br>");
 }
 
-function pushLog(target, val, reason) {
-    if (!liveData.logs) liveData.logs = [];
-    liveData.logs.unshift({ admin: currentUser.name, target, val, reason, time: new Date().toLocaleString('ar-SA') });
+// 📊 احصائيات
+let s = getStats();
+document.getElementById("stats").innerHTML =
+`أفضل لاعب: ${s.best} (${s.pts})`;
+
 }
 
-function switchTab(tab, el) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-    // هنا تضيف منطق عرض الترتيب أو السجلات
-    if(tab === 'logs') {
-        const area = document.getElementById('content-area');
-        area.innerHTML = liveData.logs?.map(l => `<div class='student-row' style='font-size:12px'>${l.time}: ${l.admin} عدل لـ ${l.target} (${l.val})</div>`).join('') || 'لا سجلات';
-    } else {
-        render();
-    }
-}
-
-// PROMPT MODAL HELPER
-function showPrompt(title, hint) {
-    return new Promise(resolve => {
-        promptResolve = resolve;
-        document.getElementById('promptTitle').innerText = title;
-        document.getElementById('promptHint').innerText = hint;
-        document.getElementById('promptModal').classList.add('show');
-    });
-}
-function confirmPrompt() {
-    const v = document.getElementById('promptInput').value;
-    document.getElementById('promptModal').classList.remove('show');
-    if(promptResolve) promptResolve(v);
-}
-function cancelPrompt() {
-    document.getElementById('promptModal').classList.remove('show');
-    if(promptResolve) promptResolve(null);
-}
-
-function showToast(m) {
-    const t = document.getElementById('toast');
-    t.innerText = m; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2000);
-}
 </script>
-</body>
-</html>
