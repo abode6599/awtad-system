@@ -3,134 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد المتكامل</title>
+    <title>نظام أوتاد الكشفي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
-        :root { --primary: #3b82f6; --bg: #0b1220; --card: #111c33; --gold: #fbbf24; --text: #e5ecf5; }
+        :root { --bg: #0b1220; --card: #161f32; --gold: #fbbf24; --blue: #3b82f6; --text: #e5ecf5; }
         * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
         body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; direction: rtl; }
-        .box { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #1e293b; }
-        button { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 2px; }
-        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #0b1220; color: white; text-align: center; margin-bottom: 10px; }
+        .box { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #2d3748; }
+        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2d3748; background: #0b1220; color: white; text-align: center; margin-bottom: 10px; }
+        button { background: var(--blue); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .hidden { display: none; }
-        h2, h3 { color: var(--gold); margin-top: 0; }
-        .user-item { border-bottom: 1px solid #1e293b; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .pin-tag { background: #1e293b; color: #fff; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 14px; margin-right: 5px; }
+        .user-card { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2d3748; padding: 10px 0; }
+        .pin-label { background: #0b1220; padding: 2px 6px; border-radius: 5px; color: var(--gold); font-family: monospace; }
+        .platoon-tag { font-size: 11px; opacity: 0.6; display: block; }
     </style>
 </head>
 <body>
 
-<div id="login" class="box" style="max-width: 400px; margin: 10vh auto; text-align: center;">
-    <h2>🛡️ دخول نظام أوتاد</h2>
-    <input type="password" id="pin" placeholder="أدخل الرقم السري">
-    <button onclick="login()" style="width: 100%;">دخول</button>
-    <div id="err" style="color: #ef4444; margin-top: 10px;"></div>
+<div id="login-section" class="box" style="max-width: 400px; margin: 15vh auto; text-align: center;">
+    <h1 style="color:var(--gold)">أوتـاد 🛡️</h1>
+    <input type="password" id="pin-input" placeholder="أدخل الرقم السري">
+    <button onclick="attemptLogin()" style="width:100%">دخول النظام</button>
+    <p id="error-msg" style="color:red; font-size:12px;"></p>
 </div>
 
-<div id="app" class="hidden container" style="max-width: 600px; margin: auto;">
-    <div class="box" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 id="user" style="margin:0;"></h3>
-        <button onclick="location.reload()" style="background:#ef4444;">خروج</button>
+<div id="main-app" class="hidden" style="max-width: 600px; margin: auto;">
+    <div class="box" style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 id="welcome-name" style="margin:0; font-size:18px;"></h2>
+        <button onclick="location.reload()" style="background:#ef4444; padding:5px 10px;">خروج</button>
     </div>
 
-    <div id="controls" class="box hidden">
-        <button onclick="importOldData()">🔄 استيراد الأسماء وتوليد الأرقام السرية</button>
-        <button onclick="resetAll()" style="background:#ef4444;">⚠️ تصفير النقاط</button>
+    <div id="admin-tools" class="box hidden">
+        <h3 style="margin-top:0; font-size:14px;">أدوات القائد</h3>
+        <button onclick="generateAllStudents()" style="background:var(--gold); color:black;">🔄 استيراد الطلاب + توليد PIN</button>
+        <button onclick="resetPoints()" style="background:#ef4444;">⚠️ تصفير النقاط</button>
     </div>
 
     <div class="box">
-        <h3>👥 قائمة الطلاب (مع الأرقام السرية)</h3>
-        <div id="users-list"></div>
+        <h3>قائمة الطلاب والطلايع</h3>
+        <div id="students-list"></div>
     </div>
 </div>
 
 <script>
+// إعدادات Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
     databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
 };
-
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database().ref("awtad_clean");
+const db = firebase.database().ref("awtad_final");
 
-let data = { users: {} };
-let currentUser = null;
+let appData = { users: {} };
+let loggedInUser = null;
 
-// القائمة الكاملة للطلاب
-const OLD_LIST = [
-    {name:"صالح حبتور", platoon:"طليعة 1"}, {name:"حسن الشهري", platoon:"طليعة 1"}, {name:"عزام خبراني", platoon:"طليعة 1"}, {name:"ريان جعام", platoon:"طليعة 1"}, {name:"غازي العجمي", platoon:"طليعة 1"}, {name:"يزيد خال", platoon:"طليعة 1"}, {name:"زياد العجلاني", platoon:"طليعة 1"}, {name:"فهد المهيني", platoon:"طليعة 1"}, {name:"يحي شراحيلي", platoon:"طليعة 1"},
-    {name:"ياسر ابو حيه", platoon:"طليعة 2"}, {name:"محمد عسيري", platoon:"طليعة 2"}, {name:"علي الغامدي", platoon:"طليعة 2"}, {name:"رياض الزهراني", platoon:"طليعة 2"}, {name:"ابراهيم التليدي", platoon:"طليعة 2"}, {name:"غازي العنزي", platoon:"طليعة 2"}, {name:"صالح الخثعمي", platoon:"طليعة 2"}, {name:"اصيل العتيبي", platoon:"طليعة 2"}, {name:"فواز الشهراني", platoon:"طليعة 2"},
-    {name:"بسام قرادي", platoon:"طليعة 3"}, {name:"بدر كعبي", platoon:"طليعة 3"}, {name:"حسام الشهراني", platoon:"طليعة 3"}, {name:"علي الشهراني", platoon:"طليعة 3"}, {name:"زايد القحطاني", platoon:"طليعة 3"}, {name:"راشد الراشدي", platoon:"طليعة 3"}, {name:"عبدالعزيز القحطاني", platoon:"طليعة 3"}, {name:"عيسى الرشيدي", platoon:"طليعة 3"}, {name:"عبدالله قشاش", platoon:"طليعة 3"},
-    {name:"مشعل القحطاني", platoon:"طليعة 4"}, {name:"ناصر المطيري", platoon:"طليعة 4"}, {name:"مبارك خميس", platoon:"طليعة 4"}, {name:"مشاري القحطاني", platoon:"طليعة 4"}, {name:"محمد فقيه", platoon:"طليعة 4"}, {name:"فارس العمري", platoon:"طليعة 4"}, {name:"رائد حوباني", platoon:"طليعة 4"}, {name:"راكان حوباني", platoon:"طليعة 4"}, {name:"عبدالله القرني", platoon:"طليعة 4"}
+// قائمة الـ 36 طالب
+const STUDENTS_MASTER = [
+    {n:"صالح حبتور", p:"ط1"}, {n:"حسن الشهري", p:"ط1"}, {n:"عزام خبراني", p:"ط1"}, {n:"يحي شراحيلي", p:"ط1"}, {n:"فهد المهيني", p:"ط1"}, {n:"زياد العجلاني", p:"ط1"}, {n:"يزيد خال", p:"ط1"}, {n:"غازي العجمي", p:"ط1"}, {n:"ريان جعام", p:"ط1"},
+    {n:"ياسر ابو حيه", p:"ط2"}, {n:"محمد عسيري", p:"p:"ط2"}, {n:"علي الغامدي", p:"ط2"}, {n:"فواز الشهراني", p:"ط2"}, {n:"اصيل العتيبي", p:"ط2"}, {n:"صالح الخثعمي", p:"ط2"}, {n:"غازي العنزي", p:"ط2"}, {n:"ابراهيم التليدي", p:"ط2"}, {n:"رياض الزهراني", p:"ط2"},
+    {n:"بسام قرادي", p:"ط3"}, {n:"بدر كعبي", p:"ط3"}, {n:"حسام الشهراني", p:"ط3"}, {n:"عبدالله قشاش", p:"ط3"}, {n:"عيسى الرشيدي", p:"ط3"}, {n:"عبدالعزيز القحطاني", p:"ط3"}, {n:"راشد الراشدي", p:"ط3"}, {n:"زايد القحطاني", p:"ط3"}, {n:"علي الشهراني", p:"ط3"},
+    {n:"مشعل القحطاني", p:"ط4"}, {n:"ناصر المطيري", p:"ط4"}, {n:"مبارك خميس", p:"ط4"}, {n:"عبدالله القرني", p:"ط4"}, {n:"راكان حوباني", p:"ط4"}, {n:"رائد حوباني", p:"ط4"}, {n:"فارس العمري", p:"ط4"}, {n:"محمد فقيه", p:"ط4"}, {n:"مشاري القحطاني", p:"ط4"}
 ];
 
-function login() {
-    let pinInput = document.getElementById("pin").value;
-    if(pinInput === "9999") currentUser = {name: "سلمان", role: "super"};
-    else if(pinInput === "8888") currentUser = {name: "معاذ", role: "super"};
-    else if(pinInput === "7777") currentUser = {name: "عبدالله", role: "super"};
-
-    if(!currentUser) {
-        document.getElementById("err").innerText = "الرمز خطأ!";
-        return;
+function attemptLogin() {
+    const pin = document.getElementById("pin-input").value;
+    // دخول القادة
+    if(pin === "9999") loggedInUser = {name: "سلمان", role: "admin"};
+    else if(pin === "8888") loggedInUser = {name: "معاذ", role: "admin"};
+    else if(pin === "7777") loggedInUser = {name: "عبدالله", role: "admin"};
+    
+    // دخول الطلاب من القاعدة
+    if(!loggedInUser) {
+        Object.values(appData.users).forEach(u => { if(u.pin === pin) loggedInUser = u; });
     }
 
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-    if(currentUser.role === "super") document.getElementById("controls").classList.remove("hidden");
-    render();
+    if(loggedInUser) {
+        document.getElementById("login-section").classList.add("hidden");
+        document.getElementById("main-app").classList.remove("hidden");
+        document.getElementById("welcome-name").innerText = "مرحباً: " + loggedInUser.name;
+        if(loggedInUser.role === "admin") document.getElementById("admin-tools").classList.remove("hidden");
+        renderData();
+    } else {
+        document.getElementById("error-msg").innerText = "الرمز السري خطأ!";
+    }
 }
 
-function importOldData() {
-    if(!confirm("سيتم إضافة الطلاب وتوليد 4 أرقام عشوائية لكل طالب. هل أنت متأكد؟")) return;
-    
-    OLD_LIST.forEach(s => {
-        let id = "U" + Math.random().toString(36).substr(2, 9);
-        data.users[id] = {
-            name: s.name,
-            platoon: s.platoon,
+function generateAllStudents() {
+    if(!confirm("هل أنت متأكد من استيراد الـ 36 طالب؟")) return;
+    let newUsers = {};
+    STUDENTS_MASTER.forEach((s, index) => {
+        let id = "student_" + index;
+        newUsers[id] = {
+            name: s.n,
+            platoon: s.p,
             pts: 0,
-            badges: [],
-            // توليد الرقم العشوائي المكون من 4 خانات هنا
-            pin: Math.floor(1000 + Math.random() * 9000).toString() 
+            pin: Math.floor(1000 + Math.random() * 9000).toString(),
+            role: "student"
         };
     });
-    save();
-    alert("تم استيراد الطلاب بنجاح!");
+    db.child("users").set(newUsers);
 }
 
-function save() { db.set(data); }
+function updatePoints(id, val) {
+    let currentPts = appData.users[id].pts || 0;
+    db.child("users").child(id).update({ pts: currentPts + val });
+}
 
-function render() {
-    let html = "";
-    Object.entries(data.users || {}).forEach(([id, u]) => {
-        html += `<div class="user-item">
+function resetPoints() {
+    if(!confirm("تصفير النقاط للكل؟")) return;
+    Object.keys(appData.users).forEach(id => db.child("users").child(id).update({ pts: 0 }));
+}
+
+function renderData() {
+    const listDiv = document.getElementById("students-list");
+    listDiv.innerHTML = "";
+    Object.entries(appData.users).forEach(([id, u]) => {
+        listDiv.innerHTML += `
+        <div class="user-card">
             <div>
-                <strong>${u.name}</strong> <br>
-                <small style="opacity:0.6">${u.platoon}</small>
+                <strong>${u.name}</strong> <span class="platoon-tag">${u.platoon}</span>
+                <span class="pin-label">${loggedInUser.role === 'admin' ? u.pin : '****'}</span>
             </div>
-            <div style="text-align: left;">
-                <span class="pin-tag">PIN: ${u.pin}</span>
-                <span style="color:var(--gold); font-weight:bold;">${u.pts || 0} ن</span>
-                <button onclick="addPts('${id}')">+</button>
+            <div>
+                <span style="color:var(--gold); font-weight:bold; margin-left:10px;">${u.pts} ن</span>
+                ${loggedInUser.role === 'admin' ? `<button onclick="updatePoints('${id}', 5)">+5</button>` : ''}
             </div>
         </div>`;
     });
-    document.getElementById("users-list").innerHTML = html || "القائمة فارغة، اضغط استيراد.";
 }
 
-function addPts(id) {
-    let v = parseInt(prompt("إضافة نقاط لـ " + data.users[id].name));
-    if(!isNaN(v)) {
-        data.users[id].pts = (data.users[id].pts || 0) + v;
-        save();
+db.on("value", (snap) => {
+    const val = snap.val();
+    if(val) {
+        appData = val;
+        if(!appData.users) appData.users = {};
+        renderData();
     }
-}
-
-db.on("value", snap => {
-    if(snap.val()) { data = snap.val(); if(!data.users) data.users = {}; render(); }
 });
 </script>
 </body>
