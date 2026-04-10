@@ -1,6 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام أوتاد</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+
+<style>
+body{background:#0b1220;color:#e5ecf5;font-family:Cairo;margin:0}
+.box{background:#111c33;padding:15px;border-radius:10px;margin:10px}
+button,input{padding:10px;border-radius:8px;border:none}
+button{cursor:pointer}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div id="login" class="box">
+<h2>تسجيل الدخول</h2>
+<input id="pin" placeholder="الرقم السري">
+<button onclick="login()">دخول</button>
+<div id="err"></div>
+</div>
+
+<div id="app" class="hidden">
+
+<h3 id="user"></h3>
+
+<div id="controls"></div>
+
+<div class="box">
+<h3>المستخدمين</h3>
+<div id="users"></div>
+</div>
+
+<div class="box">
+<h3>الترتيب</h3>
+<div id="rank"></div>
+</div>
+
+<div class="box">
+<h3>السجل</h3>
+<div id="logs"></div>
+</div>
+
+<div class="box">
+<h3>حسابي</h3>
+<div id="me"></div>
+</div>
+
+<div class="box">
+<h3>تنبيهات</h3>
+<div id="alerts"></div>
+</div>
+
+<div class="box">
+<h3>لوق الدخول</h3>
+<div id="access"></div>
+</div>
+
+</div>
+
 <script>
 
-// 🔥 تطوير البيانات
+// 🔥 firebase
+firebase.initializeApp({
+apiKey:"YOUR_KEY",
+databaseURL:"YOUR_DB"
+});
+
+const db = firebase.database().ref("awtad_clean");
+
+// 🧠 البيانات
 let data = {
   users:{},
   logs:[],
@@ -8,90 +82,221 @@ let data = {
   alerts:[]
 };
 
-// 🧠 مستويات
-function getLevel(pts){
-  if(pts>=100) return "أسطورة";
-  if(pts>=50) return "محترف";
-  if(pts>=20) return "متقدم";
-  return "مبتدئ";
+let user = null;
+
+// 🔢 توليد PIN
+function generatePin(){
+  let used = new Set(Object.values(data.users).map(u=>u.pin));
+  let pin;
+  do{
+    pin = Math.floor(1000 + Math.random()*9000).toString();
+  }while(used.has(pin));
+  return pin;
 }
 
-// 🏅 أوسمة تلقائية
-function autoBadges(user){
-  if(user.pts>=50 && !user.badges.includes("التميز"))
-    user.badges.push("التميز");
+// 🔐 دخول
+function login(){
+  let pin = document.getElementById("pin").value;
 
-  if(user.pts>=100 && !user.badges.includes("الأسطورة"))
-    user.badges.push("الأسطورة");
-}
+  let found = null;
 
-// 🚨 كشف التلاعب
-function detectAbuse(val,target){
-  if(val>=30){
-    data.alerts.unshift({
-      msg:`نشاط مشبوه على ${target}`,
-      time:new Date().toLocaleString("ar-SA")
-    });
+  Object.entries(data.users).forEach(([id,u])=>{
+    if(u.pin === pin){
+      found = {...u,id};
+    }
+  });
+
+  // العليا
+  if(pin==="9999") found={name:"سلمان",role:"super"};
+  if(pin==="8888") found={name:"معاذ",role:"super"};
+  if(pin==="7777") found={name:"عبدالله",role:"super"};
+
+  if(!found){
+    document.getElementById("err").innerText="رمز غلط";
+    return;
   }
+
+  user = found;
+
+  logAccess(user.name,"login");
+
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  render();
+}
+
+// 🧾 لوق دخول
+function logAccess(name,action){
+  data.access.unshift({
+    name,action,time:new Date().toLocaleString("ar-SA")
+  });
+  save();
+}
+
+// ➕ إضافة مستخدم
+function addUser(){
+  let name = prompt("الاسم");
+  if(!name) return;
+
+  let role = prompt("role: member / leader");
+  if(!role) return;
+
+  let id = "U"+Date.now();
+
+  data.users[id]={
+    name,
+    role,
+    pts:0,
+    badges:[],
+    pin:generatePin()
+  };
+
+  save();
 }
 
 // ➕ نقاط
 function addPts(id){
   let v = parseInt(prompt("كم؟"));
-  if(isNaN(v) || v<=0) return;
+  if(isNaN(v)||v<=0) return;
 
   data.users[id].pts += v;
 
-  autoBadges(data.users[id]);
-  detectAbuse(v,data.users[id].name);
+  // أوسمة تلقائية
+  if(data.users[id].pts>=50 && !data.users[id].badges.includes("التميز")){
+    data.users[id].badges.push("التميز");
+  }
+
+  if(data.users[id].pts>=100 && !data.users[id].badges.includes("الأسطورة")){
+    data.users[id].badges.push("الأسطورة");
+  }
+
+  // كشف تلاعب
+  if(v>=30){
+    data.alerts.unshift({
+      msg:"نشاط مشبوه على "+data.users[id].name,
+      time:new Date().toLocaleString("ar-SA")
+    });
+  }
 
   log(user.name,"نقاط",data.users[id].name,v);
   save();
 }
 
-// 📊 تحليل
-function getStats(){
-  let users = Object.values(data.users);
-
-  let top = users.sort((a,b)=>b.pts-a.pts)[0];
-  return {
-    best: top?.name || "-",
-    pts: top?.pts || 0
-  };
+// 🏅 وسام
+function giveBadge(id){
+  let b = prompt("اسم الوسام");
+  if(!b) return;
+  data.users[id].badges.push(b);
+  save();
 }
 
-// 🎨 عرض متطور
-function renderAdvanced(){
+// 🔁 تغيير PIN
+function changePin(id){
+  if(user.role!=="super") return;
 
+  let p = generatePin();
+  data.users[id].pin = p;
+
+  alert("PIN الجديد: "+p);
+  save();
+}
+
+// 🧾 لوق
+function log(admin,action,target,val){
+  data.logs.unshift({
+    admin,action,target,val,
+    time:new Date().toLocaleString("ar-SA")
+  });
+}
+
+// ⚠️ تصفير
+function resetAll(){
+  if(user.role!=="super") return;
+  if(!confirm("تصفير؟")) return;
+
+  Object.values(data.users).forEach(u=>u.pts=0);
+
+  save();
+}
+
+// 💾 حفظ
+function save(){
+  db.set(data);
+}
+
+// 🎨 عرض
+function render(){
+
+document.getElementById("user").innerText=user.name+" ("+user.role+")";
+
+// المستخدمين
 let html="";
-
 Object.entries(data.users).forEach(([id,u])=>{
 html+=`
 <div class="box">
-<b>${u.name}</b><br>
-المستوى: ${getLevel(u.pts)}<br>
-النقاط: ${u.pts}<br>
-الأوسمة: ${u.badges.join(", ")}<br>
-
-<button onclick="addPts('${id}')">إضافة نقاط</button>
+${u.name} | ${u.role} | ${u.pts || 0}
+<br>
+PIN: ${user.role==="super"?u.pin:"****"}
+<br>
+${(u.badges || []).join(", ")}
+<br>
+<button onclick="addPts('${id}')">نقاط</button>
+<button onclick="giveBadge('${id}')">وسام</button>
 ${user.role==="super"?`<button onclick="changePin('${id}')">PIN</button>`:""}
-</div>
-`;
+</div>`;
 });
-
 document.getElementById("users").innerHTML=html;
 
-// 🚨 عرض التنبيهات
-if(user.role==="super"){
+// ترتيب
+let rank = Object.values(data.users)
+.sort((a,b)=>(b.pts||0)-(a.pts||0));
+
+document.getElementById("rank").innerHTML =
+rank.map(u=>u.name+" - "+(u.pts||0)).join("<br>");
+
+// لوق
+document.getElementById("logs").innerHTML =
+data.logs.map(l=>l.admin+" عدل "+l.target+" ("+l.val+")").join("<br>");
+
+// حسابي
+if(user.role==="member"||user.role==="leader"){
+document.getElementById("me").innerHTML=`
+${user.name}<br>
+نقاط: ${user.pts||0}<br>
+أوسمة: ${(user.badges||[]).join(", ")}
+`;
+}
+
+// تنبيهات
 document.getElementById("alerts").innerHTML =
 data.alerts.map(a=>a.msg+" - "+a.time).join("<br>");
+
+// لوق الدخول
+if(user.role==="super"){
+document.getElementById("access").innerHTML =
+data.access.map(a=>a.name+" "+a.action+" "+a.time).join("<br>");
 }
 
-// 📊 احصائيات
-let s = getStats();
-document.getElementById("stats").innerHTML =
-`أفضل لاعب: ${s.best} (${s.pts})`;
+// تحكم
+let c="";
+if(user.role==="super"){
+c+=`<button onclick="addUser()">إضافة مستخدم</button>`;
+c+=`<button onclick="resetAll()">تصفير</button>`;
+}
+document.getElementById("controls").innerHTML=c;
 
 }
+
+// 🔄 مزامنة
+db.on("value",snap=>{
+  if(snap.val()){
+    data = snap.val();
+  }
+  render();
+});
 
 </script>
+
+</body>
+</html>
