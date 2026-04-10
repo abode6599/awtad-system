@@ -1,247 +1,146 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام كشافة آمن</title>
-
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-
-<style>
-body{margin:0;background:#0b1220;color:#e6eefc;font-family:Cairo}
-.box{background:#111c33;margin:10px;padding:12px;border-radius:10px}
-button,input{padding:8px;border-radius:8px;border:none}
-button{cursor:pointer}
-.hidden{display:none}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام أوتاد الكشفي الآمن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <style>
+        :root { --bg: #0b1220; --card: #111c33; --gold: #fbbf24; --blue: #3b82f6; --text: #e6eefc; }
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--text); direction: rtl; padding: 10px; }
+        .box { background: var(--card); margin-bottom: 10px; padding: 15px; border-radius: 12px; border: 1px solid #1e293b; }
+        button, input { padding: 10px; border-radius: 8px; border: none; font-size: 16px; }
+        button { background: var(--blue); color: white; cursor: pointer; font-weight: bold; }
+        input { width: 100%; background: #0b1220; color: white; border: 1px solid #1e293b; text-align: center; margin-bottom: 10px; }
+        .hidden { display: none; }
+        .student-item { border-bottom: 1px solid #1e293b; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .badge-tag { background: rgba(251, 191, 36, 0.2); color: var(--gold); padding: 2px 8px; border-radius: 5px; font-size: 11px; margin-right: 5px; }
+    </style>
 </head>
-
 <body>
 
-<div id="login" class="box">
-<h2>دخول النظام</h2>
-<input id="pin" placeholder="PIN">
-<button onclick="login()" id="loginBtn" disabled>دخول</button>
-<div id="err"></div>
-<div id="status">جاري تحميل النظام...</div>
+<div id="login" class="box" style="max-width:400px; margin: 15vh auto; text-align: center;">
+    <h2 style="color:var(--gold)">دخول نظام أوتاد</h2>
+    <input id="pin" type="password" placeholder="أدخل PIN (مثلاً 1111)">
+    <button onclick="login()" id="loginBtn" style="width:100%" disabled>جاري التحميل...</button>
+    <div id="err" style="color:#ef4444; margin-top:10px;"></div>
 </div>
 
-<div id="app" class="hidden">
-<h3 id="me"></h3>
-<div id="controls"></div>
-<div id="content"></div>
+<div id="app" class="hidden" style="max-width:600px; margin:auto;">
+    <div class="box" style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 id="me" style="margin:0"></h3>
+        <button onclick="location.reload()" style="background:#ef4444; padding:5px 10px;">خروج</button>
+    </div>
+    <div id="controls" class="box hidden"></div>
+    <div class="box">
+        <h3>قائمة الطلاب والطلايع</h3>
+        <div id="content"></div>
+    </div>
 </div>
 
 <script>
+// 🔥 الربط المباشر مع Firebase الخاص بك
+const firebaseConfig = {
+    apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
+    databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
+};
 
-// 🔥 Firebase
-firebase.initializeApp({
-apiKey:"YOUR_KEY",
-databaseURL:"YOUR_DB"
-});
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database().ref("safe_system_v3");
 
-const db = firebase.database().ref("safe_system");
-
-// 🧠 بيانات آمنة دائمًا
-let data = {users:{},logs:[],alerts:[]};
-let user = null;
+let data = {users:{}};
+let currentUser = null;
 let ready = false;
 
-// 👑 قيادة عليا
+// 👑 القيادة العليا
 const SUPER = {
-"1111":"عبدالله العرفه",
-"2222":"سلمان الصويلح",
-"3333":"معاذ الشنقيطي"
+    "1111": {name: "عبدالله العرفه", role: "Super Admin"},
+    "2222": {name: "سلمان الصويلح", role: "Super Admin"},
+    "3333": {name: "معاذ الشنقيطي", role: "Super Admin"}
 };
 
-// 🔢 PIN آمن
-function genPin(){
-let used = new Set(Object.values(data.users||{}).map(u=>u.pin));
-let p;
-do{
-p = Math.floor(1000 + Math.random()*9000).toString();
-}while(used.has(p));
-return p;
+// 🛡️ الهيكلة الرسمية (قادة وأعضاء)
+const STRUCTURE = [
+    {team: "طليعة 1", leader: "الوليد الحازمي", members: ["صالح حبتور", "حسن الشهري", "عزام خبراني", "يحي شراحيلي", "فهد المهيني", "زياد العجلاني", "يزيد خال", "غازي العجمي", "ريان جعام"]},
+    {team: "طليعة 2", leader: "حاتم خريزي", members: ["ياسر ابو حيه", "محمد عسيري", "علي الغامدي", "فواز الشهراني", "اصيل العتيبي", "صالح الخثعمي", "غازي العنزي", "ابراهيم التليدي", "رياض الزهراني"]},
+    {team: "طليعة 3", leader: "راكان شراحيلي", members: ["بسام قرادي", "بدر كعبي", "حسام الشهراني", "عبدالله قشاش", "عيسى الرشيدي", "عبدالعزيز القحطاني", "راشد الراشدي", "زايد القحطاني", "علي الشهراني"]},
+    {team: "طليعة 4", leader: "وضاح الصويلح", members: ["مشعل القحطاني", "ناصر المطيري", "مبارك خميس", "عبدالله القرني", "راكان حوباني", "رائد حوباني", "فارس العمري", "محمد فقيه", "مشاري القحطاني"]}
+];
+
+function seed() {
+    if(Object.keys(data.users || {}).length > 0) return;
+    let newUsers = {};
+    STRUCTURE.forEach(group => {
+        // إضافة القائد أولاً
+        let leaderId = "L_" + group.leader.replace(/\s/g, '');
+        newUsers[leaderId] = { name: group.leader, team: group.team, role: "قائد طليعة", pts: 0, pin: Math.floor(1000 + Math.random()*9000).toString(), badges: [] };
+        
+        // إضافة الأعضاء
+        group.members.forEach(m => {
+            let mid = "U_" + m.replace(/\s/g, '');
+            newUsers[mid] = { name: m, team: group.team, role: "عضو", pts: 0, pin: Math.floor(1000 + Math.random()*9000).toString(), badges: [] };
+        });
+    });
+    db.child("users").set(newUsers);
 }
 
-// 🚀 بناء أولي آمن
-function seed(){
-if(Object.keys(data.users||{}).length>0) return;
+function login() {
+    let pin = document.getElementById("pin").value.trim();
+    let found = null;
 
-const groups = {
-"طليعة 1":["صالح","حسن","عزام","يحي","فهد","زياد","يزيد","غازي","ريان"],
-"طليعة 2":["ياسر","محمد","علي","فواز","اصيل","صالح2","غازي2","ابراهيم","رياض"],
-"طليعة 3":["بسام","بدر","حسام","عبدالله","عيسى","عبدالعزيز","راشد","زايد","علي2"],
-"طليعة 4":["مشعل","ناصر","مبارك","عبدالله2","راكان","رائد","فارس","محمد2","مشاري"]
-};
+    if(SUPER[pin]) found = SUPER[pin];
+    else {
+        Object.values(data.users || {}).forEach(u => { if(u.pin === pin) found = u; });
+    }
 
-Object.entries(groups).forEach(([team,members])=>{
-members.forEach(name=>{
-let id="U"+Math.random();
+    if(!found) { document.getElementById("err").innerText = "PIN خطأ!"; return; }
 
-data.users[id]={
-name,
-team,
-role:"member",
-pts:0,
-badges:[],
-pin:genPin()
-};
+    currentUser = found;
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    if(currentUser.role === "Super Admin") document.getElementById("controls").classList.remove("hidden");
+    render();
+}
+
+function addPts(id) {
+    let v = parseInt(prompt("كم نقطة لـ " + data.users[id].name + "؟"));
+    if(!v || v <= 0) return;
+    let current = data.users[id].pts || 0;
+    db.child("users").child(id).update({ pts: current + v });
+}
+
+function render() {
+    document.getElementById("me").innerText = currentUser.name + " (" + currentUser.role + ")";
+    let html = "";
+    Object.entries(data.users || {}).forEach(([id, u]) => {
+        html += `<div class="student-item">
+            <div>
+                <b>${u.name}</b> <small style="opacity:0.6">${u.team}</small><br>
+                ${currentUser.role === 'Super Admin' ? `<span style="color:var(--gold); font-size:12px">PIN: ${u.pin}</span>` : ''}
+            </div>
+            <div>
+                <b style="color:var(--gold)">${u.pts} ن</b>
+                ${currentUser.role !== 'عضو' ? `<button onclick="addPts('${id}')" style="margin-right:10px; padding:2px 8px">+</button>` : ''}
+            </div>
+        </div>`;
+    });
+    document.getElementById("content").innerHTML = html;
+
+    if(currentUser.role === "Super Admin") {
+        document.getElementById("controls").innerHTML = `<button onclick="seed()">🔄 استيراد الأسماء</button> <button onclick="db.set({users:{}})" style="background:#ef4444">⚠️ تصفير كامل</button>`;
+    }
+}
+
+db.on("value", snap => {
+    data = snap.val() || {users:{}};
+    ready = true;
+    document.getElementById("loginBtn").innerText = "دخول";
+    document.getElementById("loginBtn").disabled = false;
+    if(currentUser) render();
 });
-});
-
-save();
-}
-
-// 🔐 تسجيل دخول آمن 100%
-function login(){
-
-if(!ready){
-document.getElementById("err").innerText="انتظر تحميل النظام";
-return;
-}
-
-let pin=document.getElementById("pin").value.trim();
-
-let found=null;
-
-// 👑 قيادة
-if(SUPER[pin]){
-found={name:SUPER[pin],role:"super"};
-}
-
-// 👥 مستخدمين
-for(let u of Object.values(data.users||{})){
-if(u.pin===pin){
-found=u;
-break;
-}
-}
-
-if(!found){
-document.getElementById("err").innerText="PIN خطأ";
-return;
-}
-
-user=found;
-
-log("login",user.name);
-
-document.getElementById("login").classList.add("hidden");
-document.getElementById("app").classList.remove("hidden");
-
-render();
-}
-
-// 🧾 لوق
-function log(action,name){
-data.logs.unshift({
-action,name,
-time:new Date().toLocaleString("ar-SA")
-});
-save();
-}
-
-// 💾 حفظ آمن
-function save(){
-db.set(data);
-}
-
-// ➕ نقاط
-function addPts(id){
-
-if(!data.users[id]) return;
-
-let v=parseInt(prompt("كم نقطة؟"));
-if(!v || v<=0) return;
-
-data.users[id].pts = (data.users[id].pts||0) + v;
-
-// أوسمة تلقائية
-if(data.users[id].pts>=50 && !data.users[id].badges.includes("التميز"))
-data.users[id].badges.push("التميز");
-
-if(data.users[id].pts>=100 && !data.users[id].badges.includes("الأسطورة"))
-data.users[id].badges.push("الأسطورة");
-
-// تنبيه
-if(v>=30){
-data.alerts.unshift({
-msg:"نشاط عالي: "+data.users[id].name,
-time:new Date().toLocaleString("ar-SA")
-});
-}
-
-save();
-}
-
-// 🎨 عرض آمن 100%
-function render(){
-
-document.getElementById("me").innerText =
-(user?.name||"") + " - " + (user?.role||"");
-
-// مستخدمين
-let html="";
-
-for(let [id,u] of Object.entries(data.users||{})){
-html+=`
-<div class="box">
-<b>${u.name}</b><br>
-${u.team||""}<br>
-نقاط: ${u.pts||0}<br>
-PIN: ${user.role==="super"?u.pin:"****"}<br>
-${(u.badges||[]).join(", ")}<br>
-
-<button onclick="addPts('${id}')">إضافة نقاط</button>
-</div>
-`;
-}
-
-document.getElementById("content").innerHTML=html;
-
-// تحكم
-if(user.role==="super"){
-document.getElementById("controls").innerHTML=`
-<button onclick="seed()">إعادة بناء النظام</button>
-<button onclick="data.users={};save()">تصفير كامل</button>
-`;
-}else{
-document.getElementById("controls").innerHTML="";
-}
-
-}
-
-// 🔄 تحميل Firebase (آمن جدًا)
-db.on("value",snap=>{
-
-try{
-data = snap.val() || {users:{},logs:[],alerts:[]};
-
-if(!data.users) data.users={};
-
-seed();
-
-ready = true;
-
-document.getElementById("status").innerText="جاهز";
-
-document.getElementById("loginBtn").disabled=false;
-
-render();
-
-}catch(e){
-
-document.getElementById("err").innerText="خطأ تحميل، حاول تحديث الصفحة";
-
-console.log(e);
-
-}
-
-});
-
 </script>
-
 </body>
 </html>
