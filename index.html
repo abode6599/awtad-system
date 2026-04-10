@@ -3,149 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد - الإصدار القيادي</title>
+    <title>نظام أوتاد الكشفي - مدرسة القاسم</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         :root { --primary: #3b82f6; --success: #22c55e; --danger: #ef4444; --bg: #0f172a; --card: #1e293b; }
-        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; transition: 0.2s; }
         body { margin: 0; background: var(--bg); color: #f8fafc; direction: rtl; padding: 10px; }
         .container { max-width: 600px; margin: auto; }
         .header-box { background: var(--card); padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary); text-align: center; margin-bottom: 15px; }
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .stat-item { background: var(--card); padding: 10px; border-radius: 10px; text-align: center; font-size: 12px; border: 1px solid #334155; }
         .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; }
-        .platoon-title { color: var(--primary); font-weight: bold; border-right: 4px solid var(--primary); padding-right: 10px; margin-bottom: 15px; font-size: 16px; }
+        .platoon-title { color: var(--primary); font-weight: bold; border-right: 4px solid var(--primary); padding-right: 10px; margin-bottom: 15px; }
         .member-row { display: flex; align-items: center; justify-content: space-between; background: #ffffff05; padding: 12px; border-radius: 10px; margin-bottom: 8px; }
-        .badge-tag { font-size: 9px; background: var(--primary); padding: 1px 5px; border-radius: 4px; margin-left: 3px; }
+        .badge-tag { font-size: 9px; background: var(--primary); padding: 2px 5px; border-radius: 4px; margin-left: 3px; display: inline-block; }
         .controls { display: flex; gap: 5px; }
-        select { background: #334155; color: white; border: none; padding: 5px; border-radius: 5px; font-size: 12px; }
+        select, input, textarea { background: #334155; color: white; border: 1px solid #475569; padding: 8px; border-radius: 8px; font-size: 14px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--primary); border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
         .btn-tool { background: #475569; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
         .modal-content { background: var(--card); width: 100%; max-width: 450px; padding: 20px; border-radius: 15px; max-height: 85vh; overflow-y: auto; }
-        input { width: 100%; padding: 10px; background: #334155; border: 1px solid #475569; color: white; border-radius: 8px; margin-bottom: 10px; }
+        #login-screen { padding-top: 80px; }
+        #main-screen { display: none; }
     </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+<div id="login-screen" class="container">
+    <div class="header-box"><h2>نظام أوتاد الكشفي</h2><p>الدخول للقيادة العليا</p></div>
+    <input type="password" id="pin-input" placeholder="رمز الدخول">
+    <button class="btn" onclick="login()">دخول</button>
+</div>
 
-        const CONFIG = {
-            admins: { "333": "عبدالله العرفه", "202021": "سلمان الصويلح", "202030": "معاذ الشنقيطي" },
-            platoons: [
-                { id: 1, name: "طليعة 1", members: ["صالح حبتور", "حسن الشهري", "ريان جعام", "غازي العجمي", "يزيد خال", "زياد العجلاني", "فهد المهيني", "يحي شراحيلي", "عزام خبراني"] },
-                { id: 2, name: "طليعة 2", members: ["ياسر ابو حيه", "محمد عسيري", "رياض الزهراني", "ابراهيم التليدي", "غازي العنزي", "صالح الخثعمي", "اصيل العتيبي", "فواز الشهراني", "علي الغامدي"] },
-                { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
-                { id: 4, name: "طليعة 4", members: ["مشعل القحطاني", "مشاري القحطاني", "محمد فقيه", "فارس العمري", "رائد حوباني", "راكان حوباني", "عبدالله القرني", "ناصر المطيري", "مبارك خميس"] }
-            ],
-            leaders: ["الوليد الحازمي (ق1)", "حاتم خريزي (ق2)", "راكان شراحيلي (ق3)", "وضاح الصويلح (ق4)"],
-            badges: ["وسام الخدمة", "وسام الهواية", "وسام الرياضي", "وسام المسامر"]
-        };
+<div id="main-screen" class="container">
+    <div class="header-box">
+        <h3 id="user-display"></h3>
+        <p>عريف أول الوحدة - مدرسة القاسم</p>
+    </div>
 
-        function App() {
-            const [user, setUser] = useState(null);
-            const [pin, setPin] = useState("");
-            const [data, setData] = useState({});
-            const [editId, setEditId] = useState(null);
+    <div class="stats-row">
+        <div class="stat-item"><b id="count-members">40</b><br/>كشاف</div>
+        <div class="stat-item"><b>4</b><br/>طلايع</div>
+        <div class="stat-item"><b style="color:var(--success)">نشط</b><br/>الحالة</div>
+    </div>
 
-            useEffect(() => {
-                const saved = localStorage.getItem("awtad_v17");
-                if (saved) setData(JSON.parse(saved));
-            }, []);
+    <div id="platoons-area"></div>
+</div>
 
-            const save = (id, field, val) => {
-                const updated = { ...data, [id]: { ...(data[id] || { badges: [] }), [field]: val } };
-                setData(updated);
-                localStorage.setItem("awtad_v17", JSON.stringify(updated));
-            };
+<div id="info-modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modal-title"></h3>
+        <label>الاسم الرسمي</label>
+        <input type="text" id="edit-name">
+        <label>رقم الهوية</label>
+        <input type="text" id="edit-id" placeholder="10 أرقام">
+        <label>رقم الجوال</label>
+        <input type="text" id="edit-phone" placeholder="05xxxx">
+        
+        <h4>خزانة الأوسمة</h4>
+        <div id="badges-area" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:15px;"></div>
 
-            if (!user) return (
-                <div className="container" style={{paddingTop: '80px'}}>
-                    <div className="header-box"><h2>نظام أوتاد الكشفي</h2><p>الدخول للقيادة العليا</p></div>
-                    <input type="password" placeholder="رمز الدخول" value={pin} onChange={e=>setPin(e.target.value)} />
-                    <button style={{width:'100%', padding:'12px', background:var(--primary), border:'none', color:'white', borderRadius:'10px'}} onClick={() => CONFIG.admins[pin] ? setUser({id: pin, name: CONFIG.admins[pin]}) : alert("خطأ")}>دخول</button>
-                </div>
-            );
+        <h4>سجل السلوك</h4>
+        <select id="log-select">
+            <option value="">رصد تميز/مخالفة...</option>
+            <option>انضباط مثالي</option>
+            <option>مبادرة كشفية</option>
+            <option>هندام متكامل</option>
+            <option>تأخر عن الاصطفاف</option>
+            <option>إهمال هندام</option>
+        </select>
+        <div id="log-history" style="font-size:11px; color:#94a3b8; max-height:80px; overflow-y:auto;"></div>
 
-            return (
-                <div className="container">
-                    <div className="header-box">
-                        <h3>{user.name}</h3>
-                        <p>عريف أول الوحدة - مدرسة القاسم</p>
-                    </div>
+        <button class="btn" style="background:var(--success); margin-top:20px;" onclick="closeModal()">حفظ وإغلاق</button>
+    </div>
+</div>
 
-                    <div className="stats-row">
-                        <div className="stat-item"><b>40</b><br/>كشاف</div>
-                        <div className="stat-item"><b>4</b><br/>طلايع</div>
-                        <div className="stat-item"><b>نشط</b><br/>الحالة</div>
-                    </div>
+<script>
+    const CONFIG = {
+        admins: { "333": "عبدالله العرفه", "202021": "سلمان الصويلح", "202030": "معاذ الشنقيطي" },
+        platoons: [
+            { id: "L", name: "قادة الطلائع", members: ["الوليد الحازمي", "حاتم خريزي", "راكان شراحيلي", "وضاح الصويلح"] },
+            { id: 1, name: "طليعة 1", members: ["صالح حبتور", "حسن الشهري", "ريان جعام", "غازي العجمي", "يزيد خال", "زياد العجلاني", "فهد المهيني", "يحي شراحيلي", "عزام خبراني"] },
+            { id: 2, name: "طليعة 2", members: ["ياسر ابو حيه", "محمد عسيري", "رياض الزهراني", "ابراهيم التليدي", "غازي العنزي", "صالح الخثعمي", "اصيل العتيبي", "فواز الشهراني", "علي الغامدي"] },
+            { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد سعيدان الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
+            { id: 4, name: "طليعة 4", members: ["مشعل القحطاني", "مشاري القحطاني", "محمد فقيه", "فارس العمري", "رائد حوباني", "راكان حوباني", "عبدالله القرني", "ناصر المطيري", "مبارك خميس"] }
+        ],
+        badges: ["وسام الخدمة", "وسام الهواية", "وسام الرياضي", "وسام المسامر"]
+    };
 
-                    <div className="card" style={{borderColor: var(--danger)}}>
-                        <div className="platoon-title" style={{color: var(--danger), borderColor: var(--danger)}}>قادة الطلايع</div>
-                        {CONFIG.leaders.map(l => (
-                            <div key={l} className="member-row">
-                                <span>{data[l]?.name || l}</span>
-                                <button className="btn-tool" onClick={() => setEditId(l)}>ℹ️</button>
-                            </div>
-                        ))}
-                    </div>
+    let db = JSON.parse(localStorage.getItem('awtad_v20_final')) || {};
+    let currentEditing = null;
 
-                    {CONFIG.platoons.map(p => (
-                        <div key={p.id} className="card">
-                            <div className="platoon-title">{p.name}</div>
-                            {p.members.map(m => (
-                                <div key={m} className="member-row">
-                                    <div style={{flex: 1}}>
-                                        <div>{data[m]?.name || m}</div>
-                                        <div>{(data[m]?.badges || []).map(b => <span key={b} className="badge-tag">{b}</span>)}</div>
-                                    </div>
-                                    <div className="controls">
-                                        <select onChange={e => save(m, "status", e.target.value)} value={data[m]?.status || "حاضر"}>
-                                            <option>حاضر</option><option>غائب</option><option>متأخر</option>
-                                        </select>
-                                        <button className="btn-tool" onClick={() => setEditId(m)}>ℹ️</button>
-                                    </div>
-                                </div>
-                            ))}
+    function login() {
+        const pin = document.getElementById('pin-input').value;
+        if (CONFIG.admins[pin]) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
+            document.getElementById('user-display').innerText = CONFIG.admins[pin];
+            renderPlatoons();
+        } else {
+            alert("الرمز غير صحيح");
+        }
+    }
+
+    function renderPlatoons() {
+        const area = document.getElementById('platoons-area');
+        area.innerHTML = '';
+        CONFIG.platoons.forEach(p => {
+            let card = `<div class="card"><div class="platoon-title">${p.name}</div>`;
+            p.members.forEach(m => {
+                const mData = db[m] || { badges: [] };
+                let badgesHtml = (mData.badges || []).map(b => `<span class="badge-tag">${b}</span>`).join('');
+                card += `
+                    <div class="member-row">
+                        <div>
+                            <div>${mData.name || m}</div>
+                            <div id="badges-${m}">${badgesHtml}</div>
                         </div>
-                    ))}
-
-                    {editId && (
-                        <div className="modal">
-                            <div className="modal-content">
-                                <h3>ملف: {data[editId]?.name || editId}</h3>
-                                <label>الاسم الرسمي</label>
-                                <input value={data[editId]?.name || editId} onChange={e => save(editId, "name", e.target.value)} />
-                                <label>رقم الهوية</label>
-                                <input placeholder="10 أرقام" value={data[editId]?.idNum || ""} onChange={e => save(editId, "idNum", e.target.value)} />
-                                <label>رقم الجوال</label>
-                                <input placeholder="05xxxx" value={data[editId]?.phone || ""} onChange={e => save(editId, "phone", e.target.value)} />
-                                
-                                <h4>الأوسمة</h4>
-                                <div style={{display:'flex', flexWrap:'wrap', gap:'5px'}}>
-                                    {CONFIG.badges.map(b => (
-                                        <button key={b} style={{fontSize:'10px', padding:'5px', background: data[editId]?.badges?.includes(b) ? var(--success) : '#334155', color:'white', border:'none', borderRadius:'5px'}}
-                                                onClick={() => {
-                                                    let bgs = data[editId]?.badges || [];
-                                                    bgs = bgs.includes(b) ? bgs.filter(x => x !== b) : [...bgs, b];
-                                                    save(editId, "badges", bgs);
-                                                }}>{b}</button>
-                                    ))}
-                                </div>
-                                <button onClick={() => setEditId(null)} style={{marginTop:'20px', width:'100%', padding:'10px', background:var(--success), border:'none', color:'white', borderRadius:'10px'}}>حفظ وإغلاق</button>
-                            </div>
+                        <div class="controls">
+                            <button class="btn-tool" onclick="openModal('${m}')">ℹ️</button>
                         </div>
-                    )}
-                </div>
-            );
+                    </div>`;
+            });
+            card += `</div>`;
+            area.innerHTML += card;
+        });
+    }
+
+    function openModal(id) {
+        currentEditing = id;
+        const mData = db[id] || { name: id, idNum: '', phone: '', badges: [], logs: [] };
+        document.getElementById('modal-title').innerText = mData.name || id;
+        document.getElementById('edit-name').value = mData.name || id;
+        document.getElementById('edit-id').value = mData.idNum || '';
+        document.getElementById('edit-phone').value = mData.phone || '';
+        
+        // الأوسمة
+        const bArea = document.getElementById('badges-area');
+        bArea.innerHTML = '';
+        CONFIG.badges.forEach(b => {
+            const isActive = (mData.badges || []).includes(b);
+            bArea.innerHTML += `<button onclick="toggleBadge('${id}', '${b}')" style="background:${isActive? 'var(--success)':'#334155'}; color:white; border:none; padding:5px; border-radius:5px; font-size:10px;">${b}</button>`;
+        });
+
+        // السجل
+        const lArea = document.getElementById('log-history');
+        lArea.innerHTML = (mData.logs || []).map(l => `<div>• ${l}</div>`).join('');
+
+        document.getElementById('info-modal').style.display = 'flex';
+    }
+
+    function toggleBadge(id, badge) {
+        if(!db[id]) db[id] = { badges: [], logs: [] };
+        if(!db[id].badges) db[id].badges = [];
+        if(db[id].badges.includes(badge)) {
+            db[id].badges = db[id].badges.filter(x => x !== badge);
+        } else {
+            db[id].badges.push(badge);
+        }
+        openModal(id); // تحديث النافذة
+    }
+
+    function closeModal() {
+        const id = currentEditing;
+        if(!db[id]) db[id] = { badges: [], logs: [] };
+        db[id].name = document.getElementById('edit-name').value;
+        db[id].idNum = document.getElementById('edit-id').value;
+        db[id].phone = document.getElementById('edit-phone').value;
+        
+        const log = document.getElementById('log-select').value;
+        if(log) {
+            if(!db[id].logs) db[id].logs = [];
+            db[id].logs.push(`${new Date().toLocaleDateString()}: ${log}`);
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+        localStorage.setItem('awtad_v20_final', JSON.stringify(db));
+        document.getElementById('info-modal').style.display = 'none';
+        renderPlatoons();
+    }
+</script>
 </body>
 </html>
