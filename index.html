@@ -3,108 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد التقني | كشافة أوتاد</title>
+    <title>نظام أوتاد الإداري | التقني</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
         :root {
-            --primary: #0f172a; --secondary: #1e293b; --accent: #3b82f6;
-            --success: #22c55e; --error: #ef4444; --text-p: #f8fafc; --text-s: #94a3b8;
-            --border: #334155;
+            --p-dark: #0f172a; --p-border: #1e293b; --p-accent: #3b82f6;
+            --p-gold: #fbbf24; --p-success: #22c55e; --p-danger: #ef4444;
+            --p-text: #f8fafc; --p-sub: #94a3b8;
         }
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--primary); color: var(--text-p); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--p-dark); color: var(--p-text); margin: 0; padding: 0; overflow-x: hidden; }
 
-        /* Sidebar - القائمة الجانبية */
-        #sidebar { width: 280px; background: var(--secondary); border-left: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px 15px; }
-        .sys-title { font-size: 20px; font-weight: 800; color: var(--accent); text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
-        .nav-link { padding: 12px 15px; border-radius: 8px; cursor: pointer; color: var(--text-s); margin-bottom: 5px; font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 14px; }
-        .nav-link:hover, .nav-link.active { background: var(--accent); color: white; }
+        /* ✅ حل مشكلة الانهيار: نظام الحاويات المرن */
+        .app-container { display: flex; height: 100vh; flex-direction: row; }
+        @media (max-width: 900px) { .app-container { flex-direction: column; } }
 
-        /* Main Wrapper - منطقة العمل */
-        #main { flex: 1; display: flex; flex-direction: column; background: #0c111d; overflow-y: auto; }
-        header { padding: 15px 30px; background: var(--secondary); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .content-area { padding: 25px 30px; }
+        /* Sidebar - القائمة الجانبية (للشاشات الكبيرة) */
+        aside { width: 280px; background: #0c111d; border-left: 1px solid var(--p-border); display: flex; flex-direction: column; padding: 20px; transition: 0.3s; }
+        @media (max-width: 900px) { 
+            aside { width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--p-border); padding: 10px; flex-direction: row; justify-content: space-around; position: fixed; bottom: 0; z-index: 1000; background: rgba(12, 17, 29, 0.95); backdrop-filter: blur(10px); }
+            .sys-name, .user-brief { display: none; }
+        }
 
-        /* Grid & Cards - النظام الشبكي */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .data-card { background: var(--secondary); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
-        .data-card:hover { border-color: var(--accent); }
-        .badge { font-size: 11px; padding: 3px 10px; border-radius: 5px; font-weight: 700; text-transform: uppercase; }
-        .badge-leader { background: #1e40af; color: white; }
-        .badge-member { background: #334155; color: white; }
+        .nav-link { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: var(--p-sub); font-weight: 600; font-size: 14px; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .nav-link:hover, .nav-link.active { background: var(--p-accent); color: white; }
 
-        /* Forms & Inputs */
-        #auth-gate { position: fixed; inset: 0; background: var(--primary); z-index: 10000; display: flex; align-items: center; justify-content: center; }
-        .auth-form { width: 360px; text-align: center; }
-        input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border); background: #0f172a; color: white; text-align: center; margin-bottom: 15px; font-size: 18px; }
-        .btn { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 700; font-size: 14px; transition: 0.2s; }
-        .btn-primary { background: var(--accent); color: white; width: 100%; }
-        .btn-action { background: #334155; color: white; font-size: 12px; }
+        /* Main View - منطقة العرض الأساسية */
+        main { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+        header { padding: 20px 30px; border-bottom: 1px solid var(--p-border); background: rgba(15, 23, 42, 0.8); display: flex; justify-content: space-between; align-items: center; sticky; top: 0; z-index: 900; }
 
-        /* Tables & Logs */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: right; color: var(--text-s); font-size: 13px; padding: 10px; border-bottom: 1px solid var(--border); }
-        td { padding: 12px 10px; font-size: 14px; border-bottom: 1px solid #1e293b; }
+        /* Grid System */
+        .content-padding { padding: 20px; max-width: 1200px; margin: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .card { background: #1e293b; border-radius: 15px; padding: 20px; border: 1px solid var(--p-border); transition: 0.2s; }
+        .card:hover { border-color: var(--p-accent); transform: translateY(-3px); }
+
+        /* Auth Screen */
+        #auth-gate { position: fixed; inset: 0; background: var(--p-dark); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-box { width: 100%; max-width: 400px; background: #1e293b; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid var(--p-border); }
+        input { width: 100%; background: #0f172a; border: 1px solid var(--p-border); color: white; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 20px; text-align: center; letter-spacing: 5px; }
+        .btn { border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.2s; }
+        .btn-p { background: var(--p-accent); color: white; }
+        .btn-s { background: #334155; color: white; margin-top: 10px; font-size: 12px; }
 
         .hidden { display: none !important; }
+        .badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: var(--p-accent); font-weight: 800; }
     </style>
 </head>
 <body>
 
 <div id="auth-gate">
-    <div class="auth-form">
-        <div class="sys-title">نظام الإدارة الموحد</div>
-        <p style="color: var(--text-s); font-size: 13px;">يرجى إدخال رمز الوصول للمتابعة</p>
-        <input type="password" id="auth-pin" maxlength="4" placeholder="••••">
-        <button class="btn btn-primary" onclick="Core.validate()">تسجيل الدخول</button>
-        <p id="auth-msg" style="color: var(--error); margin-top: 10px; font-size: 12px;"></p>
+    <div class="auth-box">
+        <h2 style="color: var(--p-accent); margin:0;">نظام أوتاد</h2>
+        <p style="color: var(--p-sub); font-size: 13px;">المصادقة المؤسسية المطلوبة</p>
+        <input type="password" id="pin-code" maxlength="4" placeholder="••••">
+        <button class="btn btn-p" onclick="App.validate()">دخول النظام</button>
+        <p id="auth-err" style="color: var(--p-danger); margin-top: 10px; font-size: 12px;"></p>
     </div>
 </div>
 
-<aside id="sidebar">
-    <div class="sys-title">كشافة أوتاد</div>
-    <div id="nav-container">
-        <div class="nav-link active" onclick="Core.tab('home')">📊 لوحة المعلومات</div>
-        <div class="nav-link" onclick="Core.tab('users')">👥 إدارة المستخدمين</div>
-        <div class="nav-link" onclick="Core.tab('ranking')">📈 تقرير الترتيب</div>
-        <div id="admin-panel" class="hidden">
-            <div class="nav-link" onclick="Core.tab('audit')">📜 سجل العمليات</div>
-            <div class="nav-link" style="color: var(--error)" onclick="Core.reset()">🚫 تهيئة النظام</div>
+<div class="app-container">
+    <aside id="main-nav">
+        <div class="sys-name" style="font-weight: 900; color: var(--p-accent); font-size: 22px; margin-bottom: 30px; text-align: center;">AWTAD SYS</div>
+        <div class="nav-link active" onclick="App.route('home', this)">📊 المعلومات</div>
+        <div class="nav-link" onclick="App.route('members', this)">👥 الأعضاء</div>
+        <div class="nav-link" onclick="App.route('ranking', this)">🏆 الترتيب</div>
+        <div id="admin-links" class="hidden">
+            <div class="nav-link" onclick="App.route('audit', this)">📜 السجلات</div>
+            <div class="nav-link" style="color: var(--p-danger)" onclick="App.clearData()">⚠️ تهيئة</div>
         </div>
-    </div>
-    <div style="margin-top: auto; padding: 15px; border-top: 1px solid var(--border);">
-        <div id="user-name" style="font-weight: 700; color: var(--text-p);"></div>
-        <div id="user-role" style="font-size: 11px; color: var(--text-s);"></div>
-    </div>
-</aside>
-
-<main id="main">
-    <header>
-        <div id="tab-title" style="font-weight: 700;">لوحة المعلومات</div>
-        <button class="btn btn-action" onclick="location.reload()">تسجيل الخروج</button>
-    </header>
-
-    <div id="view-port" class="content-area">
+        <div class="user-brief" style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--p-border);">
+            <div id="u-name" style="font-weight: 700; font-size: 14px;"></div>
+            <div id="u-role" style="font-size: 11px; color: var(--p-sub);"></div>
         </div>
-</main>
+    </aside>
+
+    <main>
+        <header>
+            <div id="view-title" style="font-weight: 700;">لوحة المعلومات</div>
+            <button class="btn btn-s" style="width: auto;" onclick="location.reload()">خروج</button>
+        </header>
+
+        <div id="render-target" class="content-padding">
+            </div>
+    </main>
+</div>
 
 <script>
 /**
- * Core Engine - نظام أوتاد المؤسسي V6
- * إدارة البيانات والتحقق من الصلاحيات
+ * Core Logic - الإصدار السابع المؤسسي
+ * معالجة الأخطاء ومنع الانهيار
  */
-const Core = (() => {
-    const config = {
+const App = (() => {
+    const firebaseConfig = {
         apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
         databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
     };
-    firebase.initializeApp(config);
-    const db = firebase.database().ref("awtad_sys_v6");
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database().ref("awtad_sys_v7");
 
-    let state = { me: null, users: {}, logs: [], activeTab: 'home' };
-    const ADMINS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
+    let state = { user: null, users: {}, logs: [], tab: 'home' };
+    const ADMIN_KEYS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
 
     return {
         init: () => {
@@ -112,108 +113,114 @@ const Core = (() => {
                 const data = snap.val() || {};
                 state.users = data.users || {};
                 state.logs = Object.values(data.logs || {}).reverse();
-                if (state.me) Core.render();
+                if (state.user) App.render();
             });
         },
 
         validate: () => {
-            const p = document.getElementById("auth-pin").value;
-            const msg = document.getElementById("auth-msg");
+            const pin = document.getElementById("pin-code").value;
+            const err = document.getElementById("auth-err");
             
-            if (ADMINS[p]) {
-                state.me = { name: ADMINS[p], role: 'ADMIN', team: 'الإدارة العامة' };
+            if (ADMIN_KEYS[pin]) {
+                state.user = { name: ADMIN_KEYS[pin], role: 'ADMIN', team: 'الإدارة العليا' };
             } else {
-                const u = Object.entries(state.users).find(([id, user]) => user.pin === p);
-                if (u) state.me = { ...u[1], id: u[0] };
+                const found = Object.entries(state.users).find(([id, u]) => u.pin === pin);
+                if (found) state.user = { ...found[1], id: found[0] };
             }
 
-            if (state.me) {
+            if (state.user) {
                 document.getElementById("auth-gate").classList.add("hidden");
-                document.getElementById("user-name").innerText = state.me.name;
-                document.getElementById("user-role").innerText = state.me.team;
-                if(state.me.role === 'ADMIN') document.getElementById("admin-panel").classList.remove("hidden");
-                Core.log("تم تسجيل الدخول", state.me.name);
-                Core.render();
+                document.getElementById("u-name").innerText = state.user.name;
+                document.getElementById("u-role").innerText = state.user.team;
+                if(state.user.role === 'ADMIN') document.getElementById("admin-links").classList.remove("hidden");
+                App.log("دخول للنظام", state.user.name);
+                App.render();
             } else {
-                msg.innerText = "فشل المصادقة: الرمز غير صحيح";
+                err.innerText = "الرمز غير صحيح أو غير مفعل";
             }
         },
 
-        tab: (t) => {
-            state.activeTab = t;
+        route: (t, el) => {
+            state.tab = t;
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            Core.render();
+            if(el) el.classList.add('active');
+            App.render();
         },
 
         render: () => {
-            const vp = document.getElementById("view-port");
-            const tt = document.getElementById("tab-title");
-            vp.innerHTML = "";
+            const target = document.getElementById("render-target");
+            const title = document.getElementById("view-title");
+            target.innerHTML = "";
 
-            if (state.activeTab === 'home') {
-                tt.innerText = "نظرة عامة على النظام";
-                vp.innerHTML = `
+            if (state.tab === 'home') {
+                title.innerText = "الملخص العام";
+                target.innerHTML = `
                     <div class="grid">
-                        <div class="data-card">
-                            <div style="color:var(--text-s); font-size:12px">إجمالي القوى البشرية</div>
-                            <div style="font-size:24px; font-weight:800">${Object.keys(state.users).length} عضو</div>
+                        <div class="card">
+                            <div style="color:var(--p-sub); font-size:12px">إجمالي المسجلين</div>
+                            <div style="font-size:26px; font-weight:800; color:var(--p-accent)">${Object.keys(state.users).length}</div>
                         </div>
-                        <div class="data-card">
-                            <div style="color:var(--text-s); font-size:12px">آخر عملية مسجلة</div>
-                            <div style="font-size:14px; margin-top:5px">${state.logs[0]?.action || 'لا يوجد'}</div>
+                        <div class="card">
+                            <div style="color:var(--p-sub); font-size:12px">حالة النظام</div>
+                            <div style="font-size:18px; font-weight:800; color:var(--p-success)">متصل ومؤمن</div>
                         </div>
                     </div>
-                    ${state.me.role === 'ADMIN' && Object.keys(state.users).length === 0 ? 
-                    `<div style="margin-top:30px"><button class="btn btn-primary" onclick="Core.seed()">إنشاء الهيكل التنظيمي الأول</button></div>` : ''}
+                    ${state.user.role === 'ADMIN' && Object.keys(state.users).length === 0 ? 
+                    `<button class="btn btn-p" style="margin-top:20px" onclick="App.seed()">توليد الهيكل التنظيمي الأول</button>` : ''}
                 `;
             }
 
-            if (state.activeTab === 'users') {
-                tt.innerText = "إدارة شؤون الأعضاء";
+            if (state.tab === 'members') {
+                title.innerText = "إدارة شؤون الطلايع";
                 let html = `<div class="grid">`;
                 Object.entries(state.users).forEach(([id, u]) => {
-                    const canEdit = state.me.role === 'ADMIN' || (state.me.role === 'LEADER' && state.me.team === u.team);
+                    const isAdmin = state.user.role === 'ADMIN' || (state.user.role === 'LEADER' && state.user.team === u.team);
                     html += `
-                        <div class="data-card">
-                            <div style="display:flex; justify-content:space-between">
-                                <span class="badge ${u.role === 'LEADER' ? 'badge-leader' : 'badge-member'}">${u.role}</span>
-                                <b style="color:var(--accent)">${u.pts} نقطة</b>
+                        <div class="card">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span class="badge">${u.team}</span>
+                                <b style="color:var(--p-gold)">${u.pts} نقطة</b>
                             </div>
-                            <h3 style="margin:12px 0 5px 0; font-size:16px">${u.name}</h3>
-                            <div style="font-size:12px; color:var(--text-s)">الطليعة: ${u.team}</div>
-                            ${state.me.role === 'ADMIN' ? `<div style="font-size:11px; color:var(--accent); margin-top:5px">الرمز: ${u.pin}</div>` : ''}
-                            ${canEdit ? `<button class="btn btn-action" style="width:100%; margin-top:15px" onclick="Core.update('${id}')">تعديل الرصيد</button>` : ''}
+                            <h3 style="margin:15px 0 5px 0; font-size:16px">${u.name}</h3>
+                            <div style="font-size:11px; color:var(--p-sub)">الرتبة: ${u.role === 'LEADER' ? 'قائد طليعة' : 'عضو'}</div>
+                            ${state.user.role === 'ADMIN' ? `<div style="font-size:10px; color:var(--p-accent); margin-top:5px">PIN: ${u.pin}</div>` : ''}
+                            ${isAdmin ? `<button class="btn btn-s" style="margin-top:15px; background:var(--p-accent)" onclick="App.updatePts('${id}')">تعديل النقاط</button>` : ''}
                         </div>`;
                 });
-                vp.innerHTML = html + `</div>`;
+                target.innerHTML = html + `</div>`;
             }
 
-            if (state.activeTab === 'ranking') {
-                tt.innerText = "تقرير ترتيب المستويات";
+            if (state.tab === 'ranking') {
+                title.innerText = "ترتيب الأداء العام";
                 const sorted = Object.values(state.users).sort((a,b) => b.pts - a.pts);
-                let html = `<div class="data-card"><table><tr><th>الاسم</th><th>الطليعة</th><th>الرصيد</th></tr>`;
-                sorted.forEach(u => {
-                    html += `<tr><td>${u.name}</td><td>${u.team}</td><td><b>${u.pts}</b></td></tr>`;
+                let html = `<div class="card" style="padding:0">`;
+                sorted.forEach((u, i) => {
+                    html += `<div style="padding:15px; border-bottom:1px solid var(--p-border); display:flex; justify-content:space-between">
+                        <span><b style="color:var(--p-accent)">#${i+1}</b> ${u.name}</span>
+                        <b>${u.pts}</b>
+                    </div>`;
                 });
-                vp.innerHTML = html + `</table></div>`;
+                target.innerHTML = html + `</div>`;
             }
 
-            if (state.activeTab === 'audit') {
-                tt.innerText = "سجل التدقيق والعمليات";
-                let html = `<div class="data-card"><table><tr><th>الوقت</th><th>المسؤول</th><th>الإجراء</th></tr>`;
-                state.logs.slice(0, 50).forEach(l => {
-                    html += `<tr><td style="color:var(--text-s)">${l.time}</td><td>${l.actor}</td><td>${l.action}</td></tr>`;
+            if (state.tab === 'audit') {
+                title.innerText = "سجل تدقيق العمليات";
+                let html = `<div class="card" style="padding:0">`;
+                state.logs.slice(0, 40).forEach(l => {
+                    html += `<div style="padding:10px 15px; border-bottom:1px solid var(--p-border); font-size:13px">
+                        <span style="color:var(--p-sub)">[${l.time}]</span> <b>${l.actor}</b>: ${l.action}
+                    </div>`;
                 });
-                vp.innerHTML = html + `</table></div>`;
+                target.innerHTML = html + `</div>`;
             }
         },
 
-        update: (id) => {
-            const val = parseInt(prompt("أدخل القيمة المراد إضافتها أو خصمها:"));
-            if (isNaN(val)) return;
+        updatePts: (id) => {
+            const p = parseInt(prompt("أدخل قيمة التعديل (موجب أو سالب):"));
+            if (isNaN(p)) return;
             const u = state.users[id];
-            db.child("users").child(id).update({ pts: (u.pts || 0) + val });
-            Core.log(`تعديل رصيد ${u.name} بقيمة (${val})`, state.me.name);
+            db.child("users").child(id).update({ pts: (u.pts || 0) + p });
+            App.log(`تعديل رصيد ${u.name} بـ (${p})`, state.user.name);
         },
 
         log: (action, actor) => {
@@ -243,13 +250,13 @@ const Core = (() => {
             db.child("users").set(batch);
         },
 
-        reset: () => {
-            if(confirm("سيتم مسح كافة البيانات المسجلة، هل أنت متأكد؟")) db.set({users:{}, logs:{}});
+        clearData: () => {
+            if(confirm("سيتم حذف كافة البيانات المسجلة نهائياً. هل أنت متأكد؟")) db.set({users:{}, logs:{}});
         }
     };
 })();
 
-Core.init();
+App.init();
 </script>
 </body>
 </html>
