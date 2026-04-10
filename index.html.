@@ -9,8 +9,10 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        * { font-family: 'Cairo', sans-serif; }
-        body { margin: 0; background: #020617; }
+        * { font-family: 'Cairo', sans-serif; transition: 0.3s; }
+        body { margin: 0; background: #020617; color: white; overflow-x: hidden; }
+        input, select { background: #1e293b; color: white; border: 1px solid #334155; padding: 10px; borderRadius: 10px; }
+        button:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -24,28 +26,27 @@
             if (!info) return null;
             const live = db[date]?.[`${info.pId}:${info.id}`] || { status: "غير مرصود", score: "--", editorName: "نظام أوتاد", editTime: "--" };
             return (
-                <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.95)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 4000, backdropFilter: "blur(12px)" }}>
-                    <div style={{ background: "#1e293b", padding: "40px", borderRadius: "35px", width: "90%", maxWidth: "450px", textAlign: "center", border: "2px solid #22d3ee" }}>
-                        <h3 style={{ color: "#22d3ee" }}>التحقق الرقمي</h3>
-                        <p style={{ fontSize: "24px", color: "white" }}>{info.n}</p>
-                        <div style={{ textAlign: "right", marginTop: "25px", color: "#94a3b8", background: "#0f172a", padding: "20px", borderRadius: "20px" }}>
-                            <p>📌 الحالة: <span style={{ color: "white" }}>{live.status === "present" ? "حاضر ✅" : live.status === "absent" ? "غائب ❌" : "لم يرصد"}</span></p>
-                            <p>📊 الدرجة: <span style={{ color: "#22d3ee" }}>{live.score} / 10</span></p>
-                            <p style={{ fontSize: "12px" }}>✍️ المسؤول: {live.editorName}</p>
+                <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.9)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 4000, backdropFilter: "blur(10px)" }}>
+                    <div style={{ background: "#1e293b", padding: "30px", borderRadius: "25px", width: "85%", maxWidth: "400px", textAlign: "center", border: "2px solid #22d3ee" }}>
+                        <h3 style={{ color: "#22d3ee" }}>سجل التحقق</h3>
+                        <p style={{ fontSize: "20px", fontWeight: "bold" }}>{info.n}</p>
+                        <div style={{ textAlign: "right", background: "#0f172a", padding: "15px", borderRadius: "15px", marginTop: "15px" }}>
+                            <p>📌 الحالة: {live.status === "present" ? "حاضر ✅" : live.status === "absent" ? "غائب ❌" : "لم يرصد"}</p>
+                            <p>📊 الدرجة: {live.score}</p>
+                            <p style={{ fontSize: "12px", color: "#64748b" }}>✍️ المسؤول: {live.editorName}</p>
                         </div>
-                        <button onClick={onClose} style={{ marginTop: "30px", background: "#ef4444", color: "white", border: "none", padding: "10px 40px", borderRadius: "15px", cursor: "pointer" }}>إغلاق</button>
+                        <button onClick={onClose} style={{ marginTop: "20px", background: "#ef4444", color: "white", border: "none", padding: "10px 40px", borderRadius: "10px", cursor: "pointer" }}>إغلاق</button>
                     </div>
                 </div>
             );
         };
 
-        // --- البيانات الأساسية ---
         const DATA = {
             unit: { name: "مدرسة القاسم بن محمد", chief: "عبدالله العرفه" },
             users: [
+                { name: "عبدالله العرفه", id: "333", role: "admin" },
                 { name: "سلمان الصويلح", id: "111", role: "admin" },
                 { name: "معاذ الشنقيطي", id: "222", role: "admin" },
-                { name: "عبدالله العرفه", id: "333", role: "admin" },
                 { name: "الوليد الحازمي", id: "1158717536", role: "leader" },
                 { name: "وضاح الصويلح", id: "1148865378", role: "leader" }
             ],
@@ -63,54 +64,59 @@
             const [info, setInfo] = useState(null);
 
             useEffect(() => {
-                const saved = localStorage.getItem("awtad_v8_final");
+                const saved = localStorage.getItem("awtad_db");
                 if (saved) setDb(JSON.parse(saved));
             }, []);
 
             const handleLogin = () => {
                 const found = DATA.users.find(u => u.id === loginId);
                 if (found) setUser(found);
-                else alert("خطأ في السجل!");
+                else alert("⚠️ السجل المدني غير معترف به!");
             };
 
             const updateEntry = (pId, mId, field, val) => {
-                const entryKey = `${pId}:${mId}`;
-                const newDb = { ...db, [date]: { ...db[date], [entryKey]: { ...(db[date]?.[entryKey] || { status: null, score: 5 }), [field]: val, editorName: user.name, editTime: new Date().toLocaleTimeString('ar-SA') } } };
+                const key = `${pId}:${mId}`;
+                const newDb = { ...db, [date]: { ...db[date], [key]: { ...(db[date]?.[key] || { status: null, score: 5 }), [field]: val, editorName: user.name, editTime: new Date().toLocaleTimeString('ar-SA') } } };
                 setDb(newDb);
-                localStorage.setItem("awtad_v8_final", JSON.stringify(newDb));
+                localStorage.setItem("awtad_db", JSON.stringify(newDb));
             };
 
             if (!user) return (
-                <div style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "white" }}>
+                <div style={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ fontSize: "80px" }}>⚜️</div>
                     <h1 style={{ letterSpacing: "5px", color: "#22d3ee" }}>أوتـاد</h1>
-                    <input type="password" placeholder="السجل المدني" value={loginId} onChange={e => setLoginId(e.target.value)} style={{ padding: "15px", borderRadius: "10px", textAlign: "center" }} />
-                    <button onClick={handleLogin} style={{ marginTop: "20px", padding: "10px 50px", background: "#22d3ee", border: "none", borderRadius: "10px", fontWeight: "bold" }}>دخول</button>
+                    <div style={{ background: "#1e293b", padding: "30px", borderRadius: "20px", textAlign: "center", border: "1px solid #334155" }}>
+                        <input type="password" placeholder="السجل المدني" value={loginId} onChange={e => setLoginId(e.target.value)} style={{ textAlign: "center", fontSize: "20px", width: "200px" }} />
+                        <br /><button onClick={handleLogin} style={{ marginTop: "20px", width: "100%", background: "#22d3ee", color: "#020617", border: "none", padding: "12px", borderRadius: "10px", fontWeight: "bold", cursor: "pointer" }}>دخول النظام</button>
+                    </div>
                 </div>
             );
 
             return (
-                <div style={{ padding: "20px", color: "white" }}>
-                    <header style={{ background: "#1e293b", padding: "20px", borderRadius: "20px", marginBottom: "20px" }}>
-                        <h2>{DATA.unit.name}</h2>
-                        <p>المحقق: {user.name} 🎖️</p>
+                <div style={{ padding: "15px" }}>
+                    <header style={{ background: "#1e293b", padding: "20px", borderRadius: "15px", marginBottom: "20px", border: "1px solid #334155" }}>
+                        <h2 style={{ margin: 0, color: "#22d3ee" }}>{DATA.unit.name}</h2>
+                        <p style={{ margin: "5px 0 0", fontSize: "14px" }}>المحقق: {user.name} 🎖️</p>
                     </header>
-                    <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ width: "100%", padding: "10px", marginBottom: "20px", borderRadius: "10px" }} />
+                    
+                    <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ width: "93%", marginBottom: "20px" }} />
+
                     {DATA.platoons.map(p => (
                         (user.role === "admin" || p.leaderId === user.id) && (
-                            <div key={p.id} style={{ border: `1px solid ${p.color}`, padding: "15px", borderRadius: "20px", marginBottom: "20px" }}>
-                                <h3 style={{ color: p.color }}>{p.name}</h3>
+                            <div key={p.id} style={{ border: `1px solid ${p.color}55`, padding: "15px", borderRadius: "15px", marginBottom: "20px", background: "#0f172a" }}>
+                                <h3 style={{ color: p.color, margin: "0 0 15px" }}>{p.name}</h3>
                                 {p.members.map(m => {
                                     const rec = db[date]?.[`${p.id}:${m.id}`] || { status: null, score: 5 };
                                     return (
-                                        <div key={m.id} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
-                                            <span style={{ flex: 1 }}>{m.n}</span>
+                                        <div key={m.id} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 0", borderBottom: "1px solid #1e293b" }}>
+                                            <span style={{ flex: 1, fontSize: "14px" }}>{m.n}</span>
                                             <button onClick={() => setInfo({...m, pId: p.id})} style={{background: "none", border: "none", cursor: "pointer"}}>🕵️</button>
-                                            <select value={rec.status || ""} onChange={e => updateEntry(p.id, m.id, "status", e.target.value)} style={{ borderRadius: "5px" }}>
+                                            <select value={rec.status || ""} onChange={e => updateEntry(p.id, m.id, "status", e.target.value)} style={{ fontSize: "12px" }}>
                                                 <option value="">؟</option>
                                                 <option value="present">حاضر</option>
                                                 <option value="absent">غائب</option>
                                             </select>
-                                            <input type="number" value={rec.score} onChange={e => updateEntry(p.id, m.id, "score", e.target.value)} style={{ width: "40px", textAlign: "center" }} />
+                                            <input type="number" value={rec.score} onChange={e => updateEntry(p.id, m.id, "score", e.target.value)} style={{ width: "35px", textAlign: "center" }} />
                                         </div>
                                     );
                                 })}
