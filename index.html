@@ -3,125 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد الكشفي - مدرسة القاسم</title>
+    <title>نظام أوتاد - التشفير العشوائي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #3b82f6; --success: #22c55e; --danger: #ef4444; --bg: #0f172a; --card: #1e293b; }
-        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; transition: 0.2s; }
+        :root { --primary: #3b82f6; --success: #22c55e; --danger: #ef4444; --bg: #0f172a; --card: #1e293b; --gold: #fbbf24; }
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
         body { margin: 0; background: var(--bg); color: #f8fafc; direction: rtl; padding: 10px; }
         .container { max-width: 600px; margin: auto; }
         .header-box { background: var(--card); padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary); text-align: center; margin-bottom: 15px; }
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-        .stat-item { background: var(--card); padding: 10px; border-radius: 10px; text-align: center; font-size: 12px; border: 1px solid #334155; }
         .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; }
-        .platoon-title { color: var(--primary); font-weight: bold; border-right: 4px solid var(--primary); padding-right: 10px; margin-bottom: 15px; }
-        .member-row { display: flex; align-items: center; justify-content: space-between; background: #ffffff05; padding: 12px; border-radius: 10px; margin-bottom: 8px; }
-        .badge-tag { font-size: 9px; background: var(--primary); padding: 2px 5px; border-radius: 4px; margin-left: 3px; display: inline-block; }
-        .controls { display: flex; gap: 5px; }
-        select, input, textarea { background: #334155; color: white; border: 1px solid #475569; padding: 8px; border-radius: 8px; font-size: 14px; width: 100%; margin-bottom: 10px; }
-        .btn { background: var(--primary); border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
-        .btn-tool { background: #475569; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .member-row { display: flex; align-items: center; justify-content: space-between; background: #ffffff05; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #334155; }
+        .points-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 20px; font-weight: bold; font-size: 11px; }
+        input, select { background: #334155; color: white; border: 1px solid #475569; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        .btn { background: var(--primary); border: none; color: white; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-        .modal-content { background: var(--card); width: 100%; max-width: 450px; padding: 20px; border-radius: 15px; max-height: 85vh; overflow-y: auto; }
-        #login-screen { padding-top: 80px; }
-        #main-screen { display: none; }
+        .modal-content { background: var(--card); width: 100%; max-width: 450px; padding: 20px; border-radius: 15px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
     </style>
 </head>
 <body>
 
-<div id="login-screen" class="container">
-    <div class="header-box"><h2>نظام أوتاد الكشفي</h2><p>الدخول للقيادة العليا</p></div>
-    <input type="password" id="pin-input" placeholder="رمز الدخول">
-    <button class="btn" onclick="login()">دخول</button>
+<div id="login-screen" class="container" style="padding-top: 80px;">
+    <div class="header-box"><h2>نظام أوتاد الكشفي</h2><p>أدخل شيفرة الدخول الرباعية</p></div>
+    <input type="password" id="pin-input" placeholder="****">
+    <button class="btn" onclick="login()">تحقق من الهوية</button>
 </div>
 
-<div id="main-screen" class="container">
+<div id="main-screen" class="container" style="display:none;">
     <div class="header-box">
         <h3 id="user-display"></h3>
-        <p>عريف أول الوحدة - مدرسة القاسم</p>
+        <p id="user-role" style="color:var(--gold)"></p>
     </div>
-
-    <div class="stats-row">
-        <div class="stat-item"><b id="count-members">40</b><br/>كشاف</div>
-        <div class="stat-item"><b>4</b><br/>طلايع</div>
-        <div class="stat-item"><b style="color:var(--success)">نشط</b><br/>الحالة</div>
-    </div>
-
     <div id="platoons-area"></div>
+    <button class="btn" style="background:var(--danger); margin-top:10px;" onclick="location.reload()">خروج آمن</button>
 </div>
 
 <div id="info-modal" class="modal">
     <div class="modal-content">
         <h3 id="modal-title"></h3>
-        <label>الاسم الرسمي</label>
-        <input type="text" id="edit-name">
-        <label>رقم الهوية</label>
-        <input type="text" id="edit-id" placeholder="10 أرقام">
-        <label>رقم الجوال</label>
-        <input type="text" id="edit-phone" placeholder="05xxxx">
-        
-        <h4>خزانة الأوسمة</h4>
-        <div id="badges-area" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:15px;"></div>
-
-        <h4>سجل السلوك</h4>
+        <div style="background:#0f172a; padding:10px; border-radius:10px; margin-bottom:15px; text-align:center;">
+            رصيد النقاط: <span id="current-points" style="color:var(--gold); font-weight:bold;">0</span>
+        </div>
+        <label>سجل السلوك والتميز</label>
         <select id="log-select">
-            <option value="">رصد تميز/مخالفة...</option>
-            <option>انضباط مثالي</option>
-            <option>مبادرة كشفية</option>
-            <option>هندام متكامل</option>
-            <option>تأخر عن الاصطفاف</option>
-            <option>إهمال هندام</option>
+            <option value="">اختر الإجراء...</option>
+            <option value="تميز">تميز (+15)</option>
+            <option value="مخالفة">مخالفة (-10)</option>
         </select>
-        <div id="log-history" style="font-size:11px; color:#94a3b8; max-height:80px; overflow-y:auto;"></div>
-
-        <button class="btn" style="background:var(--success); margin-top:20px;" onclick="closeModal()">حفظ وإغلاق</button>
+        <button class="btn" style="background:var(--success)" onclick="closeModal()">تحديث الملف</button>
     </div>
 </div>
 
 <script>
     const CONFIG = {
-        admins: { "333": "عبدالله العرفه", "202021": "سلمان الصويلح", "202030": "معاذ الشنقيطي" },
+        users: {
+            "8429": { name: "عبدالله العرفه", target: "ALL" },
+            "5173": { name: "سلمان الصويلح", target: "ALL" },
+            "9264": { name: "معاذ الشنقيطي", target: "ALL" },
+            "3058": { name: "الوليد الحازمي", target: 1 },
+            "6712": { name: "حاتم خريزي", target: 2 },
+            "4891": { name: "راكان شراحيلي", target: 3 },
+            "2537": { name: "وضاح الصويلح", target: 4 }
+        },
         platoons: [
-            { id: "L", name: "قادة الطلائع", members: ["الوليد الحازمي", "حاتم خريزي", "راكان شراحيلي", "وضاح الصويلح"] },
             { id: 1, name: "طليعة 1", members: ["صالح حبتور", "حسن الشهري", "ريان جعام", "غازي العجمي", "يزيد خال", "زياد العجلاني", "فهد المهيني", "يحي شراحيلي", "عزام خبراني"] },
             { id: 2, name: "طليعة 2", members: ["ياسر ابو حيه", "محمد عسيري", "رياض الزهراني", "ابراهيم التليدي", "غازي العنزي", "صالح الخثعمي", "اصيل العتيبي", "فواز الشهراني", "علي الغامدي"] },
-            { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد سعيدان الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
+            { id: 3, name: "طليعة 3", members: ["بسام قرادي", "علي الشهراني", "زايد القحطاني", "راشد الراشدي", "عبدالعزيز القحطاني", "عيسى الرشيدي", "بدر كعبي", "عبدالله قشاش", "حسام الشهراني"] },
             { id: 4, name: "طليعة 4", members: ["مشعل القحطاني", "مشاري القحطاني", "محمد فقيه", "فارس العمري", "رائد حوباني", "راكان حوباني", "عبدالله القرني", "ناصر المطيري", "مبارك خميس"] }
-        ],
-        badges: ["وسام الخدمة", "وسام الهواية", "وسام الرياضي", "وسام المسامر"]
+        ]
     };
 
-    let db = JSON.parse(localStorage.getItem('awtad_v20_final')) || {};
+    let db = JSON.parse(localStorage.getItem('awtad_v22')) || {};
+    let currentUser = null;
     let currentEditing = null;
 
     function login() {
         const pin = document.getElementById('pin-input').value;
-        if (CONFIG.admins[pin]) {
+        if (CONFIG.users[pin]) {
+            currentUser = CONFIG.users[pin];
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
-            document.getElementById('user-display').innerText = CONFIG.admins[pin];
+            document.getElementById('user-display').innerText = currentUser.name;
+            document.getElementById('user-role').innerText = currentUser.target === "ALL" ? "القيادة العليا" : "قائد طليعة";
             renderPlatoons();
-        } else {
-            alert("الرمز غير صحيح");
-        }
+        } else { alert("الشيفرة خاطئة!"); }
     }
 
     function renderPlatoons() {
         const area = document.getElementById('platoons-area');
         area.innerHTML = '';
         CONFIG.platoons.forEach(p => {
-            let card = `<div class="card"><div class="platoon-title">${p.name}</div>`;
+            if (currentUser.target !== "ALL" && currentUser.target !== p.id) return;
+            let card = `<div class="card"><div style="color:var(--primary); font-weight:bold; margin-bottom:10px;">${p.name}</div>`;
             p.members.forEach(m => {
-                const mData = db[m] || { badges: [] };
-                let badgesHtml = (mData.badges || []).map(b => `<span class="badge-tag">${b}</span>`).join('');
+                if(!db[m]) db[m] = { status: 'غائب', points: 0 };
                 card += `
                     <div class="member-row">
-                        <div>
-                            <div>${mData.name || m}</div>
-                            <div id="badges-${m}">${badgesHtml}</div>
-                        </div>
-                        <div class="controls">
-                            <button class="btn-tool" onclick="openModal('${m}')">ℹ️</button>
+                        <span><span class="status-dot" style="background:${db[m].status==='حاضر'?'var(--success)':'var(--danger)'}"></span>${m}</span>
+                        <div style="display:flex; gap:5px; align-items:center;">
+                            <span class="points-badge">${db[m].points} ن</span>
+                            <select style="width:70px; padding:2px; margin:0;" onchange="updateStatus('${m}', this.value)">
+                                <option value="غائب" ${db[m].status==='غائب'?'selected':''}>غ</option>
+                                <option value="حاضر" ${db[m].status==='حاضر'?'selected':''}>ح</option>
+                            </select>
+                            <button style="background:#475569; border:none; color:white; padding:5px; border-radius:5px;" onclick="openModal('${m}')">ℹ️</button>
                         </div>
                     </div>`;
             });
@@ -130,57 +115,31 @@
         });
     }
 
-    function openModal(id) {
-        currentEditing = id;
-        const mData = db[id] || { name: id, idNum: '', phone: '', badges: [], logs: [] };
-        document.getElementById('modal-title').innerText = mData.name || id;
-        document.getElementById('edit-name').value = mData.name || id;
-        document.getElementById('edit-id').value = mData.idNum || '';
-        document.getElementById('edit-phone').value = mData.phone || '';
-        
-        // الأوسمة
-        const bArea = document.getElementById('badges-area');
-        bArea.innerHTML = '';
-        CONFIG.badges.forEach(b => {
-            const isActive = (mData.badges || []).includes(b);
-            bArea.innerHTML += `<button onclick="toggleBadge('${id}', '${b}')" style="background:${isActive? 'var(--success)':'#334155'}; color:white; border:none; padding:5px; border-radius:5px; font-size:10px;">${b}</button>`;
-        });
+    function updateStatus(m, s) {
+        db[m].status = s;
+        db[m].points += (s === 'حاضر' ? 10 : -5);
+        save();
+        renderPlatoons();
+    }
 
-        // السجل
-        const lArea = document.getElementById('log-history');
-        lArea.innerHTML = (mData.logs || []).map(l => `<div>• ${l}</div>`).join('');
-
+    function openModal(m) {
+        currentEditing = m;
+        document.getElementById('modal-title').innerText = m;
+        document.getElementById('current-points').innerText = db[m].points;
         document.getElementById('info-modal').style.display = 'flex';
     }
 
-    function toggleBadge(id, badge) {
-        if(!db[id]) db[id] = { badges: [], logs: [] };
-        if(!db[id].badges) db[id].badges = [];
-        if(db[id].badges.includes(badge)) {
-            db[id].badges = db[id].badges.filter(x => x !== badge);
-        } else {
-            db[id].badges.push(badge);
-        }
-        openModal(id); // تحديث النافذة
-    }
-
     function closeModal() {
-        const id = currentEditing;
-        if(!db[id]) db[id] = { badges: [], logs: [] };
-        db[id].name = document.getElementById('edit-name').value;
-        db[id].idNum = document.getElementById('edit-id').value;
-        db[id].phone = document.getElementById('edit-phone').value;
-        
-        const log = document.getElementById('log-select').value;
-        if(log) {
-            if(!db[id].logs) db[id].logs = [];
-            db[id].logs.push(`${new Date().toLocaleDateString()}: ${log}`);
-        }
-
-        localStorage.setItem('awtad_v20_final', JSON.stringify(db));
+        const type = document.getElementById('log-select').value;
+        if(type === "تميز") db[currentEditing].points += 15;
+        if(type === "مخالفة") db[currentEditing].points -= 10;
+        document.getElementById('log-select').value = "";
+        save();
         document.getElementById('info-modal').style.display = 'none';
         renderPlatoons();
     }
+
+    function save() { localStorage.setItem('awtad_v22', JSON.stringify(db)); }
 </script>
 </body>
 </html>
