@@ -3,62 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد - التحكم الكامل</title>
+    <title>نظام أوتاد الاستخباراتي 🛡️</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
-        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; --gold: #fbbf24; --text: #f8fafc; --danger: #ef4444; --success: #10b981; }
-        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; outline: none; }
-        body { margin: 0; background: var(--bg); color: var(--text); direction: rtl; padding: 10px; }
-        .container { max-width: 600px; margin: auto; }
-        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; position: relative; }
-        .points-display { font-size: 32px; font-weight: 900; color: var(--gold); }
-        .badge-box { background: rgba(251, 191, 36, 0.1); border: 1px dashed var(--gold); border-radius: 10px; padding: 10px; margin-top: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
-        .tabs { display: flex; gap: 5px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .tab { flex: 1; padding: 10px; background: #334155; border: none; color: white; border-radius: 8px; cursor: pointer; white-space: nowrap; font-size: 11px; }
-        .tab.active { background: var(--primary); }
-        .btn { border: none; color: white; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); }
-        input { background: #0f172a; color: white; border: 1px solid #334155; padding: 12px; border-radius: 10px; width: 100%; margin: 10px 0; text-align: center; }
-        .admin-only { border: 2px solid var(--gold) !important; }
-        .log-item { font-size: 11px; border-bottom: 1px solid #334155; padding: 8px 0; text-align: right; }
+        :root { --primary: #2563eb; --bg: #0b1120; --card: #1e293b; --gold: #f59e0b; --text: #f1f5f9; --danger: #dc2626; --success: #059669; }
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--text); direction: rtl; padding: 15px; }
+        .container { max-width: 1100px; margin: auto; }
+        .card { background: var(--card); border-radius: 18px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); }
+        .header-box { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; }
+        .tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin: 20px 0; }
+        .tab { padding: 12px; background: #334155; border: none; color: white; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 700; }
+        .tab.active { background: var(--primary); box-shadow: 0 0 15px var(--primary); }
+        .btn { border: none; color: white; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+        input { background: #0f172a; color: white; border: 1px solid #475569; padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; }
+        .points-badge { font-size: 24px; font-weight: 900; color: var(--gold); }
+        .student-row { padding: 15px; border-bottom: 1px solid #334155; display: grid; grid-template-columns: 1fr auto; align-items: center; }
+        .badge-list { display: flex; gap: 5px; margin-top: 5px; font-size: 18px; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display: none; margin: 10px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div id="login-screen" class="container" style="padding-top: 50px; text-align: center;">
-    <div class="card">
+<div id="login-screen" class="container" style="padding-top: 15vh; max-width: 400px;">
+    <div class="card" style="text-align: center;">
         <h1 style="color:var(--gold); margin:0;">أوتـاد 🛡️</h1>
-        <p>نظام التحقيقات والطلائع</p>
-        <input type="password" id="access-pin" placeholder="أدخل رقمك الخاص">
-        <button class="btn" style="background:var(--primary); width:100%;" onclick="handleLogin()">دخول</button>
+        <p>نظام القيادة العليا</p>
+        <input type="password" id="access-pin" placeholder="أدخل كود المرور">
+        <div id="load-icon" class="loader"></div>
+        <button class="btn" style="background:var(--primary); width:100%;" onclick="handleLogin()">دخول النظام</button>
     </div>
 </div>
 
 <div id="main-app" class="container" style="display:none;">
-    <div class="card admin-only">
-        <h2 id="welcome-msg" style="margin:0;"></h2>
-        <div style="display: flex; gap: 5px; margin-top: 10px;">
-            <button class="btn" style="background:var(--success); flex:1;" onclick="exportToWhatsApp()">تقرير واتساب 📱</button>
-            <button class="btn" style="background:var(--danger); flex:1;" id="admin-reset" onclick="resetSystem()">تصفير شامل ⚠️</button>
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 id="welcome-msg" style="margin:0;"></h2>
+            <button class="btn" style="background:var(--danger)" onclick="location.reload()">خروج</button>
+        </div>
+        <div id="admin-panel" style="display: none; margin-top: 15px; border-top: 1px solid #444; padding-top: 10px; gap: 10px; display: flex; flex-wrap: wrap;">
+            <button class="btn" style="background:var(--success)" onclick="exportReport('all')">تقرير شامل للواتساب 📱</button>
+            <button class="btn" style="background:var(--danger)" onclick="resetSystem()">تصفير شامل ⚠️</button>
         </div>
     </div>
 
     <div class="tabs">
-        <button class="tab active" id="tab-points" onclick="switchTab('points')">النقاط</button>
-        <button class="tab" id="tab-badges" onclick="switchTab('badges')">الأوسمة</button>
-        <button class="tab" id="tab-leaders" onclick="switchTab('leaders')">إدارة القادة 👑</button>
-        <button class="tab" onclick="switchTab('ranking')">الترتيب</button>
-        <button class="tab" onclick="switchTab('logs')">السجل</button>
+        <button class="tab active" id="t-points" onclick="switchTab('points')">الطلائع</button>
+        <button class="tab" id="t-ranking" onclick="switchTab('ranking')">الترتيب</button>
+        <button class="tab" id="t-logs" onclick="switchTab('logs')">السجل</button>
     </div>
 
     <div id="content-area"></div>
-    <button class="btn" style="background:#334155; width:100%; margin: 20px 0;" onclick="location.reload()">خروج</button>
 </div>
 
 <script>
-    // تهيئة Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
       authDomain: "awtad-system.firebaseapp.com",
@@ -66,20 +67,21 @@
       projectId: "awtad-system"
     };
     firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const awtadRef = database.ref('awtad_final_v1');
+    const db = firebase.database();
+    const awtadRef = db.ref('awtad_hq_v2');
 
-    // بيانات الدخول (أنت تتحكم فيها هنا)
-    const ACCESS_LEVELS = {
-        "8429": {name:"عبدالله العرفه", role:"admin"}, // أنت "مولاي"
-        "5173": {name:"سلمان الصويلح", role:"admin"},
-        "9264": {name:"معاذ الشنقيطي", role:"admin"},
-        // أرقام القادة (تقدر تغيرها من الكود أو من واجهة الأدمن لاحقاً)
+    // القيادة العليا
+    const ACCESS = {
+        "8429": {name:"عبدالله العرفه", role:"admin", title:"مولاي القائد"},
+        "5173": {name:"سلمان الصويلح", role:"admin", title:"القيادة العليا"},
+        "9264": {name:"معاذ الشنقيطي", role:"admin", title:"القيادة العليا"},
         "3058": {name:"الوليد الحازمي", role:"leader", target: 1},
         "6712": {name:"حاتم خريزي", role:"leader", target: 2},
         "4891": {name:"راكان شراحيلي", role:"leader", target: 3},
         "2537": {name:"وضاح الصويلح", role:"leader", target: 4}
     };
+
+    const READY_BADGES = ["🎖️", "🦅", "🛡️", "🔥", "⭐", "🏹"];
 
     const PLATOONS = [
         {id:1, name:"طليعة 1", members:["صالح حبتور","حسن الشهري","ريان جعام","غازي العجمي","يزيد خال","زياد العجلاني","فهد المهيني","يحي شراحيلي","عزام خبراني"]},
@@ -88,128 +90,117 @@
         {id:4, name:"طليعة 4", members:["مشعل القحطاني","مشاري القحطاني","محمد فقيه","فارس العمري","رائد حوباني","راكان حوباني","عبدالله القرني","ناصر المطيري","مبارك خميس"]}
     ];
 
-    let liveData = { points: {}, badges: {}, logs: [], leaders: ACCESS_LEVELS };
-    let currentTab = 'points';
-    let currentUser = null;
+    let liveData = { students: {}, logs: [] };
+    let user = null;
 
-    function handleLogin() {
+    async function handleLogin() {
+        document.getElementById('load-icon').style.display = 'block';
         const pin = document.getElementById('access-pin').value;
-        if(ACCESS_LEVELS[pin]) {
-            currentUser = ACCESS_LEVELS[pin];
+        if(ACCESS[pin]) {
+            user = ACCESS[pin];
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
-            document.getElementById('welcome-msg').innerText = "أهلاً " + currentUser.name;
+            document.getElementById('welcome-msg').innerText = `${user.title || 'قائد'}: ${user.name}`;
+            if(user.role === 'admin') document.getElementById('admin-panel').style.display = 'flex';
             
-            // إخفاء تبويب الإدارة لغير الأدمن
-            if(currentUser.role !== 'admin') {
-                document.getElementById('tab-leaders').style.display = 'none';
-                document.getElementById('admin-reset').style.display = 'none';
-            }
-
             awtadRef.on('value', (snap) => {
-                const data = snap.val();
-                if(data) liveData = data;
+                liveData = snap.val() || { students: {}, logs: [] };
                 render();
             });
-        } else { alert("عفواً، الرقم غير مسجل!"); }
+        } else { alert("الكود خطأ!"); }
+        document.getElementById('load-icon').style.display = 'none';
     }
 
     function switchTab(tab) {
-        currentTab = tab;
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('tab-'+tab)?.classList.add('active');
-        render();
+        document.getElementById('t-'+tab).classList.add('active');
+        render(tab);
     }
 
-    function updatePoints(name, val, reason) {
-        if(!liveData.points) liveData.points = {};
-        liveData.points[name] = (liveData.points[name] || 0) + val;
-        
-        const logEntry = {
-            time: new Date().toLocaleTimeString('ar-SA'),
-            admin: currentUser.name,
-            target: name,
-            action: val > 0 ? `+${val}` : `${val}`,
-            msg: reason
-        };
-        if(!liveData.logs) liveData.logs = [];
-        liveData.logs.unshift(logEntry);
-        awtadRef.set(liveData);
-    }
-
-    function render() {
+    function render(tab = 'points') {
         const area = document.getElementById('content-area');
         area.innerHTML = "";
-        const points = liveData.points || {};
-        const badges = liveData.badges || {};
+        const students = liveData.students || {};
 
-        if(currentTab === 'points') {
+        if(tab === 'points') {
             PLATOONS.forEach(p => {
-                if(currentUser.role !== 'admin' && currentUser.target !== p.id) return;
-                let html = `<div class="card"><h3>${p.name}</h3>`;
+                if(user.role !== 'admin' && user.target !== p.id) return;
+                let html = `<div class="card"><div style="display:flex; justify-content:space-between; align-items:center"><h3 style="color:var(--gold)">${p.name}</h3><button class="btn" style="background:var(--primary)" onclick="exportReport('platoon', ${p.id})">تقرير</button></div>`;
                 p.members.forEach(m => {
-                    const pts = points[m] || 0;
-                    html += `<div style="padding:10px; border-bottom:1px solid #334155;">
-                        <b>${m}</b> <span class="points-display" style="float:left; font-size:20px;">${pts}</span>
-                        <div style="display:flex; gap:5px; margin-top:5px;">
-                            <button class="btn" style="background:var(--success); flex:1;" onclick="updatePoints('${m}', 10, 'حضور')">+10</button>
-                            <button class="btn" style="background:var(--danger); flex:1;" onclick="updatePoints('${m}', -5, 'غياب')">-5</button>
+                    const s = students[m] || {pts:0, badges:[]};
+                    html += `<div class="student-row">
+                        <div>
+                            <b>${m}</b>
+                            <div class="badge-list">${s.badges?.map(b => `<span>${b}</span>`).join('') || ''}</div>
+                        </div>
+                        <div style="text-align:left">
+                            <span class="points-badge">${s.pts}</span><br>
+                            <div style="display:flex; gap:5px; margin-top:5px">
+                                <button class="btn" style="background:var(--success); padding:5px" onclick="update('${m}', 5)">+5</button>
+                                <button class="btn" style="background:var(--danger); padding:5px" onclick="update('${m}', -5)">-5</button>
+                                <button class="btn" style="background:var(--gold); color:black; padding:5px" onclick="addBadge('${m}')">🎖️</button>
+                            </div>
                         </div>
                     </div>`;
                 });
                 area.innerHTML += html + `</div>`;
             });
-        } 
-        else if(currentTab === 'leaders') {
-            if(currentUser.role !== 'admin') return;
-            let html = `<div class="card"><h3>👑 إدارة القادة</h3><p style="font-size:12px;">تعديل صلاحيات قادة الطلائع</p>`;
-            for(let pin in ACCESS_LEVELS) {
-                const leader = ACCESS_LEVELS[pin];
-                if(leader.role === 'leader') {
-                    html += `<div style="text-align:right; padding:10px; border-bottom:1px solid #444;">
-                        <b>${leader.name}</b> (طليعة ${leader.target})<br>
-                        <small>الرقم السري: ${pin}</small>
-                        <button class="btn" style="background:var(--danger); padding:2px 8px; font-size:10px; float:left;" onclick="alert('تواصل مع المبرمج لتغيير الكود المصدري للرقم')">تغيير الرقم</button>
-                    </div>`;
-                }
-            }
-            area.innerHTML = html + `</div>`;
-        }
-        else if(currentTab === 'badges') {
-            PLATOONS.forEach(p => {
-                if(currentUser.role !== 'admin' && currentUser.target !== p.id) return;
-                p.members.forEach(m => {
-                    const bList = badges[m] || [];
-                    area.innerHTML += `<div class="card">
-                        <b>${m}</b>
-                        <div class="badge-box">${bList.map(b => `<span>${b}</span>`).join('') || 'لا أوسمة'}</div>
-                        <button class="btn" style="background:var(--gold); color:black; width:100%; margin-top:5px;" onclick="const s=prompt('أدخل إيموجي الوسام:'); if(s) { if(!liveData.badges)liveData.badges={}; if(!liveData.badges['${m}'])liveData.badges['${m}']=[]; liveData.badges['${m}'].push(s); awtadRef.set(liveData); }">إضافة وسام</button>
-                    </div>`;
-                });
+        } else if(tab === 'ranking') {
+            let list = [];
+            for(let name in students) list.push({name, pts: students[name].pts});
+            list.sort((a,b) => b.pts - a.pts);
+            let html = `<div class="card"><h3>🏆 قائمة الشرف</h3>`;
+            list.slice(0, 15).forEach((v, i) => {
+                html += `<div class="student-row"><span>${i+1}. ${v.name}</span><b>${v.pts} ن</b></div>`;
             });
-        }
-        else if(currentTab === 'logs') {
-            let html = `<div class="card"><h3>السجل</h3>`;
-            (liveData.logs || []).slice(0, 20).forEach(l => {
-                html += `<div class="log-item"><b>${l.admin}</b> -> ${l.target} (${l.action}) <br> <small>${l.time} - ${l.msg}</small></div>`;
+            area.innerHTML = html + `</div>`;
+        } else if(tab === 'logs') {
+            let html = `<div class="card"><h3>🕵️ السجل الاستخباراتي</h3>`;
+            (liveData.logs || []).slice(0, 30).forEach(l => {
+                html += `<div style="font-size:12px; border-bottom:1px solid #334155; padding:5px"><b>${l.admin}</b> -> ${l.target} (${l.val}) <br><small>${l.time}</small></div>`;
             });
             area.innerHTML = html + `</div>`;
         }
     }
 
-    function exportToWhatsApp() {
-        let txt = `*تقرير أوتاد اليومي*\n\n`;
-        PLATOONS.forEach(p => {
+    function update(name, val) {
+        if(!liveData.students[name]) liveData.students[name] = {pts:0, badges:[]};
+        liveData.students[name].pts += val;
+        const entry = {time: new Date().toLocaleTimeString('ar-SA'), admin: user.name, target: name, val: val > 0 ? `+${val}` : val};
+        if(!liveData.logs) liveData.logs = [];
+        liveData.logs.unshift(entry);
+        awtadRef.set(liveData);
+    }
+
+    function addBadge(name) {
+        const b = prompt("اختر وسام: " + READY_BADGES.join(" "));
+        if(READY_BADGES.includes(b)) {
+            if(!liveData.students[name]) liveData.students[name] = {pts:0, badges:[]};
+            if(!liveData.students[name].badges) liveData.students[name].badges = [];
+            liveData.students[name].badges.push(b);
+            awtadRef.set(liveData);
+        }
+    }
+
+    function exportReport(type, id = null) {
+        let txt = `🛡️ تقرير أوتاد (${new Date().toLocaleDateString('ar-SA')}) 🛡️\n\n`;
+        if(type === 'all') {
+            PLATOONS.forEach(p => {
+                txt += `*${p.name}*\n`;
+                p.members.forEach(m => txt += `- ${m}: ${liveData.students[m]?.pts || 0} ن\n`);
+                txt += `\n`;
+            });
+        } else {
+            const p = PLATOONS.find(x => x.id === id);
             txt += `*${p.name}*\n`;
-            p.members.forEach(m => txt += `- ${m}: ${liveData.points[m] || 0}\n`);
-            txt += `\n`;
-        });
-        window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`);
+            p.members.forEach(m => txt += `- ${m}: ${liveData.students[m]?.pts || 0} ن\n`);
+        }
+        navigator.clipboard.writeText(txt).then(() => alert("تم نسخ التقرير! ألصقه في واتساب."));
     }
 
     function resetSystem() {
-        if(confirm("مولاي، هل أنت متأكد من تصفير جميع البيانات؟")) {
-            awtadRef.set({ points: {}, badges: {}, logs: [{time: "الآن", admin: currentUser.name, action: "تصفير", target: "النظام", msg: "مسح شامل"}] });
+        if(confirm("يا مولاي، هل أنت متأكد؟ التصفير يمسح كل شيء!")) {
+            awtadRef.set({ students: {}, logs: [{time: "الآن", admin: user.name, target: "النظام", val: "تصفير"}] });
         }
     }
 </script>
