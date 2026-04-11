@@ -210,7 +210,7 @@ label{font-size:13px;color:var(--text2);font-weight:600;display:block;margin-top
 
 <div id="login-screen">
   <div class="login-wrap">
-    <div class="login-logo">أوتاد</div>
+    <div class="login-logo" onclick="App.hardReset()">أوتاد</div>
     <div class="login-sub">نظام إدارة الفرقة الكشفية</div>
     <div class="login-box">
       <div class="pin-display" id="pin-display">
@@ -248,42 +248,22 @@ label{font-size:13px;color:var(--text2);font-weight:600;display:block;margin-top
   </header>
 
   <main>
-    <div id="page-home" class="page">
-      <div class="card pts-card">
-        <div class="pts-num" id="user-pts">0</div>
-        <div class="pts-label">رصيد نقاطك</div>
-      </div>
-      <div class="section-title">📢 الإعلانات الأخيرة</div>
-      <div class="card" id="ann-list"></div>
-      <div class="section-title">🏅 أوسمتي</div>
-      <div class="card"><div class="badges-grid" id="user-badges"></div></div>
-    </div>
-
-    <div id="page-tasks" class="page">
-      <div class="section-title">📅 المهام المتاحة</div>
-      <div id="task-list"></div>
-    </div>
-
-    <div id="page-field" class="page">
-      <div id="field-content"></div>
-    </div>
-
+    <div id="page-home" class="page"></div>
+    <div id="page-tasks" class="page"></div>
+    <div id="page-field" class="page"></div>
     <div id="page-attendance" class="page"></div>
-
     <div id="page-leaderboard" class="page"></div>
-
     <div id="page-dashboard" class="page"></div>
-
     <div id="page-manage" class="page"></div>
   </main>
 
   <nav>
-    <div class="nav-item active" onclick="App.page('home')"><span class="nav-icon">🏠</span><span>الرئيسية</span></div>
-    <div class="nav-item" onclick="App.page('tasks')"><span class="nav-icon">🎯</span><span>المهام</span></div>
-    <div class="nav-item" onclick="App.page('field')"><span class="nav-icon">🛡️</span><span>الميدان</span></div>
-    <div class="nav-item" onclick="App.page('attendance')"><span class="nav-icon">📍</span><span>الحضور</span></div>
-    <div class="nav-item" onclick="App.page('leaderboard')"><span class="nav-icon">🏆</span><span>الترتيب</span></div>
-    <div id="nav-admin" class="nav-item hidden" onclick="App.page('dashboard')"><span class="nav-icon">⚙️</span><span>الإدارة</span></div>
+    <div class="nav-item active" onclick="App.page('home',this)"><span class="nav-icon">🏠</span><span>الرئيسية</span></div>
+    <div class="nav-item" onclick="App.page('tasks',this)"><span class="nav-icon">🎯</span><span>المهام</span></div>
+    <div class="nav-item" onclick="App.page('field',this)"><span class="nav-icon">🛡️</span><span>الميدان</span></div>
+    <div class="nav-item" onclick="App.page('attendance',this)"><span class="nav-icon">📍</span><span>الحضور</span></div>
+    <div class="nav-item" onclick="App.page('leaderboard',this)"><span class="nav-icon">🏆</span><span>الترتيب</span></div>
+    <div id="nav-admin" class="nav-item hidden" onclick="App.page('dashboard',this)"><span class="nav-icon">⚙️</span><span>الإدارة</span></div>
   </nav>
 </div>
 
@@ -295,25 +275,14 @@ label{font-size:13px;color:var(--text2);font-weight:600;display:block;margin-top
 
 <script>
 // ─── CONFIG ───
-const firebaseConfig = {
-  databaseURL: "https://awtad-scout-default-rtdb.firebaseio.com"
-};
+const firebaseConfig = { databaseURL: "https://awtad-scout-default-rtdb.firebaseio.com" };
 firebase.initializeApp(firebaseConfig);
 const DB = firebase.database().ref();
 
 // ─── STATE ───
 let S = {
-  user: null,
-  members: {},
-  tasks: [],
-  sessions: [],
-  announcements: [],
-  logs: [],
-  inviteCodes: {},
-  archived: {},
-  page: 'home',
-  lbTab: 'global',
-  pin: ''
+  user: null, members: {}, tasks: [], sessions: [], announcements: [], logs: [],
+  inviteCodes: {}, archived: {}, tab: 'home', lbTab: 'global', pin: ''
 };
 
 // ─── UTILS ───
@@ -322,7 +291,7 @@ const hexRgb = (hex) => {
   return `${r},${g},${b}`;
 };
 const teamColor = (t) => {
-  const colors = { 'ليث': '#4ade80', 'صقر': '#fbbf24', 'ذئب': '#60a5fa', 'فهد': '#f43f5e', 'نمر': '#a78bfa' };
+  const colors = { 'ليث': '#4ade80', 'صقر': '#fbbf24', 'ذئب': '#60a5fa', 'فهد': '#f43f5e', 'نمر': '#a78bfa', 'طليعة النسر': '#ff9f43' };
   return colors[t] || '#4ade80';
 };
 const initials = (n) => n.split(' ').map(x=>x[0]).join('').slice(0,2);
@@ -331,404 +300,244 @@ const initials = (n) => n.split(' ').map(x=>x[0]).join('').slice(0,2);
 const App = {
   init(){
     DB.on('value', snap => {
-      const data = snap.val() || {};
-      S.members = data.members || {};
-      S.tasks = Object.values(data.tasks || {}).sort((a,b)=>b.ts-a.ts);
-      S.sessions = Object.values(data.sessions || {}).sort((a,b)=>b.ts-a.ts);
-      S.announcements = Object.values(data.announcements || {}).sort((a,b)=>b.ts-a.ts);
-      S.logs = Object.values(data.logs || {}).sort((a,b)=>b.ts-a.ts);
-      S.inviteCodes = data.inviteCodes || {};
-      S.archived = data.archived || {};
-      if(S.user) {
-        S.user = S.members[S.user.pin] || S.user;
-        Render.all();
-      }
+      const d = snap.val() || {};
+      S.members = d.members || {};
+      S.tasks = Object.entries(d.tasks||{}).map(([id,v])=>({id,...v})).sort((a,b)=>b.ts-a.ts);
+      S.sessions = Object.values(d.sessions||{}).sort((a,b)=>b.ts-a.ts);
+      S.announcements = Object.values(d.announcements||{}).sort((a,b)=>b.ts-a.ts);
+      S.logs = Object.values(d.logs||{}).sort((a,b)=>b.ts-a.ts);
+      S.inviteCodes = d.inviteCodes || {};
+      S.archived = d.archived || {};
+      if(S.user) { S.user = S.members[S.user.id]; Render.all(); }
     });
   },
-  page(p){
-    S.page = p;
-    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-    document.getElementById(`page-${p}`).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-    const idx = ['home','tasks','field','attendance','leaderboard','dashboard','manage'].indexOf(p);
-    if(idx!==-1 && idx < 5) document.querySelectorAll('.nav-item')[idx].classList.add('active');
-    if(p==='dashboard'||p==='manage') document.getElementById('nav-admin').classList.add('active');
-    window.scrollTo(0,0);
+  page(name, el){
+    S.tab=name;
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    if(el)el.classList.add('active');
+    Render[name]();
   },
-  toggleTheme(){
-    const b = document.body;
-    b.classList.toggle('light');
-    localStorage.setItem('awtad_theme', b.classList.contains('light')?'light':'dark');
-    if(S.page==='dashboard') Render.dashboard();
-  },
-  log(txt){
-    DB.child('logs').push({txt, time: new Date().toLocaleTimeString('ar-SA'), ts: Date.now()});
-  },
-  logout(){
-    localStorage.removeItem('awtad_pin');
-    location.reload();
+  toggleTheme(){ document.body.classList.toggle('light'); localStorage.setItem('awtad_theme',document.body.classList.contains('light')?'light':'dark'); },
+  logout(){ UI.confirm('تسجيل الخروج','هل تريد الخروج من النظام؟','خروج',()=>location.reload()); },
+  log(txt){ DB.child('logs').push({txt,ts:Date.now(),time:new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'})}); },
+  hardReset: async ()=>{
+    const k=prompt('أدخل رمز المالك:'); if(k!=='7777')return;
+    const m={};
+    [{n:'سلمان الصويلح',r:'قائد الفرقة',p:'1111'},{n:'معاذ الشنقيطي',r:'نائب قائد الفرقة',p:'2222'},{n:'عبدالله العرفه',r:'قائد طليعة',p:'1000'}]
+      .forEach(a=>{ m[a.p]={name:a.n,role:'ROOT',rank:a.r,team:'الفرقة الرئيسية',pts:0,pin:a.p,badges:['مؤسس'],isPresent:false,joinDate:Date.now()}; });
+    ['الوليد فيصل الحازمي','يحيى علي شراحيلي','صالح سعيد حبتور'].forEach((n,i)=>{
+      const p=(2000+i).toString();
+      m[p]={name:n,role:i===0?'LEADER':'USER',rank:i===0?'قائد طليعة':'كشاف',team:'طليعة النسر',pts:0,pin:p,badges:['عضو جديد'],isPresent:false,joinDate:Date.now()};
+    });
+    await DB.set({members:m,inviteCodes:{'الفرقة الرئيسية':'FRQ001','طليعة النسر':'NSR2024'},logs:{init:{txt:'تم تأسيس النظام',ts:Date.now(),time:'00:00'}},announcements:{},sessions:{},tasks:{},archived:{}});
+    alert('تمت التهيئة!\nعبدالله: 1000 | سلمان: 1111 | معاذ: 2222\nطليعة النسر: 2000,2001,2002');
   }
 };
 
 // ─── LOGIN ───
 const Login = {
-  add(n){
-    if(S.pin.length<6){ S.pin+=n; this.update(); }
-    if(S.pin.length>=4) { /* auto submit maybe? */ }
-  },
+  add(n){ if(S.pin.length<4){ S.pin+=n; this.update(); } },
   del(){ S.pin=S.pin.slice(0,-1); this.update(); },
-  update(){
-    const dots = document.querySelectorAll('.pin-dot');
-    dots.forEach((d,i)=>d.className = i<S.pin.length?'pin-dot filled':'pin-dot');
-  },
-  async submit(){
-    const err = document.getElementById('login-error');
-    err.textContent = 'جاري التحقق...';
-    const pin = S.pin;
-    if(!S.members[pin]){
-      err.textContent = 'الرمز غير صحيح';
-      S.pin = ''; this.update();
-      return;
-    }
-    S.user = S.members[pin];
-    localStorage.setItem('awtad_pin', pin);
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
+  update(){ document.querySelectorAll('.pin-dot').forEach((d,i)=>d.className=i<S.pin.length?'pin-dot filled':'pin-dot'); },
+  submit(){
+    const p=S.pin; if(!S.members[p]){ document.getElementById('login-error').textContent='الرمز غير صحيح'; S.pin=''; this.update(); return; }
+    S.user={...S.members[p],id:p}; localStorage.setItem('awtad_pin',p);
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
     if(S.user.role==='ROOT'||S.user.role==='LEADER') document.getElementById('nav-admin').classList.remove('hidden');
-    App.init();
-    UI.toast(`أهلاً بك يا ${S.user.name.split(' ')[0]} 👋`);
+    App.init(); UI.toast(`أهلاً بك يا ${S.user.name.split(' ')[0]} 👋`);
   },
-  auto(){
-    const p = localStorage.getItem('awtad_pin');
-    if(p) { S.pin = p; this.submit(); }
-  }
+  auto(){ const p=localStorage.getItem('awtad_pin'); if(p){ S.pin=p; setTimeout(()=>this.submit(),500); } }
 };
 
 // ─── UI ───
 const UI = {
-  openModal(html){
-    document.getElementById('modal-content').innerHTML = html;
-    document.getElementById('modal').style.display = 'flex';
+  openModal(html){ document.getElementById('modal-content').innerHTML=html; document.getElementById('modal').style.display='flex'; },
+  closeModal(){ document.getElementById('modal').style.display='none'; },
+  toast(txt,type='success'){
+    const t=document.getElementById('toast'); t.textContent=txt; t.style.borderColor=type==='error'?'var(--red)':'var(--green)';
+    t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000);
   },
-  closeModal(){ document.getElementById('modal').style.display = 'none'; },
-  toast(txt, type='success'){
-    const t = document.getElementById('toast');
-    t.textContent = txt;
-    t.style.borderColor = type==='error'?'var(--red)':'var(--green)';
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 3000);
+  confirm(title,txt,btn,cb){
+    this.openModal(`<div class="modal-title">${title}</div><div style="color:var(--text2);margin-bottom:20px">${txt}</div><button class="btn btn-red" id="confirm-btn">${btn}</button><button class="modal-close" onclick="UI.closeModal()">إلغاء</button>`);
+    document.getElementById('confirm-btn').onclick=()=>{ cb(); this.closeModal(); };
   }
 };
 
 // ─── RENDER ───
 const Render = {
-  all(){
-    this.header();
-    this[S.page]();
-    if(S.user.role==='ROOT') { this.dashboard(); this.manage(); }
-  },
+  all(){ this.header(); this[S.tab](); },
   header(){
-    const h = document.getElementById('header-user');
-    const col = teamColor(S.user.team);
-    h.innerHTML = `
-      <div class="avatar" style="background:rgba(${hexRgb(col)},0.15);color:${col}">${initials(S.user.name)}</div>
-      <div><div class="header-name">${S.user.name}</div><div class="header-rank">${S.user.rank} · ${S.user.team}</div></div>`;
+    const h=document.getElementById('header-user'), me=S.members[S.user.id], c=teamColor(me.team);
+    h.innerHTML=`<div class="avatar" style="background:rgba(${hexRgb(c)},0.15);color:${c}">${initials(me.name)}</div><div><div class="header-name">${me.name}</div><div class="header-rank">${me.rank} · ${me.team}</div></div>`;
   },
   home(){
-    document.getElementById('user-pts').textContent = S.user.pts || 0;
-    document.getElementById('ann-list').innerHTML = S.announcements.slice(0,5).map(a=>`
+    const me=S.members[S.user.id]; if(!me)return;
+    const root=document.getElementById('page-home');
+    let attCount=0,totalSess=0;
+    S.sessions.forEach(s=>{ if(s.team===me.team){totalSess++; if(s.attendance&&s.attendance[S.user.id])attCount++;} });
+    const attRate=totalSess?Math.round(attCount/totalSess*100):0;
+    const myTasks=S.tasks.filter(t=>!t.done&&(t.assignedTo===S.user.id||t.assignedTo==='all'));
+    const annHtml=S.announcements.slice(0,3).map(a=>`
       <div class="ann-item">
-        <div style="flex:1"><div class="ann-text">${a.text}</div><div class="ann-time">${a.time} · <span class="ann-author">${a.author}</span></div></div>
-      </div>`).join('') || '<div style="color:var(--text3);font-size:13px;padding:10px 0">لا توجد إعلانات</div>';
-    document.getElementById('user-badges').innerHTML = (S.user.badges||[]).map(b=>`<div class="badge-item earned">🏅 ${b}</div>`).join('') || '<div style="color:var(--text3);font-size:11px">لم تحصل على أوسمة بعد</div>';
-  },
-  tasks(){
-    const root = document.getElementById('task-list');
-    const my = S.tasks.filter(t=>t.assignedTo==='all'||t.assignedTo===S.user.id);
-    root.innerHTML = my.map(t=>`
-      <div class="task-item" style="${t.done?'opacity:0.6':''}">
-        <div style="display:flex;justify-content:space-between">
-          <div class="task-title">${t.title}</div>
-          <div class="task-pts">+${t.pts}</div>
+        <div style="padding-top:4px"><span class="dot dot-green"></span></div>
+        <div style="flex:1">
+          <div class="ann-text">${a.text}</div>
+          <div style="display:flex;gap:8px;margin-top:4px"><span class="ann-author">${a.author}</span><span class="ann-time">${a.time}</span></div>
         </div>
-        <div class="task-desc">${t.desc}</div>
+      </div>`).join('')||'<div style="color:var(--text3);font-size:13px;padding:8px 0">لا توجد إعلانات حالياً</div>';
+    const taskHtml=myTasks.slice(0,3).map(t=>`
+      <div class="task-item">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+          <div><div class="task-title">${t.title}</div><div class="task-desc">${t.desc||''}</div></div>
+          <span class="badge badge-gold">+${t.pts||0} نقطة</span>
+        </div>
         <div class="task-footer">
-          <span class="badge ${t.done?'badge-green':'badge-gold'}">${t.done?'مكتملة ✓':'قيد التنفيذ'}</span>
-          ${t.due?`<span class="badge badge-blue">📅 ${t.due}</span>`:''}
-          ${!t.done?`<button class="btn btn-green btn-sm" style="margin-right:auto" onclick="Tasks.complete('${t.id}','${S.user.id}')">إتمام</button>`:''}
+          ${t.due?`<span style="font-size:11px;color:var(--text3)">📅 ${t.due}</span>`:''}
+          <button class="btn btn-green btn-sm" onclick="Tasks.complete('${t.id}','${S.user.id}')">إنجاز ✓</button>
         </div>
-      </div>`).join('') || '<div style="color:var(--text3);text-align:center;padding:40px 0">لا توجد مهام حالياً</div>';
+      </div>`).join('');
+    root.innerHTML=`
+      <div class="card pts-card">
+        <div class="pts-label">مجموع نقاطي</div>
+        <div class="pts-num">${me.pts||0}</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap">
+          <span class="badge ${me.isPresent?'badge-green':'badge-red'}"><span class="dot ${me.isPresent?'dot-green':'dot-red'}"></span>${me.isPresent?'حاضر':'غائب'}</span>
+          <span class="badge badge-blue">📊 ${attRate}% حضور</span>
+          <span class="badge badge-purple">🎖️ ${(me.badges||[]).length} وسام</span>
+        </div>
+      </div>
+      <div class="section-title">📢 الإعلانات</div>
+      <div class="card">${annHtml}</div>
+      ${myTasks.length?`<div class="section-title">📝 مهامي (${myTasks.length})</div><div>${taskHtml}</div>`:''}
+      <div class="section-title">🏅 أوسمتي</div>
+      <div class="card">
+        <div class="badges-grid">${(me.badges||[]).map(b=>`<div class="badge-item earned">🏅 ${b}</div>`).join('')||'<div style="color:var(--text3);font-size:13px">لا توجد أوسمة بعد</div>'}</div>
+      </div>`;
   },
   field(){
-    const root = document.getElementById('field-content');
-    const teams = [...new Set(Object.values(S.members).map(m=>m.team))];
-    root.innerHTML = teams.map(t=>{
-      const mems = Object.entries(S.members).filter(([,m])=>m.team===t).sort((a,b)=>(b[1].pts||0)-(a[1].pts||0));
-      const total = mems.reduce((s,[,m])=>s+(m.pts||0),0);
-      return `
-        <div class="team-header">
-          <div class="team-color" style="background:${teamColor(t)}"></div>
-          <div class="team-name">${t}</div>
-          <div class="team-count">${mems.length} أعضاء</div>
-          <div class="team-pts-total">${total} ن</div>
-        </div>
-        ${mems.map(([id,m])=>`
-          <div class="member-row" onclick="Members.openProfile('${id}')">
-            <div class="member-avatar" style="background:rgba(${hexRgb(teamColor(t))},0.1);color:${teamColor(t)}">${initials(m.name)}</div>
-            <div style="flex:1"><div class="member-name">${m.name}</div><div class="member-rank">${m.rank}</div></div>
-            <div style="text-align:right"><div class="member-pts">${m.pts||0}</div><div class="dot ${m.isPresent?'dot-green':'dot-red'}"></div></div>
-          </div>`).join('')}`;
-    }).join('');
+    const root=document.getElementById('page-field'), isRoot=S.user.role==='ROOT', isLeader=S.user.role==='LEADER'||isRoot;
+    const teams=[...new Set(Object.values(S.members).map(m=>m.team))];
+    let html='';
+    teams.forEach(team=>{
+      if(!isRoot&&S.user.team!==team)return;
+      const members=Object.entries(S.members).filter(([,m])=>m.team===team);
+      const col=teamColor(team), present=members.filter(([,m])=>m.isPresent).length, total=members.reduce((s,[,m])=>s+(m.pts||0),0);
+      html+=`<div class="team-header"><div class="team-color" style="background:${col}"></div><div><div class="team-name" style="color:${col}">${team}</div><div class="team-count">${members.length} عضو · ${present} حاضر</div></div><div class="team-pts-total">${total} نقطة</div></div>`;
+      members.forEach(([id,m])=>{
+        const c=teamColor(m.team);
+        html+=`<div class="member-row" onclick="${isLeader?`Members.openProfile('${id}')`:''}" style="${!isLeader?'cursor:default':''}">
+          <div class="member-avatar" style="background:rgba(${hexRgb(c)},0.15);color:${c}">${initials(m.name)}</div>
+          <div style="flex:1;min-width:0"><div class="member-name">${m.name}</div><div class="member-rank">${m.rank} ${m.role==='ROOT'?'<span class="badge badge-gold">قائد فرقة</span>':m.role==='LEADER'?'<span class="badge badge-blue">قائد طليعة</span>':''}</div></div>
+          <span class="dot ${m.isPresent?'dot-green':'dot-red'}" style="margin-left:4px"></span><div class="member-pts">${m.pts||0}</div>
+        </div>`;
+      });
+    });
+    root.innerHTML=`<div class="section-title">⚔️ الفرقة الكشفية</div>${html}`;
   },
-
+  tasks(){
+    const root=document.getElementById('page-tasks');
+    const my=S.tasks.filter(t=>t.assignedTo==='all'||t.assignedTo===S.user.id);
+    root.innerHTML=`<div class="section-title">📅 قائمة المهام</div>` + my.map(t=>`
+      <div class="task-item" style="${t.done?'opacity:0.6':''}">
+        <div style="display:flex;justify-content:space-between"><div><div class="task-title">${t.title}</div><div class="task-desc">${t.desc||''}</div></div><div class="task-pts">+${t.pts}</div></div>
+        <div class="task-footer"><span class="badge ${t.done?'badge-green':'badge-gold'}">${t.done?'مكتملة ✓':'قيد التنفيذ'}</span>${t.due?`<span class="badge badge-blue">📅 ${t.due}</span>`:''}
+        ${!t.done?`<button class="btn btn-green btn-sm" style="margin-right:auto" onclick="Tasks.complete('${t.id}','${S.user.id}')">إتمام</button>`:''}</div>
+      </div>`).join('') || '<div style="color:var(--text3);text-align:center;padding:40px 0">لا توجد مهام حالياً</div>';
+  },
   attendance(){
-    const root=document.getElementById('page-attendance');
-    const isLeader=S.user.role==='ROOT'||S.user.role==='LEADER';
+    const root=document.getElementById('page-attendance'), isLeader=S.user.role==='ROOT'||S.user.role==='LEADER';
     const mySessions=S.sessions.filter(s=>S.user.role==='ROOT'||s.team===S.user.team);
     const sessHtml=mySessions.slice(0,10).map(sess=>{
-      const members=Object.entries(S.members).filter(([,m])=>m.team===sess.team);
-      const pc=members.filter(([id])=>sess.attendance&&sess.attendance[id]).length;
-      return `<div class="att-session-card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div class="att-session-title">${sess.title||'جلسة'}</div><div class="att-session-date">📅 ${sess.date} · ${sess.team}</div></div>
-          <span class="badge badge-green">${pc}/${members.length}</span>
-        </div>
-        ${sess.notes?`<div style="font-size:12px;color:var(--text2);margin-top:8px">📝 ${sess.notes}</div>`:''}
-        ${sess.gps?`<div style="font-size:11px;color:var(--text3);margin-top:4px">📍 ${sess.gps}</div>`:''}
-        <div style="margin-top:8px">${members.map(([id,m])=>`
-          <div class="att-member-row"><span>${m.name}</span>
-          <span class="${sess.attendance&&sess.attendance[id]?'badge badge-green':'badge badge-red'}">${sess.attendance&&sess.attendance[id]?'حاضر ✓':'غائب ✗'}</span></div>`).join('')}
-        </div>
-      </div>`;
+      const members=Object.entries(S.members).filter(([,m])=>m.team===sess.team), pc=members.filter(([id])=>sess.attendance&&sess.attendance[id]).length;
+      return `<div class="att-session-card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="att-session-title">${sess.title||'جلسة'}</div><div class="att-session-date">📅 ${sess.date} · ${sess.team}</div></div><span class="badge badge-green">${pc}/${members.length}</span></div>
+        ${sess.notes?`<div style="font-size:12px;color:var(--text2);margin-top:8px">📝 ${sess.notes}</div>`:''}${sess.gps?`<div style="font-size:11px;color:var(--text3);margin-top:4px">📍 ${sess.gps}</div>`:''}
+        <div style="margin-top:8px">${members.map(([id,m])=>`<div class="att-member-row"><span>${m.name}</span><span class="${sess.attendance&&sess.attendance[id]?'badge badge-green':'badge badge-red'}">${sess.attendance&&sess.attendance[id]?'حاضر ✓':'غائب ✗'}</span></div>`).join('')}</div></div>`;
     }).join('')||'<div style="color:var(--text3);font-size:13px;padding:20px 0;text-align:center">لا توجد جلسات مسجلة بعد</div>';
-    root.innerHTML=`${isLeader?`<div class="section-title">📍 جلسة جديدة</div><button class="gps-btn" onclick="Attendance.newSession()"><div class="gps-pulse"></div>تسجيل جلسة حضور جديدة</button>`:''}
-      <div class="section-title">📋 سجل الجلسات</div>${sessHtml}`;
+    root.innerHTML=`${isLeader?`<div class="section-title">📍 جلسة جديدة</div><button class="gps-btn" onclick="Attendance.newSession()"><div class="gps-pulse"></div>تسجيل جلسة حضور جديدة</button>`:''}<div class="section-title">📋 سجل الجلسات</div>${sessHtml}`;
   },
-
   leaderboard(){
-    const root=document.getElementById('page-leaderboard');
-    const all=Object.entries(S.members).sort((a,b)=>(b[1].pts||0)-(a[1].pts||0));
-    const myTeam=all.filter(([,m])=>m.team===S.user.team);
-    const list=S.lbTab==='global'?all:myTeam;
-    const maxP=list[0]?(list[0][1].pts||1):1;
-    const rIcon=(i)=>i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
-    const rClass=(i)=>i===0?'gold':i===1?'silver':i===2?'bronze':'';
-    const rows=list.map(([id,m],i)=>`
-      <div class="lb-item" style="${id===S.user.id?'border-color:rgba(74,222,128,0.35);background:rgba(74,222,128,0.06)':''}">
-        <div class="lb-rank ${rClass(i)}">${rIcon(i)}</div>
-        <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;background:rgba(${hexRgb(teamColor(m.team))},0.15);color:${teamColor(m.team)};flex-shrink:0">${initials(m.name)}</div>
-        <div class="lb-info">
-          <div class="lb-name">${m.name}${id===S.user.id?' <span style="font-size:10px;color:var(--green)">(أنا)</span>':''}</div>
-          <div class="lb-team">${m.team}</div>
-          <div class="lb-bar-wrap"><div class="lb-bar" style="width:${Math.round((m.pts||0)/maxP*100)}%;background:${teamColor(m.team)}"></div></div>
-        </div>
-        <div class="lb-pts">${m.pts||0}</div>
-      </div>`).join('');
-    root.innerHTML=`<div class="lb-tabs">
-      <button class="lb-tab ${S.lbTab==='global'?'active':''}" onclick="S.lbTab='global';Render.leaderboard()">🌍 ترتيب الفرقة</button>
-      <button class="lb-tab ${S.lbTab==='team'?'active':''}" onclick="S.lbTab='team';Render.leaderboard()">⚔️ طليعتي</button>
-    </div><div class="section-title">🏆 المتصدرون</div>${rows}`;
+    const root=document.getElementById('page-leaderboard'), all=Object.entries(S.members).sort((a,b)=>(b[1].pts||0)-(a[1].pts||0));
+    const myTeam=all.filter(([,m])=>m.team===S.user.team), list=S.lbTab==='global'?all:myTeam, maxP=list[0]?(list[0][1].pts||1):1;
+    const rIcon=(i)=>i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`, rClass=(i)=>i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const rows=list.map(([id,m],i)=>`<div class="lb-item" style="${id===S.user.id?'border-color:rgba(74,222,128,0.35);background:rgba(74,222,128,0.06)':''}">
+      <div class="lb-rank ${rClass(i)}">${rIcon(i)}</div><div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;background:rgba(${hexRgb(teamColor(m.team))},0.15);color:${teamColor(m.team)};flex-shrink:0">${initials(m.name)}</div>
+      <div class="lb-info"><div class="lb-name">${m.name}${id===S.user.id?' <span style="font-size:10px;color:var(--green)">(أنا)</span>':''}</div><div class="lb-team">${m.team}</div><div class="lb-bar-wrap"><div class="lb-bar" style="width:${Math.round((m.pts||0)/maxP*100)}%;background:${teamColor(m.team)}"></div></div></div><div class="lb-pts">${m.pts||0}</div></div>`).join('');
+    root.innerHTML=`<div class="lb-tabs"><button class="lb-tab ${S.lbTab==='global'?'active':''}" onclick="S.lbTab='global';Render.leaderboard()">🌍 ترتيب الفرقة</button><button class="lb-tab ${S.lbTab==='team'?'active':''}" onclick="S.lbTab='team';Render.leaderboard()">⚔️ طليعتي</button></div><div class="section-title">🏆 المتصدرون</div>${rows}`;
   },
-
   dashboard(){
     if(S.user.role!=='ROOT')return;
-    const root=document.getElementById('page-dashboard');
-    const members=Object.values(S.members);
-    const teams=[...new Set(members.map(m=>m.team))];
-    const present=members.filter(m=>m.isPresent).length;
-    const totalPts=members.reduce((s,m)=>s+(m.pts||0),0);
-    const sessLabels=S.sessions.slice(0,6).reverse().map(s=>s.date||'');
-    const sessData=S.sessions.slice(0,6).reverse().map(sess=>{
-      const tm=Object.entries(S.members).filter(([,m])=>m.team===sess.team);
-      const pr=tm.filter(([id])=>sess.attendance&&sess.attendance[id]).length;
-      return tm.length?Math.round(pr/tm.length*100):0;
-    });
-    const teamNames=teams;
-    const teamPts=teams.map(t=>members.filter(m=>m.team===t).reduce((s,m)=>s+(m.pts||0),0));
-    root.innerHTML=`
-      <div class="section-title">📊 إحصائيات الفرقة</div>
-      <div class="stats-grid">
-        <div class="stat-box"><div class="stat-num" style="color:var(--green)">${members.length}</div><div class="stat-lbl">إجمالي الأعضاء</div></div>
-        <div class="stat-box"><div class="stat-num" style="color:var(--gold)">${present}</div><div class="stat-lbl">حاضر الآن</div></div>
-        <div class="stat-box"><div class="stat-num" style="color:var(--blue)">${teams.length}</div><div class="stat-lbl">الطلائع</div></div>
-        <div class="stat-box"><div class="stat-num" style="color:var(--purple)">${totalPts}</div><div class="stat-lbl">مجموع النقاط</div></div>
-      </div>
-      <div class="card"><div class="card-title">نسبة الحضور (آخر الجلسات)</div><div class="chart-wrap"><canvas id="ch-att"></canvas></div></div>
-      <div class="card"><div class="card-title">نقاط الطلائع</div><div class="chart-wrap"><canvas id="ch-teams"></canvas></div></div>
-      <div class="section-title">📋 سجل العمليات</div>
-      <div class="card" style="max-height:300px;overflow-y:auto">
-        ${S.logs.slice(0,40).map(l=>`<div class="log-item"><div class="log-time">${l.time}</div><div class="log-txt">${l.txt}</div></div>`).join('')||'<div style="color:var(--text3);font-size:13px">لا توجد سجلات</div>'}
-      </div>`;
+    const root=document.getElementById('page-dashboard'), members=Object.values(S.members), teams=[...new Set(members.map(m=>m.team))], present=members.filter(m=>m.isPresent).length, totalPts=members.reduce((s,m)=>s+(m.pts||0),0);
+    const sessLabels=S.sessions.slice(0,6).reverse().map(s=>s.date||''), sessData=S.sessions.slice(0,6).reverse().map(sess=>{ const tm=Object.entries(S.members).filter(([,m])=>m.team===sess.team); const pr=tm.filter(([id])=>sess.attendance&&sess.attendance[id]).length; return tm.length?Math.round(pr/tm.length*100):0; });
+    const teamNames=teams, teamPts=teams.map(t=>members.filter(m=>m.team===t).reduce((s,m)=>s+(m.pts||0),0));
+    root.innerHTML=`<div class="section-title">📊 إحصائيات الفرقة</div><div class="stats-grid"><div class="stat-box"><div class="stat-num" style="color:var(--green)">${members.length}</div><div class="stat-lbl">إجمالي الأعضاء</div></div><div class="stat-box"><div class="stat-num" style="color:var(--gold)">${present}</div><div class="stat-lbl">حاضر الآن</div></div><div class="stat-box"><div class="stat-num" style="color:var(--blue)">${teams.length}</div><div class="stat-lbl">الطلائع</div></div><div class="stat-box"><div class="stat-num" style="color:var(--purple)">${totalPts}</div><div class="stat-lbl">مجموع النقاط</div></div></div>
+      <div class="card"><div class="card-title">نسبة الحضور</div><div class="chart-wrap"><canvas id="ch-att"></canvas></div></div><div class="card"><div class="card-title">نقاط الطلائع</div><div class="chart-wrap"><canvas id="ch-teams"></canvas></div></div>
+      <div class="section-title">📋 سجل العمليات</div><div class="card" style="max-height:300px;overflow-y:auto">${S.logs.slice(0,40).map(l=>`<div class="log-item"><div class="log-time">${l.time}</div><div class="log-txt">${l.txt}</div></div>`).join('')||'<div style="color:var(--text3);font-size:13px">لا توجد سجلات</div>'}</div>
+      <button class="btn btn-ghost" onclick="App.page('manage')">إدارة الأعضاء والرموز ⚙️</button>`;
     setTimeout(()=>{
-      const dark=!document.body.classList.contains('light');
-      const gc=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
-      const tc=dark?'#4a7a4a':'#6a8a6a';
-      const opts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tc},grid:{color:gc}},y:{ticks:{color:tc},grid:{color:gc}}}};
+      const dark=!document.body.classList.contains('light'), gc=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)', tc=dark?'#4a7a4a':'#6a8a6a', opts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tc},grid:{color:gc}},y:{ticks:{color:tc},grid:{color:gc}}}};
       if(document.getElementById('ch-att')) new Chart(document.getElementById('ch-att'),{type:'line',data:{labels:sessLabels,datasets:[{label:'%',data:sessData,borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.1)',tension:0.4,fill:true,pointBackgroundColor:'#4ade80'}]},options:{...opts,scales:{...opts.scales,y:{...opts.scales.y,min:0,max:100}}}});
       if(document.getElementById('ch-teams')) new Chart(document.getElementById('ch-teams'),{type:'bar',data:{labels:teamNames,datasets:[{data:teamPts,backgroundColor:teamNames.map(t=>teamColor(t)+'44'),borderColor:teamNames.map(t=>teamColor(t)),borderWidth:2,borderRadius:8}]},options:opts});
     },100);
   },
-
   manage(){
     if(S.user.role!=='ROOT')return;
-    const root=document.getElementById('page-manage');
-    const teams=[...new Set(Object.values(S.members).map(m=>m.team))];
-    const invHtml=teams.map(t=>`
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
-        <div><div style="font-size:13px;font-weight:700">${t}</div>
-        <div style="font-size:20px;font-weight:900;color:var(--green);letter-spacing:3px;margin-top:2px">${S.inviteCodes[t]||'---'}</div></div>
-        <button class="btn btn-ghost btn-sm" onclick="Admin.genCode('${t}')">تجديد</button>
-      </div>`).join('');
-    const archHtml=Object.values(S.archived).map(m=>`
-      <div class="archive-item">
-        <div class="member-avatar" style="background:var(--card2);color:var(--text3)">${initials(m.name)}</div>
-        <div style="flex:1"><div class="archive-name">${m.name}</div><div class="archive-meta">${m.team} · ${m.pts||0} نقطة</div></div>
-        <button class="btn btn-green btn-sm" onclick="Admin.restoreMember('${m.pin}')">استعادة</button>
-      </div>`).join('')||'<div style="color:var(--text3);font-size:13px;padding:10px 0">الأرشيف فارغ</div>';
-    root.innerHTML=`
-      <div class="section-title">📣 إرسال إعلان</div>
-      <div class="card"><textarea id="ann-text" placeholder="اكتب الإعلان هنا..."></textarea>
-      <button class="btn btn-green" onclick="Admin.sendAnn()">إرسال للجميع 📢</button></div>
-      <div class="section-title">➕ إدارة الأعضاء</div>
-      <div class="card" style="display:flex;gap:8px">
-        <button class="btn btn-gold btn-sm" style="flex:1;padding:13px" onclick="Admin.showAdd()">إضافة عضو</button>
-        <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Admin.showAddTask()">إضافة مهمة</button>
-      </div>
-      <div class="section-title">🔑 رموز الدعوة</div>
-      <div class="card">${invHtml}</div>
-      <div class="section-title">🗂️ الأرشيف</div>
-      ${archHtml}`;
+    const root=document.getElementById('page-manage'), teams=[...new Set(Object.values(S.members).map(m=>m.team))];
+    const invHtml=teams.map(t=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:700">${t}</div><div style="font-size:20px;font-weight:900;color:var(--green);letter-spacing:3px;margin-top:2px">${S.inviteCodes[t]||'---'}</div></div><button class="btn btn-ghost btn-sm" onclick="Admin.genCode('${t}')">تجديد</button></div>`).join('');
+    const archHtml=Object.values(S.archived).map(m=>`<div class="archive-item"><div class="member-avatar" style="background:var(--card2);color:var(--text3)">${initials(m.name)}</div><div style="flex:1"><div class="archive-name">${m.name}</div><div class="archive-meta">${m.team} · ${m.pts||0} نقطة</div></div><button class="btn btn-green btn-sm" onclick="Admin.restoreMember('${m.pin}')">استعادة</button></div>`).join('')||'<div style="color:var(--text3);font-size:13px;padding:10px 0">الأرشيف فارغ</div>';
+    root.innerHTML=`<div class="section-title">📣 إرسال إعلان</div><div class="card"><textarea id="ann-text" placeholder="اكتب الإعلان هنا..."></textarea><button class="btn btn-green" onclick="Admin.sendAnn()">إرسال للجميع 📢</button></div>
+      <div class="section-title">➕ إدارة الأعضاء</div><div class="card" style="display:flex;gap:8px"><button class="btn btn-gold btn-sm" style="flex:1;padding:13px" onclick="Admin.showAdd()">إضافة عضو</button><button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Admin.showAddTask()">إضافة مهمة</button></div>
+      <div class="section-title">🔑 رموز الدعوة</div><div class="card">${invHtml}</div><div class="section-title">🗂️ الأرشيف</div>${archHtml}`;
   }
 };
 
 // ─── MEMBERS ───
 const Members = {
   openProfile(id){
-    const m=S.members[id]; if(!m)return;
-    const isRoot=S.user.role==='ROOT';
-    const col=teamColor(m.team);
-    let attC=0,totS=0;
-    S.sessions.forEach(s=>{ if(s.team===m.team){totS++; if(s.attendance&&s.attendance[id])attC++;} });
-    const attR=totS?Math.round(attC/totS*100):0;
-    UI.openModal(` <div style="text-align:center;margin-bottom:16px"> <div style="width:64px;height:64px;border-radius:18px;background:rgba(${hexRgb(col)},0.2);color:${col};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 12px;border:2px solid ${col}">${initials(m.name)}</div> <div style="font-size:20px;font-weight:900">${m.name}</div> <div style="font-size:13px;color:var(--text2);margin-top:4px">${m.rank} · ${m.team}</div> <div style="display:flex;gap:16px;justify-content:center;margin-top:16px"> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--gold)">${m.pts||0}</div><div style="font-size:11px;color:var(--text3)">النقاط</div></div> <div style="width:1px;background:var(--border)"></div> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--green)">${attR}%</div><div style="font-size:11px;color:var(--text3)">الحضور</div></div> <div style="width:1px;background:var(--border)"></div> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--purple)">${(m.badges||[]).length}</div><div style="font-size:11px;color:var(--text3)">الأوسمة</div></div> </div> <div style="margin-top:10px"><span class="badge ${m.isPresent?'badge-green':'badge-red'}">${m.isPresent?'حاضر ✓':'غائب ✗'}</span></div> </div> ${isRoot?`
-    <div class="manage-section"><div class="manage-section-title">تعديل الحضور</div>
-    <div class="att-toggle">
-    <button class="att-btn ${m.isPresent?'present-active':''}" onclick="Members.setAtt('${id}',true)">حاضر ✓</button>
-    <button class="att-btn ${!m.isPresent?'absent-active':''}" onclick="Members.setAtt('${id}',false)">غائب ✗</button>
-    </div>
-    </div>
-    <div class="manage-section"><div class="manage-section-title">تعديل النقاط</div>
-    <input type="number" id="pts-v" placeholder="عدد النقاط" min="1">
-    <div style="display:flex;gap:8px;margin-top:8px">
-    <button class="btn btn-green btn-sm" style="flex:1;padding:13px" onclick="Members.pts('${id}',1)">إضافة +</button>
-    <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Members.pts('${id}',-1)">خصم −</button>
-    </div>
-    </div>
-    <div class="manage-section"><div class="manage-section-title">منح وسام</div>
-    <input id="bdg-v" placeholder="اسم الوسام">
-    <button class="btn btn-gold" onclick="Members.badge('${id}')">منح الوسام 🏅</button>
-    </div>
-    <div class="manage-section"><div class="manage-section-title">تغيير الرمز السري</div>
-    <input id="pin-v" placeholder="الرمز الجديد (4+ أرقام)" type="number">
-    <button class="btn btn-ghost" onclick="Members.pin('${id}')">تحديث الرمز</button>
-    </div>
-    ${id!==S.user.id?`<div class="manage-section"><div class="manage-section-title">حذف العضو</div> <button class="btn btn-red" onclick="Members.archive('${id}')">أرشفة العضو 🗂️</button> </div>`:''}
-    `:''} <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
+    const m=S.members[id]; if(!m)return; const isRoot=S.user.role==='ROOT', col=teamColor(m.team);
+    let attC=0,totS=0; S.sessions.forEach(s=>{ if(s.team===m.team){totS++; if(s.attendance&&s.attendance[id])attC++;} });
+    UI.openModal(`<div style="text-align:center;margin-bottom:16px"><div style="width:64px;height:64px;border-radius:18px;background:rgba(${hexRgb(col)},0.2);color:${col};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 12px;border:2px solid ${col}">${initials(m.name)}</div><div style="font-size:20px;font-weight:900">${m.name}</div><div style="font-size:13px;color:var(--text2);margin-top:4px">${m.rank} · ${m.team}</div><div style="display:flex;gap:16px;justify-content:center;margin-top:16px"><div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--gold)">${m.pts||0}</div><div style="font-size:11px;color:var(--text3)">النقاط</div></div><div style="width:1px;background:var(--border)"></div><div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--green)">${totS?Math.round(attC/totS*100):0}%</div><div style="font-size:11px;color:var(--text3)">الحضور</div></div></div><div style="margin-top:10px"><span class="badge ${m.isPresent?'badge-green':'badge-red'}">${m.isPresent?'حاضر ✓':'غائب ✗'}</span></div></div>
+      ${isRoot?`<div class="manage-section"><div class="manage-section-title">تعديل الحضور</div><div class="att-toggle"><button class="att-btn ${m.isPresent?'present-active':''}" onclick="Members.setAtt('${id}',true)">حاضر ✓</button><button class="att-btn ${!m.isPresent?'absent-active':''}" onclick="Members.setAtt('${id}',false)">غائب ✗</button></div></div>
+      <div class="manage-section"><div class="manage-section-title">تعديل النقاط</div><input type="number" id="pts-v" placeholder="عدد النقاط"><div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-green btn-sm" style="flex:1" onclick="Members.pts('${id}',1)">إضافة +</button><button class="btn btn-ghost btn-sm" style="flex:1" onclick="Members.pts('${id}',-1)">خصم −</button></div></div>
+      <div class="manage-section"><div class="manage-section-title">منح وسام</div><input id="bdg-v" placeholder="اسم الوسام"><button class="btn btn-gold" onclick="Members.badge('${id}')">منح الوسام 🏅</button></div>
+      <div class="manage-section"><div class="manage-section-title">تغيير الرمز السري</div><input id="pin-v" placeholder="الرمز الجديد (4 أرقام)" type="number"><button class="btn btn-ghost" onclick="Members.pin('${id}')">تحديث الرمز</button></div>
+      ${id!==S.user.id?`<div class="manage-section"><button class="btn btn-red" onclick="Members.archive('${id}')">أرشفة العضو 🗂️</button></div>`:''}`:''} <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
   },
   setAtt(id,val){ DB.child('members').child(id).update({isPresent:val}); App.log(`${S.user.name} سجّل [${S.members[id].name}] كـ ${val?'حاضر':'غائب'}`); UI.toast(val?'تم تسجيل الحضور ✓':'تم تسجيل الغياب'); UI.closeModal(); },
-  pts(id,dir){ const v=parseInt(document.getElementById('pts-v').value); if(!v||v<=0){UI.toast('أدخل عدد صحيح','error');return;} DB.child('members').child(id).update({pts:(S.members[id].pts||0)+v*dir}); App.log(`${S.user.name} ${dir>0?'أضاف':'خصم'} ${v} نقطة ${dir>0?'لـ':'من'} ${S.members[id].name}`); UI.toast(dir>0?`+${v} نقطة ✓`:`−${v} نقطة`); UI.closeModal(); },
+  pts(id,dir){ const v=parseInt(document.getElementById('pts-v').value); if(!v||v<=0){UI.toast('أدخل عدد صحيح','error');return;} DB.child('members').child(id).update({pts:(S.members[id].pts||0)+v*dir}); App.log(`${S.user.name} ${dir>0?'أضاف':'خصم'} ${v} نقطة لـ ${S.members[id].name}`); UI.toast(dir>0?`+${v} نقطة ✓`:`−${v} نقطة`); UI.closeModal(); },
   badge(id){ const b=document.getElementById('bdg-v').value.trim(); if(!b){UI.toast('اكتب اسم الوسام','error');return;} DB.child('members').child(id).update({badges:[...(S.members[id].badges||[]),b]}); App.log(`${S.user.name} منح وسام [${b}] لـ ${S.members[id].name}`); UI.toast('تم منح الوسام 🏅'); UI.closeModal(); },
-  pin(id){ const np=document.getElementById('pin-v').value.trim(); if(!np||np.length<4){UI.toast('الرمز يجب 4 أرقام على الأقل','error');return;} if(S.members[np]&&np!==id){UI.toast('الرمز مستخدم مسبقاً','error');return;} const old=S.members[id]; DB.child('members').child(np).set({...old, pin:np}); DB.child('members').child(id).remove(); UI.toast('تم تحديث الرمز ✓'); UI.closeModal(); },
-  archive(id){ if(!confirm('هل أنت متأكد من أرشفة هذا العضو؟'))return; const m=S.members[id]; DB.child('archived').child(id).set({...m, archivedAt:Date.now()}); DB.child('members').child(id).remove(); UI.toast('تمت أرشفة العضو 🗂️'); UI.closeModal(); }
+  pin(id){ const np=document.getElementById('pin-v').value.trim(); if(!np||np.length<4){UI.toast('الرمز يجب 4 أرقام','error');return;} if(S.members[np]&&np!==id){UI.toast('الرمز مستخدم','error');return;} const old=S.members[id]; DB.child('members').child(np).set({...old, pin:np}); DB.child('members').child(id).remove(); UI.toast('تم تحديث الرمز ✓'); UI.closeModal(); },
+  archive(id){ if(!confirm('أرشفة العضو؟'))return; const m=S.members[id]; DB.child('archived').child(id).set({...m, archivedAt:Date.now()}); DB.child('members').child(id).remove(); UI.toast('تمت الأرشفة 🗂️'); UI.closeModal(); }
 };
 
 // ─── ATTENDANCE ───
 const Attendance = {
   _att:{}, _gps:'',
   newSession(){
-    const myM=Object.entries(S.members).filter(([,m])=>m.team===S.user.team);
-    this._att={}; this._gps='';
-    myM.forEach(([id])=>{this._att[id]=false;});
-    UI.openModal(` <div class="modal-title">📋 جلسة حضور جديدة</div> <label>عنوان الجلسة</label> <input id="s-title" placeholder="مثال: اجتماع أسبوعي، رحلة، تدريب..."> <label>ملاحظات (اختياري)</label> <textarea id="s-notes" placeholder="ملاحظات..."></textarea> <label>تحديد الموقع</label> <button class="gps-btn" style="margin-top:8px" onclick="Attendance.getGPS()"><div class="gps-pulse"></div>تحديد موقعي تلقائياً</button> <div id="gps-res" style="font-size:12px;color:var(--text3);margin-top:6px"></div> <label style="margin-top:16px">تسجيل الحضور</label> <div id="att-list">${myM.map(([id,m])=>`
-    <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
-    <span style="font-size:13px;flex:1">${m.name}</span>
-    <button class="att-btn" id="ap-${id}" onclick="Attendance.toggle('${id}',true)">حاضر</button>
-    <button class="att-btn absent-active" id="aa-${id}" onclick="Attendance.toggle('${id}',false)">غائب</button>
-    </div>`).join('')}</div> <button class="btn btn-green" onclick="Attendance.save()">حفظ الجلسة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
+    const myM=Object.entries(S.members).filter(([,m])=>m.team===S.user.team); this._att={}; this._gps=''; myM.forEach(([id])=>{this._att[id]=false;});
+    UI.openModal(`<div class="modal-title">📋 جلسة حضور جديدة</div><label>عنوان الجلسة</label><input id="s-title" placeholder="اجتماع، رحلة..."><label>تحديد الموقع</label><button class="gps-btn" onclick="Attendance.getGPS()"><div class="gps-pulse"></div>تحديد موقعي</button><div id="gps-res" style="font-size:12px;color:var(--text3);margin-top:6px"></div><label style="margin-top:16px">تسجيل الحضور</label><div id="att-list">${myM.map(([id,m])=>`<div style="display:flex;align-items:center;gap:8px;margin-top:8px"><span style="font-size:13px;flex:1">${m.name}</span><button class="att-btn" id="ap-${id}" onclick="Attendance.toggle('${id}',true)">حاضر</button><button class="att-btn absent-active" id="aa-${id}" onclick="Attendance.toggle('${id}',false)">غائب</button></div>`).join('')}</div><button class="btn btn-green" onclick="Attendance.save()">حفظ الجلسة ✓</button><button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
   },
-  toggle(id,val){
-    this._att[id]=val;
-    document.getElementById(`ap-${id}`).className='att-btn'+(val?' present-active':'');
-    document.getElementById(`aa-${id}`).className='att-btn'+(val?'':' absent-active');
-  },
-  getGPS(){
-    if(!navigator.geolocation){UI.toast('المتصفح لا يدعم GPS','error');return;}
-    document.getElementById('gps-res').textContent='جاري التحديد...';
-    navigator.geolocation.getCurrentPosition(p=>{
-      this._gps=`${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
-      document.getElementById('gps-res').textContent=`📍 ${this._gps}`;
-      UI.toast('تم تحديد الموقع ✓');
-    },()=>{ document.getElementById('gps-res').textContent='تعذّر الوصول للموقع'; UI.toast('تعذّر تحديد الموقع','error'); });
-  },
-  save(){
-    const title=document.getElementById('s-title').value.trim()||'جلسة';
-    const notes=document.getElementById('s-notes').value.trim();
-    const id=Date.now().toString();
-    DB.child('sessions').child(id).set({id,title,notes,date:new Date().toLocaleDateString('ar-SA'),team:S.user.team,gps:this._gps,attendance:{...this._att},ts:Date.now(),createdBy:S.user.name});
-    App.log(`${S.user.name} سجّل جلسة [${title}] لـ ${S.user.team}`);
-    UI.toast('تم حفظ الجلسة ✓');
-    UI.closeModal();
-  }
+  toggle(id,val){ this._att[id]=val; document.getElementById(`ap-${id}`).className='att-btn'+(val?' present-active':''); document.getElementById(`aa-${id}`).className='att-btn'+(val?'':' absent-active'); },
+  getGPS(){ if(!navigator.geolocation){UI.toast('GPS غير مدعوم','error');return;} document.getElementById('gps-res').textContent='جاري التحديد...'; navigator.geolocation.getCurrentPosition(p=>{ this._gps=`${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`; document.getElementById('gps-res').textContent=`📍 ${this._gps}`; UI.toast('تم تحديد الموقع ✓'); },()=>{ UI.toast('تعذّر تحديد الموقع','error'); }); },
+  save(){ const title=document.getElementById('s-title').value.trim()||'جلسة', id=Date.now().toString(); DB.child('sessions').child(id).set({id,title,date:new Date().toLocaleDateString('ar-SA'),team:S.user.team,gps:this._gps,attendance:{...this._att},ts:Date.now(),createdBy:S.user.name}); App.log(`${S.user.name} سجّل جلسة [${title}]`); UI.toast('تم الحفظ ✓'); UI.closeModal(); }
 };
 
 // ─── TASKS ───
 const Tasks = {
-  complete(taskId,userId){
-    const t=S.tasks.find(x=>x.id===taskId); if(!t)return;
-    DB.child('tasks').child(taskId).update({done:true,completedBy:userId,completedAt:Date.now()});
-    DB.child('members').child(userId).update({pts:(S.members[userId].pts||0)+(t.pts||0)});
-    App.log(`${S.members[userId].name} أنجز [${t.title}] وحصل على ${t.pts||0} نقطة`);
-    UI.toast(`أحسنت! +${t.pts||0} نقطة 🎉`);
-  }
+  complete(taskId,userId){ const t=S.tasks.find(x=>x.id===taskId); if(!t)return; DB.child('tasks').child(taskId).update({done:true,completedBy:userId,completedAt:Date.now()}); DB.child('members').child(userId).update({pts:(S.members[userId].pts||0)+(t.pts||0)}); App.log(`${S.members[userId].name} أنجز [${t.title}]`); UI.toast(`أحسنت! +${t.pts||0} نقطة 🎉`); }
 };
 
 // ─── ADMIN ───
 const Admin = {
   sendAnn(){ const txt=document.getElementById('ann-text').value.trim(); if(!txt){UI.toast('اكتب الإعلان','error');return;} DB.child('announcements').push({text:txt,author:S.user.name,ts:Date.now(),time:new Date().toLocaleDateString('ar-SA')}); App.log(`${S.user.name} أرسل إعلاناً`); document.getElementById('ann-text').value=''; UI.toast('تم الإرسال 📢'); },
-  showAdd(){
-    const teams=[...new Set(Object.values(S.members).map(m=>m.team))];
-    UI.openModal(` <div class="modal-title">➕ إضافة عضو جديد</div> <label>الاسم الكامل</label><input id="nm-n" placeholder="اسم الكشاف"> <label>الرتبة</label><input id="nm-r" placeholder="كشاف، قائد طليعة..."> <label>الطليعة</label> <select id="nm-t" onchange="Admin.teamChange()"> ${teams.map(t=>`<option>${t}</option>`).join('')} <option value="__new__">+ طليعة جديدة</option> </select> <div id="nm-tn" style="display:none"><input id="nm-tn-v" placeholder="اسم الطليعة الجديدة"></div> <label>الرمز السري</label><input id="nm-p" type="number" placeholder="رمز من 4 أرقام"> <label>الدور</label> <select id="nm-role"><option value="USER">كشاف</option><option value="LEADER">قائد طليعة</option></select> <button class="btn btn-green" onclick="Admin.addMember()">إضافة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
-  },
-  teamChange(){ const v=document.getElementById('nm-t').value; document.getElementById('nm-tn').style.display=v==='__new__'?'block':'none'; },
-  addMember(){
-    const name=document.getElementById('nm-n').value.trim();
-    const rank=document.getElementById('nm-r').value.trim()||'كشاف';
-    let team=document.getElementById('nm-t').value;
-    if(team==='__new__') team=document.getElementById('nm-tn-v').value.trim();
-    const pin=document.getElementById('nm-p').value.trim();
-    const role=document.getElementById('nm-role').value;
-    if(!name||!pin||pin.length<4){UI.toast('أكمل الحقول (الرمز 4+)','error');return;}
-    if(S.members[pin]){UI.toast('الرمز مستخدم مسبقاً','error');return;}
-    DB.child('members').child(pin).set({name,rank,team,role,pts:0,pin,badges:['عضو جديد'],isPresent:false,joinDate:Date.now()});
-    if(!S.inviteCodes[team]) Admin.genCode(team,false);
-    App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
-    UI.toast(`تمت إضافة ${name} ✓`);
-    UI.closeModal();
-  },
-  showAddTask(){
-    UI.openModal(` <div class="modal-title">📝 مهمة جديدة</div> <label>العنوان</label><input id="tk-t" placeholder="عنوان المهمة"> <label>الوصف</label><textarea id="tk-d" placeholder="تفاصيل المهمة..."></textarea> <label>النقاط عند الإنجاز</label><input id="tk-p" type="number" placeholder="0" min="0"> <label>تاريخ الانتهاء</label><input id="tk-due" type="date"> <label>تعيين لـ</label> <select id="tk-a"> <option value="all">الجميع</option> ${Object.entries(S.members).map(([id,m])=>`<option value="${id}">${m.name}</option>`).join('')} </select> <button class="btn btn-green" onclick="Admin.addTask()">إنشاء المهمة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
-  },
-  addTask(){
-    const title=document.getElementById('tk-t').value.trim();
-    if(!title){UI.toast('اكتب عنوان المهمة','error');return;}
-    const id=Date.now().toString();
-    DB.child('tasks').child(id).set({id,title,desc:document.getElementById('tk-d').value.trim(),pts:parseInt(document.getElementById('tk-p').value)||0,due:document.getElementById('tk-due').value,assignedTo:document.getElementById('tk-a').value,done:false,ts:Date.now(),createdBy:S.user.name});
-    App.log(`${S.user.name} أضاف مهمة: ${title}`);
-    UI.toast('تم إنشاء المهمة ✓');
-    UI.closeModal();
-  },
-  genCode(team,toast=true){ const c=(team.replace(/\s/g,'').slice(0,3).toUpperCase()+(Math.floor(1000+Math.random()*9000))).toString(); DB.child('inviteCodes').child(team).set(c); if(toast)UI.toast(`تم تجديد كود ${team} ✓`); },
-  restoreMember(pin){ const m=S.archived[pin]; if(!m)return; DB.child('members').child(pin).set({...m,archivedAt:undefined}); DB.child('archived').child(pin).remove(); App.log(`${S.user.name} استعاد [${m.name}] من الأرشيف`); UI.toast(`تمت استعادة ${m.name} ✓`); }
+  showAdd(){ const teams=[...new Set(Object.values(S.members).map(m=>m.team))]; UI.openModal(`<div class="modal-title">➕ إضافة عضو</div><label>الاسم</label><input id="nm-n"><label>الرتبة</label><input id="nm-r"><label>الطليعة</label><select id="nm-t">${teams.map(t=>`<option>${t}</option>`).join('')}<option value="__new__">+ طليعة جديدة</option></select><div id="nm-tn" style="display:none"><input id="nm-tn-v" placeholder="اسم الطليعة"></div><label>الرمز السري</label><input id="nm-p" type="number"><label>الدور</label><select id="nm-role"><option value="USER">كشاف</option><option value="LEADER">قائد طليعة</option></select><button class="btn btn-green" onclick="Admin.addMember()">إضافة ✓</button><button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`); document.getElementById('nm-t').onchange=e=>document.getElementById('nm-tn').style.display=e.target.value==='__new__'?'block':'none'; },
+  addMember(){ const name=document.getElementById('nm-n').value.trim(), pin=document.getElementById('nm-p').value.trim(); let team=document.getElementById('nm-t').value; if(team==='__new__')team=document.getElementById('nm-tn-v').value.trim(); if(!name||!pin||pin.length<4){UI.toast('أكمل الحقول (الرمز 4+)','error');return;} if(S.members[pin]){UI.toast('الرمز مستخدم','error');return;} DB.child('members').child(pin).set({name,rank:document.getElementById('nm-r').value.trim()||'كشاف',team,role:document.getElementById('nm-role').value,pts:0,pin,badges:['عضو جديد'],isPresent:false,joinDate:Date.now()}); if(!S.inviteCodes[team])Admin.genCode(team,false); UI.toast('تمت الإضافة ✓'); UI.closeModal(); },
+  showAddTask(){ UI.openModal(`<div class="modal-title">📝 مهمة جديدة</div><label>العنوان</label><input id="tk-t"><label>الوصف</label><textarea id="tk-d"></textarea><label>النقاط</label><input id="tk-p" type="number" value="10"><label>تعيين لـ</label><select id="tk-a"><option value="all">الجميع</option>${Object.entries(S.members).map(([id,m])=>`<option value="${id}">${m.name}</option>`).join('')}</select><button class="btn btn-green" onclick="Admin.addTask()">إنشاء ✓</button><button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`); },
+  addTask(){ const title=document.getElementById('tk-t').value.trim(), id=Date.now().toString(); if(!title)return; DB.child('tasks').child(id).set({title,desc:document.getElementById('tk-d').value.trim(),pts:parseInt(document.getElementById('tk-p').value)||0,assignedTo:document.getElementById('tk-a').value,done:false,ts:Date.now(),createdBy:S.user.name}); UI.toast('تم الإنشاء ✓'); UI.closeModal(); },
+  genCode(team,toast=true){ const c=(team.replace(/\s/g,'').slice(0,3).toUpperCase()+(Math.floor(1000+Math.random()*9000))).toString(); DB.child('inviteCodes').child(team).set(c); if(toast)UI.toast('تم التجديد ✓'); },
+  restoreMember(pin){ const m=S.archived[pin]; DB.child('members').child(pin).set({...m,archivedAt:undefined}); DB.child('archived').child(pin).remove(); UI.toast('تمت الاستعادة ✓'); }
 };
 
 // ─── INIT ───
@@ -737,6 +546,5 @@ window.onload=()=>{
   Login.auto();
 };
 </script>
-
 </body>
 </html>
