@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -33,40 +32,40 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 
 /* LOGIN */
-#login-screen{position:fixed;inset:0;z-index:10000;background:var(–bg);display:flex;align-items:center;justify-content:center;padding:20px}
+#login-screen{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
 .login-wrap{width:100%;max-width:380px;text-align:center}
-.login-logo{font-size:52px;font-weight:900;color:var(–green);letter-spacing:-2px;line-height:1;text-shadow:0 0 40px rgba(74,222,128,0.4);margin-bottom:4px}
-.login-sub{color:var(–text3);font-size:13px;margin-bottom:36px;letter-spacing:3px}
-.login-box{background:var(–card);border:1px solid var(–border2);border-radius:24px;padding:32px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.login-logo{font-size:52px;font-weight:900;color:var(--green);letter-spacing:-2px;line-height:1;text-shadow:0 0 40px rgba(74,222,128,0.4);margin-bottom:4px}
+.login-sub{color:var(--text3);font-size:13px;margin-bottom:36px;letter-spacing:3px}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:32px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
 .pin-display{display:flex;justify-content:center;gap:12px;margin-bottom:28px}
-.pin-dot{width:14px;height:14px;border-radius:50%;background:var(–border2);border:2px solid var(–border2);transition:all 0.2s}
-.pin-dot.filled{background:var(–green);border-color:var(–green);box-shadow:0 0 10px rgba(74,222,128,0.5)}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--border2);border:2px solid var(--border2);transition:all 0.2s}
+.pin-dot.filled{background:var(--green);border-color:var(--green);box-shadow:0 0 10px rgba(74,222,128,0.5)}
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.num-btn{background:var(–card2);border:1px solid var(–border);border-radius:14px;padding:18px;font-size:22px;font-weight:700;color:var(–text);cursor:pointer;transition:all 0.15s;font-family:‘Cairo’,sans-serif}
-.num-btn:active{transform:scale(0.93);background:var(–border)}
-.num-btn.del{font-size:16px;color:var(–text2)}
-.num-btn.enter{background:var(–green2);color:#000;font-size:15px;font-weight:900}
-.login-error{color:var(–red);font-size:13px;margin-top:14px;min-height:18px}
+.num-btn{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:18px;font-size:22px;font-weight:700;color:var(--text);cursor:pointer;transition:all 0.15s;font-family:'Cairo',sans-serif}
+.num-btn:active{transform:scale(0.93);background:var(--border)}
+.num-btn.del{font-size:16px;color:var(--text2)}
+.num-btn.enter{background:var(--green2);color:#000;font-size:15px;font-weight:900}
+.login-error{color:var(--red);font-size:13px;margin-top:14px;min-height:18px}
 
 /* APP */
 #app{display:none;position:relative;z-index:1;padding-bottom:80px}
 
 /* HEADER */
-.header{position:sticky;top:0;z-index:100;background:rgba(6,13,6,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(–border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.header{position:sticky;top:0;z-index:100;background:rgba(6,13,6,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
 .light .header{background:rgba(240,247,240,0.92)}
 .header-user{display:flex;align-items:center;gap:12px}
 .avatar{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;border:2px solid currentColor}
 .header-name{font-size:15px;font-weight:700}
-.header-rank{font-size:11px;color:var(–text2);margin-top:1px}
+.header-rank{font-size:11px;color:var(--text2);margin-top:1px}
 .header-actions{display:flex;gap:8px}
-.icon-btn{height:36px;padding:0 12px;border-radius:10px;background:var(–card2);border:1px solid var(–border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(–text2);font-family:‘Cairo’,sans-serif;font-weight:700;transition:all 0.2s}
+.icon-btn{height:36px;padding:0 12px;border-radius:10px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--text2);font-family:'Cairo',sans-serif;font-weight:700;transition:all 0.2s}
 .icon-btn:active{transform:scale(0.9)}
 
 /* NAV */
-nav{position:fixed;bottom:0;width:100%;z-index:1000;background:var(–card);border-top:1px solid var(–border);display:flex;justify-content:space-around;align-items:center;padding:8px 0 14px}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(–text3);font-size:10px;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:12px;transition:all 0.2s;min-width:50px}
+nav{position:fixed;bottom:0;width:100%;z-index:1000;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:8px 0 14px}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--text3);font-size:10px;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:12px;transition:all 0.2s;min-width:50px}
 .nav-icon{font-size:20px;transition:transform 0.2s}
-.nav-item.active{color:var(–green)}
+.nav-item.active{color:var(--green)}
 .nav-item.active .nav-icon{transform:translateY(-2px)}
 
 /* PAGES */
@@ -74,147 +73,145 @@ nav{position:fixed;bottom:0;width:100%;z-index:1000;background:var(–card);bord
 .page.active{display:block}
 
 /* CARDS */
-.card{background:var(–card);border:1px solid var(–border);border-radius:20px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden}
-.card-title{font-size:12px;color:var(–text2);font-weight:700;letter-spacing:1px;margin-bottom:10px}
-.section-title{font-size:11px;font-weight:700;color:var(–text3);letter-spacing:2px;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
-.section-title::after{content:’’;flex:1;height:1px;background:var(–border)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden}
+.card-title{font-size:12px;color:var(--text2);font-weight:700;letter-spacing:1px;margin-bottom:10px}
+.section-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:2px;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* BUTTONS */
-.btn{width:100%;padding:15px;border-radius:14px;border:none;font-weight:900;font-size:15px;cursor:pointer;font-family:‘Cairo’,sans-serif;transition:all 0.2s;margin-top:10px}
+.btn{width:100%;padding:15px;border-radius:14px;border:none;font-weight:900;font-size:15px;cursor:pointer;font-family:'Cairo',sans-serif;transition:all 0.2s;margin-top:10px}
 .btn:active{transform:scale(0.97)}
-.btn-green{background:var(–green2);color:#000}
-.btn-gold{background:var(–gold2);color:#000}
-.btn-red{background:var(–red);color:#fff}
-.btn-ghost{background:var(–card2);color:var(–text);border:1px solid var(–border)}
+.btn-green{background:var(--green2);color:#000}
+.btn-gold{background:var(--gold2);color:#000}
+.btn-red{background:var(--red);color:#fff}
+.btn-ghost{background:var(--card2);color:var(--text);border:1px solid var(--border)}
 .btn-sm{padding:10px 16px;font-size:13px;width:auto;margin:0}
 
 /* INPUTS */
-input,select,textarea{width:100%;padding:14px 16px;border-radius:13px;border:1px solid var(–border2);background:var(–bg2);color:var(–text);font-size:15px;font-family:‘Cairo’,sans-serif;margin-top:10px;outline:none;transition:border 0.2s}
-input:focus,select:focus,textarea:focus{border-color:var(–green)}
+input,select,textarea{width:100%;padding:14px 16px;border-radius:13px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-size:15px;font-family:'Cairo',sans-serif;margin-top:10px;outline:none;transition:border 0.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
 textarea{resize:none;min-height:80px}
-select option{background:var(–card)}
-label{font-size:13px;color:var(–text2);font-weight:600;display:block;margin-top:14px}
+select option{background:var(--card)}
+label{font-size:13px;color:var(--text2);font-weight:600;display:block;margin-top:14px}
 
 /* BADGES */
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700}
-.badge-green{background:rgba(74,222,128,0.15);color:var(–green)}
-.badge-gold{background:rgba(251,191,36,0.15);color:var(–gold)}
-.badge-red{background:rgba(244,63,94,0.15);color:var(–red)}
-.badge-blue{background:rgba(96,165,250,0.15);color:var(–blue)}
-.badge-purple{background:rgba(167,139,250,0.15);color:var(–purple)}
+.badge-green{background:rgba(74,222,128,0.15);color:var(--green)}
+.badge-gold{background:rgba(251,191,36,0.15);color:var(--gold)}
+.badge-red{background:rgba(244,63,94,0.15);color:var(--red)}
+.badge-blue{background:rgba(96,165,250,0.15);color:var(--blue)}
+.badge-purple{background:rgba(167,139,250,0.15);color:var(--purple)}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
-.dot-green{background:var(–green);box-shadow:0 0 8px var(–green)}
-.dot-red{background:var(–red);box-shadow:0 0 8px var(–red)}
+.dot-green{background:var(--green);box-shadow:0 0 8px var(--green)}
+.dot-red{background:var(--red);box-shadow:0 0 8px var(--red)}
 .hidden{display:none!important}
 
 /* HOME */
-.pts-card{text-align:center;padding:28px 20px;background:linear-gradient(135deg,var(–card) 0%,var(–card2) 100%)}
-.pts-num{font-size:60px;font-weight:900;color:var(–gold);line-height:1}
-.pts-label{font-size:11px;color:var(–text3);margin-top:4px;letter-spacing:2px}
-.ann-item{padding:14px 0;border-bottom:1px solid var(–border);display:flex;gap:12px}
+.pts-card{text-align:center;padding:28px 20px;background:linear-gradient(135deg,var(--card) 0%,var(--card2) 100%)}
+.pts-num{font-size:60px;font-weight:900;color:var(--gold);line-height:1}
+.pts-label{font-size:11px;color:var(--text3);margin-top:4px;letter-spacing:2px}
+.ann-item{padding:14px 0;border-bottom:1px solid var(--border);display:flex;gap:12px}
 .ann-item:last-child{border-bottom:none}
 .ann-text{font-size:14px;line-height:1.5}
-.ann-time{font-size:11px;color:var(–text3);margin-top:4px}
-.ann-author{font-size:11px;color:var(–green);font-weight:700}
+.ann-time{font-size:11px;color:var(--text3);margin-top:4px}
+.ann-author{font-size:11px;color:var(--green);font-weight:700}
 .badges-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-.badge-item{background:var(–card2);border:1px solid var(–border2);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:700;color:var(–text2);display:flex;align-items:center;gap:6px}
-.badge-item.earned{color:var(–gold);border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.08)}
+.badge-item{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:6px}
+.badge-item.earned{color:var(--gold);border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.08)}
 
 /* TASK */
-.task-item{padding:14px;border-radius:14px;background:var(–card2);border:1px solid var(–border);margin-bottom:8px}
+.task-item{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--border);margin-bottom:8px}
 .task-title{font-size:14px;font-weight:700}
-.task-desc{font-size:12px;color:var(–text2);margin-top:4px;line-height:1.4}
+.task-desc{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.4}
 .task-footer{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
-.task-pts{font-size:12px;color:var(–gold);font-weight:700}
+.task-pts{font-size:12px;color:var(--gold);font-weight:700}
 
 /* FIELD */
-.team-header{display:flex;align-items:center;gap:10px;padding:14px 0 8px;border-bottom:1px solid var(–border);margin-bottom:8px}
+.team-header{display:flex;align-items:center;gap:10px;padding:14px 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px}
 .team-color{width:4px;height:36px;border-radius:4px;flex-shrink:0}
 .team-name{font-size:16px;font-weight:900}
-.team-count{font-size:12px;color:var(–text3)}
-.team-pts-total{font-size:14px;color:var(–gold);font-weight:700;margin-right:auto}
-.member-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(–card2);border:1px solid var(–border);margin-bottom:6px;cursor:pointer;transition:all 0.2s}
+.team-count{font-size:12px;color:var(--text3)}
+.team-pts-total{font-size:14px;color:var(--gold);font-weight:700;margin-right:auto}
+.member-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all 0.2s}
 .member-row:active{transform:scale(0.98)}
 .member-avatar{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
 .member-name{font-size:14px;font-weight:700}
-.member-rank{font-size:11px;color:var(–text2);margin-top:2px}
-.member-pts{font-size:15px;font-weight:900;color:var(–gold)}
+.member-rank{font-size:11px;color:var(--text2);margin-top:2px}
+.member-pts{font-size:15px;font-weight:900;color:var(--gold)}
 
 /* LEADERBOARD */
-.lb-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(–card2);border:1px solid var(–border);margin-bottom:6px}
+.lb-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--border);margin-bottom:6px}
 .lb-rank{font-size:20px;font-weight:900;width:32px;text-align:center}
-.lb-rank.gold{color:var(–gold)}
+.lb-rank.gold{color:var(--gold)}
 .lb-rank.silver{color:#94a3b8}
 .lb-rank.bronze{color:#cd7f32}
 .lb-info{flex:1;min-width:0}
 .lb-name{font-size:14px;font-weight:700}
-.lb-team{font-size:11px;color:var(–text2)}
-.lb-pts{font-size:18px;font-weight:900;color:var(–gold)}
-.lb-bar-wrap{height:3px;background:var(–border);border-radius:3px;margin-top:4px}
+.lb-team{font-size:11px;color:var(--text2)}
+.lb-pts{font-size:18px;font-weight:900;color:var(--gold)}
+.lb-bar-wrap{height:3px;background:var(--border);border-radius:3px;margin-top:4px}
 .lb-bar{height:3px;border-radius:3px}
 .lb-tabs{display:flex;gap:8px;margin-bottom:14px}
-.lb-tab{flex:1;text-align:center;padding:10px;border-radius:12px;font-size:13px;font-weight:700;background:var(–card2);border:1px solid var(–border);cursor:pointer;color:var(–text2);transition:all 0.2s;font-family:‘Cairo’,sans-serif}
-.lb-tab.active{background:rgba(74,222,128,0.15);color:var(–green);border-color:rgba(74,222,128,0.3)}
+.lb-tab{flex:1;text-align:center;padding:10px;border-radius:12px;font-size:13px;font-weight:700;background:var(--card2);border:1px solid var(--border);cursor:pointer;color:var(--text2);transition:all 0.2s;font-family:'Cairo',sans-serif}
+.lb-tab.active{background:rgba(74,222,128,0.15);color:var(--green);border-color:rgba(74,222,128,0.3)}
 
 /* DASHBOARD */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.stat-box{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:16px 14px;text-align:center}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 14px;text-align:center}
 .stat-num{font-size:28px;font-weight:900;line-height:1}
-.stat-lbl{font-size:11px;color:var(–text3);margin-top:4px}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:4px}
 .chart-wrap{position:relative;height:200px}
-.log-item{padding:10px 0;border-bottom:1px solid var(–border);display:flex;gap:10px}
-.log-time{font-size:11px;color:var(–green);font-weight:700;white-space:nowrap;margin-top:2px}
-.log-txt{font-size:12px;color:var(–text2);line-height:1.4}
+.log-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:10px}
+.log-time{font-size:11px;color:var(--green);font-weight:700;white-space:nowrap;margin-top:2px}
+.log-txt{font-size:12px;color:var(--text2);line-height:1.4}
 
 /* ATTENDANCE */
-.att-session-card{background:var(–card2);border:1px solid var(–border);border-radius:16px;padding:14px;margin-bottom:8px}
+.att-session-card{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:8px}
 .att-session-title{font-size:14px;font-weight:700}
-.att-session-date{font-size:12px;color:var(–text3);margin-top:2px}
-.att-member-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(–border);font-size:13px}
-.gps-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#065f46,#047857);border:1px solid #059669;border-radius:16px;padding:16px;cursor:pointer;margin-bottom:12px;transition:all 0.2s;color:var(–green3);font-weight:700;font-size:15px;font-family:‘Cairo’,sans-serif;width:100%}
+.att-session-date{font-size:12px;color:var(--text3);margin-top:2px}
+.att-member-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--border);font-size:13px}
+.gps-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#065f46,#047857);border:1px solid #059669;border-radius:16px;padding:16px;cursor:pointer;margin-bottom:12px;transition:all 0.2s;color:var(--green3);font-weight:700;font-size:15px;font-family:'Cairo',sans-serif;width:100%}
 .gps-btn:active{transform:scale(0.97)}
-.gps-pulse{width:12px;height:12px;border-radius:50%;background:var(–green);animation:pulse 1.5s infinite;flex-shrink:0}
+.gps-pulse{width:12px;height:12px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.4)}50%{box-shadow:0 0 0 8px rgba(74,222,128,0)}}
 .att-toggle{display:flex;gap:8px;margin-top:8px}
-.att-btn{flex:1;padding:10px;border-radius:12px;border:1px solid var(–border);background:var(–card2);color:var(–text2);font-weight:700;font-size:13px;cursor:pointer;font-family:‘Cairo’,sans-serif;transition:all 0.2s}
-.att-btn.present-active{background:rgba(74,222,128,0.2);color:var(–green);border-color:rgba(74,222,128,0.4)}
-.att-btn.absent-active{background:rgba(244,63,94,0.15);color:var(–red);border-color:rgba(244,63,94,0.3)}
+.att-btn{flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card2);color:var(--text2);font-weight:700;font-size:13px;cursor:pointer;font-family:'Cairo',sans-serif;transition:all 0.2s}
+.att-btn.present-active{background:rgba(74,222,128,0.2);color:var(--green);border-color:rgba(74,222,128,0.4)}
+.att-btn.absent-active{background:rgba(244,63,94,0.15);color:var(--red);border-color:rgba(244,63,94,0.3)}
 
 /* MODAL */
 #modal-overlay{display:none;position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);padding:20px;align-items:flex-end;justify-content:center}
 #modal-overlay.open{display:flex}
-#modal-box{background:var(–card);border:1px solid var(–border2);border-radius:24px 24px 20px 20px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
+#modal-box{background:var(--card);border:1px solid var(--border2);border-radius:24px 24px 20px 20px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
 @keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-title{font-size:18px;font-weight:900;margin-bottom:16px}
-.modal-close{background:var(–card2);border:1px solid var(–border);border-radius:10px;padding:10px 20px;cursor:pointer;font-size:13px;color:var(–text2);font-family:‘Cairo’,sans-serif;font-weight:700;margin-top:14px;width:100%}
-.manage-section{margin-top:18px;padding-top:18px;border-top:1px solid var(–border)}
-.manage-section-title{font-size:11px;color:var(–text3);font-weight:700;letter-spacing:1.5px;margin-bottom:8px}
+.modal-close{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 20px;cursor:pointer;font-size:13px;color:var(--text2);font-family:'Cairo',sans-serif;font-weight:700;margin-top:14px;width:100%}
+.manage-section{margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
+.manage-section-title{font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1.5px;margin-bottom:8px}
 
 /* CONFIRM */
 #confirm-overlay{display:none;position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:20px}
 #confirm-overlay.open{display:flex}
-#confirm-box{background:var(–card);border:1px solid var(–border2);border-radius:20px;padding:24px;width:100%;max-width:340px;text-align:center}
+#confirm-box{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:24px;width:100%;max-width:340px;text-align:center}
 .confirm-title{font-size:17px;font-weight:900;margin-bottom:8px}
-.confirm-msg{font-size:13px;color:var(–text2);margin-bottom:20px;line-height:1.5}
+.confirm-msg{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.5}
 .confirm-btns{display:flex;gap:10px}
 .confirm-btns .btn{margin:0}
 
 /* TOAST */
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(–card2);border:1px solid var(–border2);border-radius:14px;padding:12px 20px;font-size:14px;font-weight:700;z-index:30000;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border2);border-radius:14px;padding:12px 20px;font-size:14px;font-weight:700;z-index:30000;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#toast.success{border-color:rgba(74,222,128,0.4);color:var(–green)}
-#toast.error{border-color:rgba(244,63,94,0.4);color:var(–red)}
+#toast.success{border-color:rgba(74,222,128,0.4);color:var(--green)}
+#toast.error{border-color:rgba(244,63,94,0.4);color:var(--red)}
 
 /* ARCHIVE */
-.archive-item{padding:12px 14px;border-radius:14px;background:var(–card2);border:1px solid var(–border);margin-bottom:6px;opacity:0.75;display:flex;align-items:center;gap:12px}
+.archive-item{padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--border);margin-bottom:6px;opacity:0.75;display:flex;align-items:center;gap:12px}
 .archive-name{font-size:14px;font-weight:700}
-.archive-meta{font-size:11px;color:var(–text3);margin-top:2px}
+.archive-meta{font-size:11px;color:var(--text3);margin-top:2px}
 </style>
 
 </head>
 <body>
-
-<!-- LOGIN -->
 
 <div id="login-screen">
   <div class="login-wrap">
@@ -244,8 +241,6 @@ label{font-size:13px;color:var(–text2);font-weight:600;display:block;margin-to
     <div onclick="App.hardReset()" style="margin-top:40px;color:var(--border2);font-size:10px;cursor:pointer;text-align:center;letter-spacing:1px">تهيئة النظام</div>
   </div>
 </div>
-
-<!-- APP -->
 
 <div id="app">
   <div class="header">
@@ -608,28 +603,24 @@ const Render = {
     root.innerHTML=`
       <div class="section-title">📣 إرسال إعلان</div>
       <div class="card"><textarea id="ann-text" placeholder="اكتب الإعلان هنا..."></textarea>
-
-```
-  <button class="btn btn-green" onclick="Admin.sendAnn()">إرسال للجميع 📢</button></div>
-  <div class="section-title">➕ إدارة الأعضاء</div>
-  <div class="card" style="display:flex;gap:8px">
-    <button class="btn btn-gold btn-sm" style="flex:1;padding:13px" onclick="Admin.showAdd()">إضافة عضو</button>
-    <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Admin.showAddTask()">إضافة مهمة</button>
-  </div>
-  <div class="section-title">🔑 رموز الدعوة</div>
-  <div class="card">${invHtml}</div>
-  <div class="section-title">🗂️ الأرشيف</div>
-  ${archHtml}`;
-```
-
-}
+      <button class="btn btn-green" onclick="Admin.sendAnn()">إرسال للجميع 📢</button></div>
+      <div class="section-title">➕ إدارة الأعضاء</div>
+      <div class="card" style="display:flex;gap:8px">
+        <button class="btn btn-gold btn-sm" style="flex:1;padding:13px" onclick="Admin.showAdd()">إضافة عضو</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Admin.showAddTask()">إضافة مهمة</button>
+      </div>
+      <div class="section-title">🔑 رموز الدعوة</div>
+      <div class="card">${invHtml}</div>
+      <div class="section-title">🗂️ الأرشيف</div>
+      ${archHtml}`;
+  }
 };
 
 // ─── MEMBERS ───
 const Members = {
 openProfile(id){
 const m=S.members[id]; if(!m)return;
-const isRoot=S.user.role===‘ROOT’;
+const isRoot=S.user.role==='ROOT';
 const col=teamColor(m.team);
 let attC=0,totS=0;
 S.sessions.forEach(s=>{ if(s.team===m.team){totS++; if(s.attendance&&s.attendance[id])attC++;} });
@@ -656,22 +647,22 @@ UI.openModal(` <div style="text-align:center;margin-bottom:16px"> <div style="wi
 <input id="pin-v" placeholder="الرمز الجديد (4+ أرقام)" type="number">
 <button class="btn btn-ghost" onclick="Members.pin('${id}')">تحديث الرمز</button>
 </div>
-${id!==S.user.id?`<div class="manage-section"><div class="manage-section-title">حذف العضو</div> <button class="btn btn-red" onclick="Members.archive('${id}')">أرشفة العضو 🗂️</button> </div>`:’’}
+${id!==S.user.id?`<div class="manage-section"><div class="manage-section-title">حذف العضو</div> <button class="btn btn-red" onclick="Members.archive('${id}')">أرشفة العضو 🗂️</button> </div>`:''}
 `:''} <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
 },
-setAtt(id,val){ DB.child(‘members’).child(id).update({isPresent:val}); App.log(`${S.user.name} سجّل [${S.members[id].name}] كـ ${val?'حاضر':'غائب'}`); UI.toast(val?‘تم تسجيل الحضور ✓’:‘تم تسجيل الغياب’); UI.closeModal(); },
-pts(id,dir){ const v=parseInt(document.getElementById(‘pts-v’).value); if(!v||v<=0){UI.toast(‘أدخل عدد صحيح’,‘error’);return;} DB.child(‘members’).child(id).update({pts:(S.members[id].pts||0)+v*dir}); App.log(`${S.user.name} ${dir>0?'أضاف':'خصم'} ${v} نقطة ${dir>0?'لـ':'من'} ${S.members[id].name}`); UI.toast(dir>0?`+${v} نقطة ✓`:`−${v} نقطة`); UI.closeModal(); },
-badge(id){ const b=document.getElementById(‘bdg-v’).value.trim(); if(!b){UI.toast(‘اكتب اسم الوسام’,‘error’);return;} DB.child(‘members’).child(id).update({badges:[…(S.members[id].badges||[]),b]}); App.log(`${S.user.name} منح وسام [${b}] لـ ${S.members[id].name}`); UI.toast(‘تم منح الوسام 🏅’); UI.closeModal(); },
-pin(id){ const np=document.getElementById(‘pin-v’).value.trim(); if(!np||np.length<4){UI.toast(‘الرمز يجب 4 أرقام على الأقل’,‘error’);return;} if(S.members[np]&&np!==id){UI.toast(‘الرمز مستخدم مسبقاً’,‘error’);return;} const old=S.members[id].pin; DB.child(‘members’).child(id).update({pin:np}); App.log(`${S.user.name} غيّر رمز ${S.members[id].name} من ${old} إلى ${np}`); UI.toast(‘تم تحديث الرمز ✓’); UI.closeModal(); },
-archive(id){ const m=S.members[id]; UI.confirm(`أرشفة ${m.name}`,`سيُنقل ${m.name} للأرشيف مع الاحتفاظ بسجله كاملاً`,‘أرشفة’,()=>{ DB.child(‘archived’).child(id).set({…m,archivedAt:new Date().toLocaleDateString(‘ar-SA’)}); DB.child(‘members’).child(id).remove(); App.log(`${S.user.name} أرشف [${m.name}]`); UI.toast(`تمت أرشفة ${m.name} 🗂️`); UI.closeModal(); }); }
+setAtt(id,val){ DB.child('members').child(id).update({isPresent:val}); App.log(`${S.user.name} سجّل [${S.members[id].name}] كـ ${val?'حاضر':'غائب'}`); UI.toast(val?'تم تسجيل الحضور ✓':'تم تسجيل الغياب'); UI.closeModal(); },
+pts(id,dir){ const v=parseInt(document.getElementById('pts-v').value); if(!v||v<=0){UI.toast('أدخل عدد صحيح','error');return;} DB.child('members').child(id).update({pts:(S.members[id].pts||0)+v*dir}); App.log(`${S.user.name} ${dir>0?'أضاف':'خصم'} ${v} نقطة ${dir>0?'لـ':'من'} ${S.members[id].name}`); UI.toast(dir>0?`+${v} نقطة ✓`:`−${v} نقطة`); UI.closeModal(); },
+badge(id){ const b=document.getElementById('bdg-v').value.trim(); if(!b){UI.toast('اكتب اسم الوسام','error');return;} DB.child('members').child(id).update({badges:[...(S.members[id].badges||[]),b]}); App.log(`${S.user.name} منح وسام [${b}] لـ ${S.members[id].name}`); UI.toast('تم منح الوسام 🏅'); UI.closeModal(); },
+pin(id){ const np=document.getElementById('pin-v').value.trim(); if(!np||np.length<4){UI.toast('الرمز يجب 4 أرقام على الأقل','error');return;} if(S.members[np]&&np!==id){UI.toast('الرمز مستخدم مسبقاً','error');return;} const old=S.members[id].pin; DB.child('members').child(id).update({pin:np}); App.log(`${S.user.name} غيّر رمز ${S.members[id].name} من ${old} إلى ${np}`); UI.toast('تم تحديث الرمز ✓'); UI.closeModal(); },
+archive(id){ const m=S.members[id]; UI.confirm(`أرشفة ${m.name}`,`سيُنقل ${m.name} للأرشيف مع الاحتفاظ بسجله كاملاً`,'أرشفة',()=>{ DB.child('archived').child(id).set({...m,archivedAt:new Date().toLocaleDateString('ar-SA')}); DB.child('members').child(id).remove(); App.log(`${S.user.name} أرشف [${m.name}]`); UI.toast(`تمت أرشفة ${m.name} 🗂️`); UI.closeModal(); }); }
 };
 
 // ─── ATTENDANCE ───
 const Attendance = {
-_att:{}, _gps:’’,
+_att:{}, _gps:'',
 newSession(){
 const myM=Object.entries(S.members).filter(([,m])=>m.team===S.user.team);
-this._att={}; this._gps=’’;
+this._att={}; this._gps='';
 myM.forEach(([id])=>{this._att[id]=false;});
 UI.openModal(` <div class="modal-title">📋 جلسة حضور جديدة</div> <label>عنوان الجلسة</label> <input id="s-title" placeholder="مثال: اجتماع أسبوعي، رحلة، تدريب..."> <label>ملاحظات (اختياري)</label> <textarea id="s-notes" placeholder="ملاحظات..."></textarea> <label>تحديد الموقع</label> <button class="gps-btn" style="margin-top:8px" onclick="Attendance.getGPS()"><div class="gps-pulse"></div>تحديد موقعي تلقائياً</button> <div id="gps-res" style="font-size:12px;color:var(--text3);margin-top:6px"></div> <label style="margin-top:16px">تسجيل الحضور</label> <div id="att-list">${myM.map(([id,m])=>`
 <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
@@ -682,25 +673,25 @@ UI.openModal(` <div class="modal-title">📋 جلسة حضور جديدة</div> 
 },
 toggle(id,val){
 this._att[id]=val;
-document.getElementById(`ap-${id}`).className=‘att-btn’+(val?’ present-active’:’’);
-document.getElementById(`aa-${id}`).className=‘att-btn’+(val?’’:’ absent-active’);
+document.getElementById(`ap-${id}`).className='att-btn'+(val?' present-active':'');
+document.getElementById(`aa-${id}`).className='att-btn'+(val?'':' absent-active');
 },
 getGPS(){
-if(!navigator.geolocation){UI.toast(‘المتصفح لا يدعم GPS’,‘error’);return;}
-document.getElementById(‘gps-res’).textContent=‘جاري التحديد…’;
+if(!navigator.geolocation){UI.toast('المتصفح لا يدعم GPS','error');return;}
+document.getElementById('gps-res').textContent='جاري التحديد...';
 navigator.geolocation.getCurrentPosition(p=>{
 this._gps=`${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
-document.getElementById(‘gps-res’).textContent=`📍 ${this._gps}`;
-UI.toast(‘تم تحديد الموقع ✓’);
-},()=>{ document.getElementById(‘gps-res’).textContent=‘تعذّر الوصول للموقع’; UI.toast(‘تعذّر تحديد الموقع’,‘error’); });
+document.getElementById('gps-res').textContent=`📍 ${this._gps}`;
+UI.toast('تم تحديد الموقع ✓');
+},()=>{ document.getElementById('gps-res').textContent='تعذّر الوصول للموقع'; UI.toast('تعذّر تحديد الموقع','error'); });
 },
 save(){
-const title=document.getElementById(‘s-title’).value.trim()||‘جلسة’;
-const notes=document.getElementById(‘s-notes’).value.trim();
+const title=document.getElementById('s-title').value.trim()||'جلسة';
+const notes=document.getElementById('s-notes').value.trim();
 const id=Date.now().toString();
-DB.child(‘sessions’).child(id).set({id,title,notes,date:new Date().toLocaleDateString(‘ar-SA’),team:S.user.team,gps:this._gps,attendance:{…this._att},ts:Date.now(),createdBy:S.user.name});
+DB.child('sessions').child(id).set({id,title,notes,date:new Date().toLocaleDateString('ar-SA'),team:S.user.team,gps:this._gps,attendance:{...this._att},ts:Date.now(),createdBy:S.user.name});
 App.log(`${S.user.name} سجّل جلسة [${title}] لـ ${S.user.team}`);
-UI.toast(‘تم حفظ الجلسة ✓’);
+UI.toast('تم حفظ الجلسة ✓');
 UI.closeModal();
 }
 };
@@ -709,8 +700,8 @@ UI.closeModal();
 const Tasks = {
 complete(taskId,userId){
 const t=S.tasks.find(x=>x.id===taskId); if(!t)return;
-DB.child(‘tasks’).child(taskId).update({done:true,completedBy:userId,completedAt:Date.now()});
-DB.child(‘members’).child(userId).update({pts:(S.members[userId].pts||0)+(t.pts||0)});
+DB.child('tasks').child(taskId).update({done:true,completedBy:userId,completedAt:Date.now()});
+DB.child('members').child(userId).update({pts:(S.members[userId].pts||0)+(t.pts||0)});
 App.log(`${S.members[userId].name} أنجز [${t.title}] وحصل على ${t.pts||0} نقطة`);
 UI.toast(`أحسنت! +${t.pts||0} نقطة 🎉`);
 }
@@ -718,48 +709,26 @@ UI.toast(`أحسنت! +${t.pts||0} نقطة 🎉`);
 
 // ─── ADMIN ───
 const Admin = {
-sendAnn(){ const txt=document.getElementById(‘ann-text’).value.trim(); if(!txt){UI.toast(‘اكتب الإعلان’,‘error’);return;} DB.child(‘announcements’).push({text:txt,author:S.user.name,ts:Date.now(),time:new Date().toLocaleDateString(‘ar-SA’)}); App.log(`${S.user.name} أرسل إعلاناً`); document.getElementById(‘ann-text’).value=’’; UI.toast(‘تم الإرسال 📢’); },
+sendAnn(){ const txt=document.getElementById('ann-text').value.trim(); if(!txt){UI.toast('اكتب الإعلان','error');return;} DB.child('announcements').push({text:txt,author:S.user.name,ts:Date.now(),time:new Date().toLocaleDateString('ar-SA')}); App.log(`${S.user.name} أرسل إعلاناً`); document.getElementById('ann-text').value=''; UI.toast('تم الإرسال 📢'); },
 showAdd(){
-const teams=[…new Set(Object.values(S.members).map(m=>m.team))];
+const teams=[...new Set(Object.values(S.members).map(m=>m.team))];
 UI.openModal(` <div class="modal-title">➕ إضافة عضو جديد</div> <label>الاسم الكامل</label><input id="nm-n" placeholder="اسم الكشاف"> <label>الرتبة</label><input id="nm-r" placeholder="كشاف، قائد طليعة..."> <label>الطليعة</label> <select id="nm-t" onchange="Admin.teamChange()"> ${teams.map(t=>`<option>${t}</option>`).join('')} <option value="__new__">+ طليعة جديدة</option> </select> <div id="nm-tn" style="display:none"><input id="nm-tn-v" placeholder="اسم الطليعة الجديدة"></div> <label>الرمز السري</label><input id="nm-p" type="number" placeholder="رمز من 4 أرقام"> <label>الدور</label> <select id="nm-role"><option value="USER">كشاف</option><option value="LEADER">قائد طليعة</option></select> <button class="btn btn-green" onclick="Admin.addMember()">إضافة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
 },
-teamChange(){ const v=document.getElementById(‘nm-t’).value; document.getElementById(‘nm-tn’).style.display=v===’**new**’?‘block’:‘none’; },
+teamChange(){ const v=document.getElementById('nm-t').value; document.getElementById('nm-tn').style.display=v==='__new__'?'block':'none'; },
 addMember(){
-const name=document.getElementById(‘nm-n’).value.trim();
-const rank=document.getElementById(‘nm-r’).value.trim()||‘كشاف’;
-let team=document.getElementById(‘nm-t’).value;
-if(team===’**new**’) team=document.getElementById(‘nm-tn-v’).value.trim();
-const pin=document.getElementById(‘nm-p’).value.trim();
-const role=document.getElementById(‘nm-role’).value;
-if(!name||!pin||pin.length<4){UI.toast(‘أكمل الحقول (الرمز 4+)’,‘error’);return;}
-if(S.members[pin]){UI.toast(‘الرمز مستخدم مسبقاً’,‘error’);return;}
-DB.child(‘members’).child(pin).set({name,rank,team,role,pts:0,pin,badges:[‘عضو جديد’],isPresent:false,joinDate:Date.now()});
+const name=document.getElementById('nm-n').value.trim();
+const rank=document.getElementById('nm-r').value.trim()||'كشاف';
+let team=document.getElementById('nm-t').value;
+if(team==='__new__') team=document.getElementById('nm-tn-v').value.trim();
+const pin=document.getElementById('nm-p').value.trim();
+const role=document.getElementById('nm-role').value;
+if(!name||!pin||pin.length<4){UI.toast('أكمل الحقول (الرمز 4+)','error');return;}
+if(S.members[pin]){UI.toast('الرمز مستخدم مسبقاً','error');return;}
+DB.child('members').child(pin).set({name,rank,team,role,pts:0,pin,badges:['عضو جديد'],isPresent:false,joinDate:Date.now()});
 if(!S.inviteCodes[team]) Admin.genCode(team,false);
 App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
 UI.toast(`تمت إضافة ${name} ✓`);
 UI.closeModal();
 },
 showAddTask(){
-UI.openModal(` <div class="modal-title">📝 مهمة جديدة</div> <label>العنوان</label><input id="tk-t" placeholder="عنوان المهمة"> <label>الوصف</label><textarea id="tk-d" placeholder="تفاصيل المهمة..."></textarea> <label>النقاط عند الإنجاز</label><input id="tk-p" type="number" placeholder="0" min="0"> <label>تاريخ الانتهاء</label><input id="tk-due" type="date"> <label>تعيين لـ</label> <select id="tk-a"> <option value="all">الجميع</option> ${Object.entries(S.members).map(([id,m])=>`<option value="${id}">${m.name}</option>`).join('')} </select> <button class="btn btn-green" onclick="Admin.addTask()">إنشاء المهمة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
-},
-addTask(){
-const title=document.getElementById(‘tk-t’).value.trim();
-if(!title){UI.toast(‘اكتب عنوان المهمة’,‘error’);return;}
-const id=Date.now().toString();
-DB.child(‘tasks’).child(id).set({id,title,desc:document.getElementById(‘tk-d’).value.trim(),pts:parseInt(document.getElementById(‘tk-p’).value)||0,due:document.getElementById(‘tk-due’).value,assignedTo:document.getElementById(‘tk-a’).value,done:false,ts:Date.now(),createdBy:S.user.name});
-App.log(`${S.user.name} أضاف مهمة: ${title}`);
-UI.toast(‘تم إنشاء المهمة ✓’);
-UI.closeModal();
-},
-genCode(team,toast=true){ const c=(team.replace(/\s/g,’’).slice(0,3).toUpperCase()+(Math.floor(1000+Math.random()*9000))).toString(); DB.child(‘inviteCodes’).child(team).set(c); if(toast)UI.toast(`تم تجديد كود ${team} ✓`); },
-restoreMember(pin){ const m=S.archived[pin]; if(!m)return; DB.child(‘members’).child(pin).set({…m,archivedAt:undefined}); DB.child(‘archived’).child(pin).remove(); App.log(`${S.user.name} استعاد [${m.name}] من الأرشيف`); UI.toast(`تمت استعادة ${m.name} ✓`); }
-};
-
-// ─── INIT ───
-window.onload=()=>{
-if(localStorage.getItem(‘awtad_theme’)===‘light’) document.body.classList.add(‘light’);
-};
-</script>
-
-</body>
-</html>
+UI.openModal(` <div class="modal-title">📝 مهمة جديدة</div> <label>العنوان</label><input id="tk-t" placeholder="عنوان المهمة"> <label>الوصف</label><textarea id="tk-d" placeholder="تفاصيل المهمة..."></textarea> <label>النقاط عند الإنجاز</label><input id="tk-p" type="number" placeholder="0" min="0"> <label>تاريخ الانتهاء</label><input id="tk-due" type="date"> <label>تعيين لـ</label> <select id="tk-a"> <option value
