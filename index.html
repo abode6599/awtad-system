@@ -33,40 +33,40 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 
 /* LOGIN */
-#login-screen{position:fixed;inset:0;z-index:10000;background:var(–bg);display:flex;align-items:center;justify-content:center;padding:20px}
+#login-screen{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
 .login-wrap{width:100%;max-width:380px;text-align:center}
-.login-logo{font-size:52px;font-weight:900;color:var(–green);letter-spacing:-2px;line-height:1;text-shadow:0 0 40px rgba(74,222,128,0.4);margin-bottom:4px}
-.login-sub{color:var(–text3);font-size:13px;margin-bottom:36px;letter-spacing:3px}
-.login-box{background:var(–card);border:1px solid var(–border2);border-radius:24px;padding:32px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.login-logo{font-size:52px;font-weight:900;color:var(--green);letter-spacing:-2px;line-height:1;text-shadow:0 0 40px rgba(74,222,128,0.4);margin-bottom:4px}
+.login-sub{color:var(--text3);font-size:13px;margin-bottom:36px;letter-spacing:3px}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:32px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
 .pin-display{display:flex;justify-content:center;gap:12px;margin-bottom:28px}
-.pin-dot{width:14px;height:14px;border-radius:50%;background:var(–border2);border:2px solid var(–border2);transition:all 0.2s}
-.pin-dot.filled{background:var(–green);border-color:var(–green);box-shadow:0 0 10px rgba(74,222,128,0.5)}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--border2);border:2px solid var(--border2);transition:all 0.2s}
+.pin-dot.filled{background:var(--green);border-color:var(--green);box-shadow:0 0 10px rgba(74,222,128,0.5)}
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.num-btn{background:var(–card2);border:1px solid var(–border);border-radius:14px;padding:18px;font-size:22px;font-weight:700;color:var(–text);cursor:pointer;transition:all 0.15s;font-family:‘Cairo’,sans-serif}
-.num-btn:active{transform:scale(0.93);background:var(–border)}
-.num-btn.del{font-size:16px;color:var(–text2)}
-.num-btn.enter{background:var(–green2);color:#000;font-size:15px;font-weight:900}
-.login-error{color:var(–red);font-size:13px;margin-top:14px;min-height:18px}
+.num-btn{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:18px;font-size:22px;font-weight:700;color:var(--text);cursor:pointer;transition:all 0.15s;font-family:'Cairo',sans-serif}
+.num-btn:active{transform:scale(0.93);background:var(--border)}
+.num-btn.del{font-size:16px;color:var(--text2)}
+.num-btn.enter{background:var(--green2);color:#000;font-size:15px;font-weight:900}
+.login-error{color:var(--red);font-size:13px;margin-top:14px;min-height:18px}
 
 /* APP */
 #app{display:none;position:relative;z-index:1;padding-bottom:80px}
 
 /* HEADER */
-.header{position:sticky;top:0;z-index:100;background:rgba(6,13,6,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(–border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.header{position:sticky;top:0;z-index:100;background:rgba(6,13,6,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
 .light .header{background:rgba(240,247,240,0.92)}
 .header-user{display:flex;align-items:center;gap:12px}
 .avatar{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;border:2px solid currentColor}
 .header-name{font-size:15px;font-weight:700}
-.header-rank{font-size:11px;color:var(–text2);margin-top:1px}
+.header-rank{font-size:11px;color:var(--text2);margin-top:1px}
 .header-actions{display:flex;gap:8px}
-.icon-btn{height:36px;padding:0 12px;border-radius:10px;background:var(–card2);border:1px solid var(–border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(–text2);font-family:‘Cairo’,sans-serif;font-weight:700;transition:all 0.2s}
+.icon-btn{height:36px;padding:0 12px;border-radius:10px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--text2);font-family:'Cairo',sans-serif;font-weight:700;transition:all 0.2s}
 .icon-btn:active{transform:scale(0.9)}
 
 /* NAV */
-nav{position:fixed;bottom:0;width:100%;z-index:1000;background:var(–card);border-top:1px solid var(–border);display:flex;justify-content:space-around;align-items:center;padding:8px 0 14px}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(–text3);font-size:10px;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:12px;transition:all 0.2s;min-width:50px}
+nav{position:fixed;bottom:0;width:100%;z-index:1000;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:8px 0 14px}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--text3);font-size:10px;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:12px;transition:all 0.2s;min-width:50px}
 .nav-icon{font-size:20px;transition:transform 0.2s}
-.nav-item.active{color:var(–green)}
+.nav-item.active{color:var(--green)}
 .nav-item.active .nav-icon{transform:translateY(-2px)}
 
 /* PAGES */
@@ -74,431 +74,411 @@ nav{position:fixed;bottom:0;width:100%;z-index:1000;background:var(–card);bord
 .page.active{display:block}
 
 /* CARDS */
-.card{background:var(–card);border:1px solid var(–border);border-radius:20px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden}
-.card-title{font-size:12px;color:var(–text2);font-weight:700;letter-spacing:1px;margin-bottom:10px}
-.section-title{font-size:11px;font-weight:700;color:var(–text3);letter-spacing:2px;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
-.section-title::after{content:’’;flex:1;height:1px;background:var(–border)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden}
+.card-title{font-size:12px;color:var(--text2);font-weight:700;letter-spacing:1px;margin-bottom:10px}
+.section-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:2px;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* BUTTONS */
-.btn{width:100%;padding:15px;border-radius:14px;border:none;font-weight:900;font-size:15px;cursor:pointer;font-family:‘Cairo’,sans-serif;transition:all 0.2s;margin-top:10px}
+.btn{width:100%;padding:15px;border-radius:14px;border:none;font-weight:900;font-size:15px;cursor:pointer;font-family:'Cairo',sans-serif;transition:all 0.2s;margin-top:10px}
 .btn:active{transform:scale(0.97)}
-.btn-green{background:var(–green2);color:#000}
-.btn-gold{background:var(–gold2);color:#000}
-.btn-red{background:var(–red);color:#fff}
-.btn-ghost{background:var(–card2);color:var(–text);border:1px solid var(–border)}
+.btn-green{background:var(--green2);color:#000}
+.btn-gold{background:var(--gold2);color:#000}
+.btn-red{background:var(--red);color:#fff}
+.btn-ghost{background:var(--card2);color:var(--text);border:1px solid var(--border)}
 .btn-sm{padding:10px 16px;font-size:13px;width:auto;margin:0}
 
 /* INPUTS */
-input,select,textarea{width:100%;padding:14px 16px;border-radius:13px;border:1px solid var(–border2);background:var(–bg2);color:var(–text);font-size:15px;font-family:‘Cairo’,sans-serif;margin-top:10px;outline:none;transition:border 0.2s}
-input:focus,select:focus,textarea:focus{border-color:var(–green)}
+input,select,textarea{width:100%;padding:14px 16px;border-radius:13px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-size:15px;font-family:'Cairo',sans-serif;margin-top:10px;outline:none;transition:border 0.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
 textarea{resize:none;min-height:80px}
-select option{background:var(–card)}
-label{font-size:13px;color:var(–text2);font-weight:600;display:block;margin-top:14px}
+select option{background:var(--card)}
+label{font-size:13px;color:var(--text2);font-weight:600;display:block;margin-top:14px}
 
 /* BADGES */
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700}
-.badge-green{background:rgba(74,222,128,0.15);color:var(–green)}
-.badge-gold{background:rgba(251,191,36,0.15);color:var(–gold)}
-.badge-red{background:rgba(244,63,94,0.15);color:var(–red)}
-.badge-blue{background:rgba(96,165,250,0.15);color:var(–blue)}
-.badge-purple{background:rgba(167,139,250,0.15);color:var(–purple)}
+.badge-green{background:rgba(74,222,128,0.15);color:var(--green)}
+.badge-gold{background:rgba(251,191,36,0.15);color:var(--gold)}
+.badge-red{background:rgba(244,63,94,0.15);color:var(--red)}
+.badge-blue{background:rgba(96,165,250,0.15);color:var(--blue)}
+.badge-purple{background:rgba(167,139,250,0.15);color:var(--purple)}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
-.dot-green{background:var(–green);box-shadow:0 0 8px var(–green)}
-.dot-red{background:var(–red);box-shadow:0 0 8px var(–red)}
+.dot-green{background:var(--green);box-shadow:0 0 8px var(--green)}
+.dot-red{background:var(--red);box-shadow:0 0 8px var(--red)}
 .hidden{display:none!important}
 
 /* HOME */
-.pts-card{text-align:center;padding:28px 20px;background:linear-gradient(135deg,var(–card) 0%,var(–card2) 100%)}
-.pts-num{font-size:60px;font-weight:900;color:var(–gold);line-height:1}
-.pts-label{font-size:11px;color:var(–text3);margin-top:4px;letter-spacing:2px}
-.ann-item{padding:14px 0;border-bottom:1px solid var(–border);display:flex;gap:12px}
+.pts-card{text-align:center;padding:28px 20px;background:linear-gradient(135deg,var(--card) 0%,var(--card2) 100%)}
+.pts-num{font-size:60px;font-weight:900;color:var(--gold);line-height:1}
+.pts-label{font-size:11px;color:var(--text3);margin-top:4px;letter-spacing:2px}
+.ann-item{padding:14px 0;border-bottom:1px solid var(--border);display:flex;gap:12px}
 .ann-item:last-child{border-bottom:none}
 .ann-text{font-size:14px;line-height:1.5}
-.ann-time{font-size:11px;color:var(–text3);margin-top:4px}
-.ann-author{font-size:11px;color:var(–green);font-weight:700}
+.ann-time{font-size:11px;color:var(--text3);margin-top:4px}
+.ann-author{font-size:11px;color:var(--green);font-weight:700}
 .badges-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-.badge-item{background:var(–card2);border:1px solid var(–border2);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:700;color:var(–text2);display:flex;align-items:center;gap:6px}
-.badge-item.earned{color:var(–gold);border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.08)}
+.badge-item{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:6px}
+.badge-item.earned{color:var(--gold);border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.08)}
 
 /* TASK */
-.task-item{padding:14px;border-radius:14px;background:var(–card2);border:1px solid var(–border);margin-bottom:8px}
+.task-item{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--border);margin-bottom:8px}
 .task-title{font-size:14px;font-weight:700}
-.task-desc{font-size:12px;color:var(–text2);margin-top:4px;line-height:1.4}
+.task-desc{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.4}
 .task-footer{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
-.task-pts{font-size:12px;color:var(–gold);font-weight:700}
+.task-pts{font-size:12px;color:var(--gold);font-weight:700}
 
 /* FIELD */
-.team-header{display:flex;align-items:center;gap:10px;padding:14px 0 8px;border-bottom:1px solid var(–border);margin-bottom:8px}
+.team-header{display:flex;align-items:center;gap:10px;padding:14px 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px}
 .team-color{width:4px;height:36px;border-radius:4px;flex-shrink:0}
 .team-name{font-size:16px;font-weight:900}
-.team-count{font-size:12px;color:var(–text3)}
-.team-pts-total{font-size:14px;color:var(–gold);font-weight:700;margin-right:auto}
-.member-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(–card2);border:1px solid var(–border);margin-bottom:6px;cursor:pointer;transition:all 0.2s}
+.team-count{font-size:12px;color:var(--text3)}
+.team-pts-total{font-size:14px;color:var(--gold);font-weight:700;margin-right:auto}
+.member-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all 0.2s}
 .member-row:active{transform:scale(0.98)}
 .member-avatar{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
 .member-name{font-size:14px;font-weight:700}
-.member-rank{font-size:11px;color:var(–text2);margin-top:2px}
-.member-pts{font-size:15px;font-weight:900;color:var(–gold)}
+.member-rank{font-size:11px;color:var(--text2);margin-top:2px}
+.member-pts{font-size:15px;font-weight:900;color:var(--gold)}
 
 /* LEADERBOARD */
-.lb-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(–card2);border:1px solid var(–border);margin-bottom:6px}
+.lb-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--border);margin-bottom:6px}
 .lb-rank{font-size:20px;font-weight:900;width:32px;text-align:center}
-.lb-rank.gold{color:var(–gold)}
+.lb-rank.gold{color:var(--gold)}
 .lb-rank.silver{color:#94a3b8}
 .lb-rank.bronze{color:#cd7f32}
 .lb-info{flex:1;min-width:0}
 .lb-name{font-size:14px;font-weight:700}
-.lb-team{font-size:11px;color:var(–text2)}
-.lb-pts{font-size:18px;font-weight:900;color:var(–gold)}
-.lb-bar-wrap{height:3px;background:var(–border);border-radius:3px;margin-top:4px}
+.lb-team{font-size:11px;color:var(--text2)}
+.lb-pts{font-size:18px;font-weight:900;color:var(--gold)}
+.lb-bar-wrap{height:3px;background:var(--border);border-radius:3px;margin-top:4px}
 .lb-bar{height:3px;border-radius:3px}
 .lb-tabs{display:flex;gap:8px;margin-bottom:14px}
-.lb-tab{flex:1;text-align:center;padding:10px;border-radius:12px;font-size:13px;font-weight:700;background:var(–card2);border:1px solid var(–border);cursor:pointer;color:var(–text2);transition:all 0.2s;font-family:‘Cairo’,sans-serif}
-.lb-tab.active{background:rgba(74,222,128,0.15);color:var(–green);border-color:rgba(74,222,128,0.3)}
+.lb-tab{flex:1;text-align:center;padding:10px;border-radius:12px;font-size:13px;font-weight:700;background:var(--card2);border:1px solid var(--border);cursor:pointer;color:var(--text2);transition:all 0.2s;font-family:'Cairo',sans-serif}
+.lb-tab.active{background:rgba(74,222,128,0.15);color:var(--green);border-color:rgba(74,222,128,0.3)}
 
 /* DASHBOARD */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.stat-box{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:16px 14px;text-align:center}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 14px;text-align:center}
 .stat-num{font-size:28px;font-weight:900;line-height:1}
-.stat-lbl{font-size:11px;color:var(–text3);margin-top:4px}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:4px}
 .chart-wrap{position:relative;height:200px}
-.log-item{padding:10px 0;border-bottom:1px solid var(–border);display:flex;gap:10px}
-.log-time{font-size:11px;color:var(–green);font-weight:700;white-space:nowrap;margin-top:2px}
-.log-txt{font-size:12px;color:var(–text2);line-height:1.4}
+.log-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:10px}
+.log-time{font-size:11px;color:var(--green);font-weight:700;white-space:nowrap;margin-top:2px}
+.log-txt{font-size:12px;color:var(--text2);line-height:1.4}
 
 /* ATTENDANCE */
-.att-session-card{background:var(–card2);border:1px solid var(–border);border-radius:16px;padding:14px;margin-bottom:8px}
+.att-session-card{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:8px}
 .att-session-title{font-size:14px;font-weight:700}
-.att-session-date{font-size:12px;color:var(–text3);margin-top:2px}
-.att-member-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(–border);font-size:13px}
-.gps-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#065f46,#047857);border:1px solid #059669;border-radius:16px;padding:16px;cursor:pointer;margin-bottom:12px;transition:all 0.2s;color:var(–green3);font-weight:700;font-size:15px;font-family:‘Cairo’,sans-serif;width:100%}
-.gps-btn:active{transform:scale(0.97)}
-.gps-pulse{width:12px;height:12px;border-radius:50%;background:var(–green);animation:pulse 1.5s infinite;flex-shrink:0}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.4)}50%{box-shadow:0 0 0 8px rgba(74,222,128,0)}}
-.att-toggle{display:flex;gap:8px;margin-top:8px}
-.att-btn{flex:1;padding:10px;border-radius:12px;border:1px solid var(–border);background:var(–card2);color:var(–text2);font-weight:700;font-size:13px;cursor:pointer;font-family:‘Cairo’,sans-serif;transition:all 0.2s}
-.att-btn.present-active{background:rgba(74,222,128,0.2);color:var(–green);border-color:rgba(74,222,128,0.4)}
-.att-btn.absent-active{background:rgba(244,63,94,0.15);color:var(–red);border-color:rgba(244,63,94,0.3)}
+.att-session-date{font-size:11px;color:var(--text3);margin-top:2px}
+.att-member-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.att-member-row:last-child{border-bottom:none}
 
 /* MODAL */
-#modal-overlay{display:none;position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);padding:20px;align-items:flex-end;justify-content:center}
-#modal-overlay.open{display:flex}
-#modal-box{background:var(–card);border:1px solid var(–border2);border-radius:24px 24px 20px 20px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
-@keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-title{font-size:18px;font-weight:900;margin-bottom:16px}
-.modal-close{background:var(–card2);border:1px solid var(–border);border-radius:10px;padding:10px 20px;cursor:pointer;font-size:13px;color:var(–text2);font-family:‘Cairo’,sans-serif;font-weight:700;margin-top:14px;width:100%}
-.manage-section{margin-top:18px;padding-top:18px;border-top:1px solid var(–border)}
-.manage-section-title{font-size:11px;color:var(–text3);font-weight:700;letter-spacing:1.5px;margin-bottom:8px}
+.modal-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-content{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.modal-title{font-size:18px;font-weight:900;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.modal-close{margin-top:20px;width:100%;padding:12px;border-radius:12px;background:var(--card2);border:1px solid var(--border);color:var(--text2);font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif}
 
-/* CONFIRM */
-#confirm-overlay{display:none;position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:20px}
-#confirm-overlay.open{display:flex}
-#confirm-box{background:var(–card);border:1px solid var(–border2);border-radius:20px;padding:24px;width:100%;max-width:340px;text-align:center}
-.confirm-title{font-size:17px;font-weight:900;margin-bottom:8px}
-.confirm-msg{font-size:13px;color:var(–text2);margin-bottom:20px;line-height:1.5}
-.confirm-btns{display:flex;gap:10px}
-.confirm-btns .btn{margin:0}
+/* UTILS */
+.gps-btn{width:100%;padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--border);color:var(--text);font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;font-family:'Cairo',sans-serif}
+.gps-pulse{width:10px;height:10px;background:var(--green);border-radius:50%;box-shadow:0 0 0 0 rgba(74,222,128,0.4);animation:pulse 2s infinite}
+@keyframes pulse{0%{transform:scale(0.95);box-shadow:0 0 0 0 rgba(74,222,128,0.7)}70%{transform:scale(1);box-shadow:0 0 0 10px rgba(74,222,128,0)}100%{transform:scale(0.95);box-shadow:0 0 0 0 rgba(74,222,128,0)}}
 
-/* TOAST */
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(–card2);border:1px solid var(–border2);border-radius:14px;padding:12px 20px;font-size:14px;font-weight:700;z-index:30000;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#toast.success{border-color:rgba(74,222,128,0.4);color:var(–green)}
-#toast.error{border-color:rgba(244,63,94,0.4);color:var(–red)}
+.att-toggle{display:flex;gap:4px;background:var(--bg2);padding:4px;border-radius:12px;margin-top:8px}
+.att-btn{flex:1;padding:10px;border-radius:9px;border:none;background:transparent;color:var(--text3);font-size:12px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;transition:all 0.2s}
+.att-btn.present-active{background:var(--green2);color:#000}
+.att-btn.absent-active{background:var(--red);color:#fff}
 
-/* ARCHIVE */
-.archive-item{padding:12px 14px;border-radius:14px;background:var(–card2);border:1px solid var(–border);margin-bottom:6px;opacity:0.75;display:flex;align-items:center;gap:12px}
+.manage-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.manage-section-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1px;margin-bottom:10px;text-transform:uppercase}
+
+.archive-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:var(--card2);border:1px solid var(--border);margin-bottom:8px}
 .archive-name{font-size:14px;font-weight:700}
-.archive-meta{font-size:11px;color:var(–text3);margin-top:2px}
+.archive-meta{font-size:11px;color:var(--text3);margin-top:2px}
+
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--card);border:1px solid var(--border2);padding:12px 24px;border-radius:16px;z-index:20000;font-weight:700;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,0.3);transition:all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (max-width: 400px) {
+  .login-logo{font-size:42px}
+  .numpad{gap:8px}
+  .num-btn{padding:15px;font-size:20px}
+}
 </style>
-
 </head>
-<body>
-
-<!-- LOGIN -->
+<body class="dark">
 
 <div id="login-screen">
   <div class="login-wrap">
     <div class="login-logo">أوتاد</div>
     <div class="login-sub">نظام إدارة الفرقة الكشفية</div>
     <div class="login-box">
-      <div class="pin-display" id="pin-dots">
-        <div class="pin-dot"></div><div class="pin-dot"></div>
-        <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-display" id="pin-display">
+        <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
       </div>
       <div class="numpad">
-        <button class="num-btn" onclick="PIN.press('1')">١</button>
-        <button class="num-btn" onclick="PIN.press('2')">٢</button>
-        <button class="num-btn" onclick="PIN.press('3')">٣</button>
-        <button class="num-btn" onclick="PIN.press('4')">٤</button>
-        <button class="num-btn" onclick="PIN.press('5')">٥</button>
-        <button class="num-btn" onclick="PIN.press('6')">٦</button>
-        <button class="num-btn" onclick="PIN.press('7')">٧</button>
-        <button class="num-btn" onclick="PIN.press('8')">٨</button>
-        <button class="num-btn" onclick="PIN.press('9')">٩</button>
-        <button class="num-btn del" onclick="PIN.del()">⌫</button>
-        <button class="num-btn" onclick="PIN.press('0')">٠</button>
-        <button class="num-btn enter" onclick="PIN.submit()">دخول</button>
+        <button class="num-btn" onclick="Login.add(1)">1</button>
+        <button class="num-btn" onclick="Login.add(2)">2</button>
+        <button class="num-btn" onclick="Login.add(3)">3</button>
+        <button class="num-btn" onclick="Login.add(4)">4</button>
+        <button class="num-btn" onclick="Login.add(5)">5</button>
+        <button class="num-btn" onclick="Login.add(6)">6</button>
+        <button class="num-btn" onclick="Login.add(7)">7</button>
+        <button class="num-btn" onclick="Login.add(8)">8</button>
+        <button class="num-btn" onclick="Login.add(9)">9</button>
+        <button class="num-btn del" onclick="Login.del()">مسح</button>
+        <button class="num-btn" onclick="Login.add(0)">0</button>
+        <button class="num-btn enter" onclick="Login.submit()">دخول</button>
       </div>
-      <div class="login-error" id="login-err"></div>
+      <div class="login-error" id="login-error"></div>
     </div>
-    <div onclick="App.hardReset()" style="margin-top:40px;color:var(--border2);font-size:10px;cursor:pointer;text-align:center;letter-spacing:1px">تهيئة النظام</div>
   </div>
 </div>
 
-<!-- APP -->
-
 <div id="app">
-  <div class="header">
-    <div class="header-user">
-      <div class="avatar" id="h-avatar" style="color:var(--green);border-color:var(--green)">؟</div>
-      <div>
-        <div class="header-name" id="h-name">---</div>
-        <div class="header-rank" id="h-rank"></div>
-      </div>
+  <header class="header">
+    <div class="header-user" id="header-user">
+      <div class="avatar" style="color:var(--green)">--</div>
+      <div><div class="header-name">جاري التحميل...</div><div class="header-rank">الرجاء الانتظار</div></div>
     </div>
     <div class="header-actions">
-      <div class="icon-btn" onclick="App.toggleTheme()">🌙</div>
-      <div class="icon-btn" onclick="App.logout()">خروج</div>
+      <button class="icon-btn" onclick="App.toggleTheme()">🌓</button>
+      <button class="icon-btn" onclick="App.logout()">خروج</button>
     </div>
-  </div>
+  </header>
 
-  <div class="page active" id="page-home"></div>
-  <div class="page" id="page-field"></div>
-  <div class="page" id="page-attendance"></div>
-  <div class="page" id="page-leaderboard"></div>
-  <div class="page" id="page-dashboard"></div>
-  <div class="page" id="page-manage"></div>
+  <main>
+    <div id="page-home" class="page">
+      <div class="card pts-card">
+        <div class="pts-num" id="user-pts">0</div>
+        <div class="pts-label">رصيد نقاطك</div>
+      </div>
+      <div class="section-title">📢 الإعلانات الأخيرة</div>
+      <div class="card" id="ann-list"></div>
+      <div class="section-title">🏅 أوسمتي</div>
+      <div class="card"><div class="badges-grid" id="user-badges"></div></div>
+    </div>
 
-  <nav id="main-nav">
-    <div class="nav-item active" onclick="App.tab('home',this)">
-      <span class="nav-icon">🏠</span>الرئيسية
+    <div id="page-tasks" class="page">
+      <div class="section-title">📅 المهام المتاحة</div>
+      <div id="task-list"></div>
     </div>
-    <div class="nav-item" onclick="App.tab('field',this)">
-      <span class="nav-icon">⚔️</span>الميدان
+
+    <div id="page-field" class="page">
+      <div id="field-content"></div>
     </div>
-    <div class="nav-item" onclick="App.tab('attendance',this)">
-      <span class="nav-icon">📋</span>الحضور
-    </div>
-    <div class="nav-item" onclick="App.tab('leaderboard',this)">
-      <span class="nav-icon">🏆</span>الترتيب
-    </div>
-    <div class="nav-item hidden" id="nav-dashboard" onclick="App.tab('dashboard',this)">
-      <span class="nav-icon">📊</span>لوحة القيادة
-    </div>
-    <div class="nav-item hidden" id="nav-manage" onclick="App.tab('manage',this)">
-      <span class="nav-icon">🛡️</span>الإدارة
-    </div>
+
+    <div id="page-attendance" class="page"></div>
+
+    <div id="page-leaderboard" class="page"></div>
+
+    <div id="page-dashboard" class="page"></div>
+
+    <div id="page-manage" class="page"></div>
+  </main>
+
+  <nav>
+    <div class="nav-item active" onclick="App.page('home')"><span class="nav-icon">🏠</span><span>الرئيسية</span></div>
+    <div class="nav-item" onclick="App.page('tasks')"><span class="nav-icon">🎯</span><span>المهام</span></div>
+    <div class="nav-item" onclick="App.page('field')"><span class="nav-icon">🛡️</span><span>الميدان</span></div>
+    <div class="nav-item" onclick="App.page('attendance')"><span class="nav-icon">📍</span><span>الحضور</span></div>
+    <div class="nav-item" onclick="App.page('leaderboard')"><span class="nav-icon">🏆</span><span>الترتيب</span></div>
+    <div id="nav-admin" class="nav-item hidden" onclick="App.page('dashboard')"><span class="nav-icon">⚙️</span><span>الإدارة</span></div>
   </nav>
 </div>
 
-<div id="modal-overlay" onclick="UI.closeModal(event)">
-  <div id="modal-box"></div>
+<div class="modal-overlay" id="modal">
+  <div class="modal-content" id="modal-content"></div>
 </div>
-<div id="confirm-overlay">
-  <div id="confirm-box">
-    <div class="confirm-title" id="confirm-title"></div>
-    <div class="confirm-msg" id="confirm-msg"></div>
-    <div class="confirm-btns">
-      <button class="btn btn-ghost" style="flex:1;padding:13px;margin:0" onclick="UI.confirmNo()">إلغاء</button>
-      <button class="btn btn-red" id="confirm-yes-btn" style="flex:1;padding:13px;margin:0" onclick="UI.confirmYes()">تأكيد</button>
-    </div>
-  </div>
-</div>
-<div id="toast"></div>
+
+<div id="toast" class="toast"></div>
 
 <script>
-// ─── FIREBASE ───
-const fbConfig = { apiKey:"AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE", databaseURL:"https://awtad-system-default-rtdb.firebaseio.com" };
-firebase.initializeApp(fbConfig);
-const DB = firebase.database().ref("awtad_v5");
-
-// ─── TEAM COLORS ───
-const TC = ['#4ade80','#60a5fa','#f59e0b','#a78bfa','#f43f5e','#34d399','#fb923c','#e879f9'];
-function teamColor(name){ if(!name)return TC[0]; let h=0; for(let c of name) h=(h*31+c.charCodeAt(0))%TC.length; return TC[h]; }
-function initials(name){ if(!name)return'؟'; const p=name.trim().split(' '); return p[0][0]+(p[1]?p[1][0]:''); }
-function hexRgb(hex){ return `${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)}`; }
+// ─── CONFIG ───
+const firebaseConfig = {
+  databaseURL: "https://awtad-scout-default-rtdb.firebaseio.com"
+};
+firebase.initializeApp(firebaseConfig);
+const DB = firebase.database().ref();
 
 // ─── STATE ───
-const S = { user:null, members:{}, logs:[], announcements:[], sessions:[], tasks:[], inviteCodes:{}, archived:{}, tab:'home', lbTab:'global' };
+let S = {
+  user: null,
+  members: {},
+  tasks: [],
+  sessions: [],
+  announcements: [],
+  logs: [],
+  inviteCodes: {},
+  archived: {},
+  page: 'home',
+  lbTab: 'global',
+  pin: ''
+};
 
-// ─── PIN ───
-const PIN = {
-  val:'',
-  press(n){ if(this.val.length>=4)return; this.val+=n; this.update(); if(this.val.length===4) setTimeout(()=>this.submit(),250); },
-  del(){ this.val=this.val.slice(0,-1); this.update(); },
-  update(){ document.querySelectorAll('.pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<this.val.length)); },
+// ─── UTILS ───
+const hexRgb = (hex) => {
+  const r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16);
+  return `${r},${g},${b}`;
+};
+const teamColor = (t) => {
+  const colors = { 'ليث': '#4ade80', 'صقر': '#fbbf24', 'ذئب': '#60a5fa', 'فهد': '#f43f5e', 'نمر': '#a78bfa' };
+  return colors[t] || '#4ade80';
+};
+const initials = (n) => n.split(' ').map(x=>x[0]).join('').slice(0,2);
+
+// ─── CORE ───
+const App = {
+  init(){
+    DB.on('value', snap => {
+      const data = snap.val() || {};
+      S.members = data.members || {};
+      S.tasks = Object.values(data.tasks || {}).sort((a,b)=>b.ts-a.ts);
+      S.sessions = Object.values(data.sessions || {}).sort((a,b)=>b.ts-a.ts);
+      S.announcements = Object.values(data.announcements || {}).sort((a,b)=>b.ts-a.ts);
+      S.logs = Object.values(data.logs || {}).sort((a,b)=>b.ts-a.ts);
+      S.inviteCodes = data.inviteCodes || {};
+      S.archived = data.archived || {};
+      if(S.user) {
+        S.user = S.members[S.user.pin] || S.user;
+        Render.all();
+      }
+    });
+  },
+  page(p){
+    S.page = p;
+    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    document.getElementById(`page-${p}`).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+    const idx = ['home','tasks','field','attendance','leaderboard','dashboard','manage'].indexOf(p);
+    if(idx!==-1 && idx < 5) document.querySelectorAll('.nav-item')[idx].classList.add('active');
+    if(p==='dashboard'||p==='manage') document.getElementById('nav-admin').classList.add('active');
+    window.scrollTo(0,0);
+  },
+  toggleTheme(){
+    const b = document.body;
+    b.classList.toggle('light');
+    localStorage.setItem('awtad_theme', b.classList.contains('light')?'light':'dark');
+    if(S.page==='dashboard') Render.dashboard();
+  },
+  log(txt){
+    DB.child('logs').push({txt, time: new Date().toLocaleTimeString('ar-SA'), ts: Date.now()});
+  },
+  logout(){
+    localStorage.removeItem('awtad_pin');
+    location.reload();
+  }
+};
+
+// ─── LOGIN ───
+const Login = {
+  add(n){
+    if(S.pin.length<6){ S.pin+=n; this.update(); }
+    if(S.pin.length>=4) { /* auto submit maybe? */ }
+  },
+  del(){ S.pin=S.pin.slice(0,-1); this.update(); },
+  update(){
+    const dots = document.querySelectorAll('.pin-dot');
+    dots.forEach((d,i)=>d.className = i<S.pin.length?'pin-dot filled':'pin-dot');
+  },
   async submit(){
-    const p=this.val; if(!p)return;
-    document.getElementById('login-err').textContent='';
-    try{
-      const snap=await DB.child('members').once('value');
-      const m=snap.val()||{};
-      if(m[p]){ S.user={...m[p],id:p}; App.boot(); }
-      else{ document.getElementById('login-err').textContent='الرمز غير صحيح'; this.val=''; this.update(); }
-    }catch(e){ document.getElementById('login-err').textContent='خطأ في الاتصال'; this.val=''; this.update(); }
+    const err = document.getElementById('login-error');
+    err.textContent = 'جاري التحقق...';
+    const pin = S.pin;
+    if(!S.members[pin]){
+      err.textContent = 'الرمز غير صحيح';
+      S.pin = ''; this.update();
+      return;
+    }
+    S.user = S.members[pin];
+    localStorage.setItem('awtad_pin', pin);
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    if(S.user.role==='ROOT'||S.user.role==='LEADER') document.getElementById('nav-admin').classList.remove('hidden');
+    App.init();
+    UI.toast(`أهلاً بك يا ${S.user.name.split(' ')[0]} 👋`);
+  },
+  auto(){
+    const p = localStorage.getItem('awtad_pin');
+    if(p) { S.pin = p; this.submit(); }
   }
 };
 
 // ─── UI ───
 const UI = {
-  toast(msg,type='success'){
-    const t=document.getElementById('toast');
-    t.textContent=msg; t.className='show '+type;
-    setTimeout(()=>t.className='',2500);
+  openModal(html){
+    document.getElementById('modal-content').innerHTML = html;
+    document.getElementById('modal').style.display = 'flex';
   },
-  openModal(html){ document.getElementById('modal-box').innerHTML=html; document.getElementById('modal-overlay').classList.add('open'); },
-  closeModal(e){ if(!e||e.target.id==='modal-overlay') document.getElementById('modal-overlay').classList.remove('open'); },
-  _cb:null,
-  confirm(title,msg,label,cb){
-    document.getElementById('confirm-title').textContent=title;
-    document.getElementById('confirm-msg').textContent=msg;
-    document.getElementById('confirm-yes-btn').textContent=label;
-    this._cb=cb;
-    document.getElementById('confirm-overlay').classList.add('open');
-  },
-  confirmYes(){ document.getElementById('confirm-overlay').classList.remove('open'); if(this._cb)this._cb(); },
-  confirmNo(){ document.getElementById('confirm-overlay').classList.remove('open'); }
-};
-
-// ─── APP ───
-const App = {
-  boot(){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='block';
-    if(S.user.role==='ROOT'||S.user.role==='LEADER'){
-      if(S.user.role==='ROOT'){
-        document.getElementById('nav-dashboard').classList.remove('hidden');
-        document.getElementById('nav-manage').classList.remove('hidden');
-      }
-    }
-    App.log(`دخل [${S.user.name}] إلى النظام`);
-    App.sync();
-  },
-  sync(){
-    DB.on('value',snap=>{
-      const d=snap.val()||{};
-      S.members=d.members||{};
-      S.archived=d.archived||{};
-      S.logs=Object.values(d.logs||{}).sort((a,b)=>b.ts-a.ts);
-      S.announcements=Object.values(d.announcements||{}).sort((a,b)=>b.ts-a.ts);
-      S.sessions=Object.values(d.sessions||{}).sort((a,b)=>b.ts-a.ts);
-      S.tasks=Object.values(d.tasks||{}).sort((a,b)=>b.ts-a.ts);
-      S.inviteCodes=d.inviteCodes||{};
-      const me=S.members[S.user.id];
-      if(me){
-        S.user={...me,id:S.user.id};
-        document.getElementById('h-name').textContent=me.name;
-        document.getElementById('h-rank').textContent=`${me.rank} | ${me.team}`;
-        const col=teamColor(me.team);
-        const av=document.getElementById('h-avatar');
-        av.textContent=initials(me.name); av.style.color=col; av.style.borderColor=col;
-      }
-      Render[S.tab]();
-    });
-  },
-  tab(name,el){
-    S.tab=name;
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById('page-'+name).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-    if(el)el.classList.add('active');
-    Render[name]();
-  },
-  toggleTheme(){ document.body.classList.toggle('light'); localStorage.setItem('awtad_theme',document.body.classList.contains('light')?'light':'dark'); },
-  logout(){ UI.confirm('تسجيل الخروج','هل تريد الخروج من النظام؟','خروج',()=>location.reload()); },
-  log(txt){ DB.child('logs').push({txt,ts:Date.now(),time:new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'})}); },
-  hardReset: async ()=>{
-    const k=prompt('أدخل رمز المالك:'); if(k!=='7777')return;
-    const m={};
-    [{n:'سلمان الصويلح',r:'قائد الفرقة',p:'1111'},{n:'معاذ الشنقيطي',r:'نائب قائد الفرقة',p:'2222'},{n:'عبدالله العرفه',r:'قائد طليعة',p:'1000'}]
-      .forEach(a=>{ m[a.p]={name:a.n,role:'ROOT',rank:a.r,team:'الفرقة الرئيسية',pts:0,pin:a.p,badges:['مؤسس'],isPresent:false,joinDate:Date.now()}; });
-    ['الوليد فيصل الحازمي','يحيى علي شراحيلي','صالح سعيد حبتور'].forEach((n,i)=>{
-      const p=(2000+i).toString();
-      m[p]={name:n,role:i===0?'LEADER':'USER',rank:i===0?'قائد طليعة':'كشاف',team:'طليعة النسر',pts:0,pin:p,badges:['عضو جديد'],isPresent:false,joinDate:Date.now()};
-    });
-    await DB.set({members:m,inviteCodes:{'الفرقة الرئيسية':'FRQ001','طليعة النسر':'NSR2024'},logs:{init:{txt:'تم تأسيس النظام',ts:Date.now(),time:'00:00'}},announcements:{},sessions:{},tasks:{},archived:{}});
-    alert('تمت التهيئة!\nعبدالله: 1000 | سلمان: 1111 | معاذ: 2222\nطليعة النسر: 2000,2001,2002');
+  closeModal(){ document.getElementById('modal').style.display = 'none'; },
+  toast(txt, type='success'){
+    const t = document.getElementById('toast');
+    t.textContent = txt;
+    t.style.borderColor = type==='error'?'var(--red)':'var(--green)';
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 3000);
   }
 };
 
 // ─── RENDER ───
 const Render = {
-  home(){
-    const me=S.members[S.user.id]; if(!me)return;
-    const root=document.getElementById('page-home');
-    let attCount=0,totalSess=0;
-    S.sessions.forEach(s=>{ if(s.team===me.team){totalSess++; if(s.attendance&&s.attendance[S.user.id])attCount++;} });
-    const attRate=totalSess?Math.round(attCount/totalSess*100):0;
-    const myTasks=S.tasks.filter(t=>!t.done&&(t.assignedTo===S.user.id||t.assignedTo==='all'));
-    const annHtml=S.announcements.slice(0,3).map(a=>`
-      <div class="ann-item">
-        <div style="padding-top:4px"><span class="dot dot-green"></span></div>
-        <div style="flex:1">
-          <div class="ann-text">${a.text}</div>
-          <div style="display:flex;gap:8px;margin-top:4px"><span class="ann-author">${a.author}</span><span class="ann-time">${a.time}</span></div>
-        </div>
-      </div>`).join('')||'<div style="color:var(--text3);font-size:13px;padding:8px 0">لا توجد إعلانات حالياً</div>';
-    const taskHtml=myTasks.slice(0,3).map(t=>`
-      <div class="task-item">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-          <div><div class="task-title">${t.title}</div><div class="task-desc">${t.desc||''}</div></div>
-          <span class="badge badge-gold">+${t.pts||0} نقطة</span>
-        </div>
-        <div class="task-footer">
-          ${t.due?`<span style="font-size:11px;color:var(--text3)">📅 ${t.due}</span>`:''}
-          <button class="btn btn-green btn-sm" onclick="Tasks.complete('${t.id}','${S.user.id}')">إنجاز ✓</button>
-        </div>
-      </div>`).join('');
-    root.innerHTML=`
-      <div class="card pts-card">
-        <div class="pts-label">مجموع نقاطي</div>
-        <div class="pts-num">${me.pts||0}</div>
-        <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap">
-          <span class="badge ${me.isPresent?'badge-green':'badge-red'}"><span class="dot ${me.isPresent?'dot-green':'dot-red'}"></span>${me.isPresent?'حاضر':'غائب'}</span>
-          <span class="badge badge-blue">📊 ${attRate}% حضور</span>
-          <span class="badge badge-purple">🎖️ ${(me.badges||[]).length} وسام</span>
-        </div>
-      </div>
-      <div class="section-title">📢 الإعلانات</div>
-      <div class="card">${annHtml}</div>
-      ${myTasks.length?`<div class="section-title">📝 مهامي (${myTasks.length})</div><div>${taskHtml}</div>`:''}
-      <div class="section-title">🏅 أوسمتي</div>
-      <div class="card">
-        <div class="badges-grid">${(me.badges||[]).map(b=>`<div class="badge-item earned">🏅 ${b}</div>`).join('')||'<div style="color:var(--text3);font-size:13px">لا توجد أوسمة بعد</div>'}</div>
-      </div>`;
+  all(){
+    this.header();
+    this[S.page]();
+    if(S.user.role==='ROOT') { this.dashboard(); this.manage(); }
   },
-
+  header(){
+    const h = document.getElementById('header-user');
+    const col = teamColor(S.user.team);
+    h.innerHTML = `
+      <div class="avatar" style="background:rgba(${hexRgb(col)},0.15);color:${col}">${initials(S.user.name)}</div>
+      <div><div class="header-name">${S.user.name}</div><div class="header-rank">${S.user.rank} · ${S.user.team}</div></div>`;
+  },
+  home(){
+    document.getElementById('user-pts').textContent = S.user.pts || 0;
+    document.getElementById('ann-list').innerHTML = S.announcements.slice(0,5).map(a=>`
+      <div class="ann-item">
+        <div style="flex:1"><div class="ann-text">${a.text}</div><div class="ann-time">${a.time} · <span class="ann-author">${a.author}</span></div></div>
+      </div>`).join('') || '<div style="color:var(--text3);font-size:13px;padding:10px 0">لا توجد إعلانات</div>';
+    document.getElementById('user-badges').innerHTML = (S.user.badges||[]).map(b=>`<div class="badge-item earned">🏅 ${b}</div>`).join('') || '<div style="color:var(--text3);font-size:11px">لم تحصل على أوسمة بعد</div>';
+  },
+  tasks(){
+    const root = document.getElementById('task-list');
+    const my = S.tasks.filter(t=>t.assignedTo==='all'||t.assignedTo===S.user.id);
+    root.innerHTML = my.map(t=>`
+      <div class="task-item" style="${t.done?'opacity:0.6':''}">
+        <div style="display:flex;justify-content:space-between">
+          <div class="task-title">${t.title}</div>
+          <div class="task-pts">+${t.pts}</div>
+        </div>
+        <div class="task-desc">${t.desc}</div>
+        <div class="task-footer">
+          <span class="badge ${t.done?'badge-green':'badge-gold'}">${t.done?'مكتملة ✓':'قيد التنفيذ'}</span>
+          ${t.due?`<span class="badge badge-blue">📅 ${t.due}</span>`:''}
+          ${!t.done?`<button class="btn btn-green btn-sm" style="margin-right:auto" onclick="Tasks.complete('${t.id}','${S.user.id}')">إتمام</button>`:''}
+        </div>
+      </div>`).join('') || '<div style="color:var(--text3);text-align:center;padding:40px 0">لا توجد مهام حالياً</div>';
+  },
   field(){
-    const root=document.getElementById('page-field');
-    const isRoot=S.user.role==='ROOT';
-    const isLeader=S.user.role==='LEADER'||isRoot;
-    const teams=[...new Set(Object.values(S.members).map(m=>m.team))];
-    let html='';
-    teams.forEach(team=>{
-      if(!isRoot&&S.user.team!==team)return;
-      const members=Object.entries(S.members).filter(([,m])=>m.team===team);
-      const col=teamColor(team);
-      const present=members.filter(([,m])=>m.isPresent).length;
-      const total=members.reduce((s,[,m])=>s+(m.pts||0),0);
-      html+=`<div class="team-header">
-        <div class="team-color" style="background:${col}"></div>
-        <div><div class="team-name" style="color:${col}">${team}</div><div class="team-count">${members.length} عضو · ${present} حاضر</div></div>
-        <div class="team-pts-total">${total} نقطة</div>
-      </div>`;
-      members.forEach(([id,m])=>{
-        const c=teamColor(m.team);
-        html+=`<div class="member-row" onclick="${isLeader?`Members.openProfile('${id}')`:''}" style="${!isLeader?'cursor:default':''}">
-          <div class="member-avatar" style="background:rgba(${hexRgb(c)},0.15);color:${c}">${initials(m.name)}</div>
-          <div style="flex:1;min-width:0">
-            <div class="member-name">${m.name}</div>
-            <div class="member-rank">${m.rank} ${m.role==='ROOT'?'<span class="badge badge-gold">قائد فرقة</span>':m.role==='LEADER'?'<span class="badge badge-blue">قائد طليعة</span>':''}</div>
-          </div>
-          <span class="dot ${m.isPresent?'dot-green':'dot-red'}" style="margin-left:4px"></span>
-          <div class="member-pts">${m.pts||0}</div>
-        </div>`;
-      });
-    });
-    root.innerHTML=`<div class="section-title">⚔️ الفرقة الكشفية</div>${html}`;
+    const root = document.getElementById('field-content');
+    const teams = [...new Set(Object.values(S.members).map(m=>m.team))];
+    root.innerHTML = teams.map(t=>{
+      const mems = Object.entries(S.members).filter(([,m])=>m.team===t).sort((a,b)=>(b[1].pts||0)-(a[1].pts||0));
+      const total = mems.reduce((s,[,m])=>s+(m.pts||0),0);
+      return `
+        <div class="team-header">
+          <div class="team-color" style="background:${teamColor(t)}"></div>
+          <div class="team-name">${t}</div>
+          <div class="team-count">${mems.length} أعضاء</div>
+          <div class="team-pts-total">${total} ن</div>
+        </div>
+        ${mems.map(([id,m])=>`
+          <div class="member-row" onclick="Members.openProfile('${id}')">
+            <div class="member-avatar" style="background:rgba(${hexRgb(teamColor(t))},0.1);color:${teamColor(t)}">${initials(m.name)}</div>
+            <div style="flex:1"><div class="member-name">${m.name}</div><div class="member-rank">${m.rank}</div></div>
+            <div style="text-align:right"><div class="member-pts">${m.pts||0}</div><div class="dot ${m.isPresent?'dot-green':'dot-red'}"></div></div>
+          </div>`).join('')}`;
+    }).join('');
   },
 
   attendance(){
@@ -608,156 +588,153 @@ const Render = {
     root.innerHTML=`
       <div class="section-title">📣 إرسال إعلان</div>
       <div class="card"><textarea id="ann-text" placeholder="اكتب الإعلان هنا..."></textarea>
-
-```
-  <button class="btn btn-green" onclick="Admin.sendAnn()">إرسال للجميع 📢</button></div>
-  <div class="section-title">➕ إدارة الأعضاء</div>
-  <div class="card" style="display:flex;gap:8px">
-    <button class="btn btn-gold btn-sm" style="flex:1;padding:13px" onclick="Admin.showAdd()">إضافة عضو</button>
-    <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Admin.showAddTask()">إضافة مهمة</button>
-  </div>
-  <div class="section-title">🔑 رموز الدعوة</div>
-  <div class="card">${invHtml}</div>
-  <div class="section-title">🗂️ الأرشيف</div>
-  ${archHtml}`;
-```
-
-}
+      <button class="btn btn-green" onclick="Admin.sendAnn()">إرسال للجميع 📢</button></div>
+      <div class="section-title">➕ إدارة الأعضاء</div>
+      <div class="card" style="display:flex;gap:8px">
+        <button class="btn btn-gold btn-sm" style="flex:1;padding:13px" onclick="Admin.showAdd()">إضافة عضو</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Admin.showAddTask()">إضافة مهمة</button>
+      </div>
+      <div class="section-title">🔑 رموز الدعوة</div>
+      <div class="card">${invHtml}</div>
+      <div class="section-title">🗂️ الأرشيف</div>
+      ${archHtml}`;
+  }
 };
 
 // ─── MEMBERS ───
 const Members = {
-openProfile(id){
-const m=S.members[id]; if(!m)return;
-const isRoot=S.user.role===‘ROOT’;
-const col=teamColor(m.team);
-let attC=0,totS=0;
-S.sessions.forEach(s=>{ if(s.team===m.team){totS++; if(s.attendance&&s.attendance[id])attC++;} });
-const attR=totS?Math.round(attC/totS*100):0;
-UI.openModal(` <div style="text-align:center;margin-bottom:16px"> <div style="width:64px;height:64px;border-radius:18px;background:rgba(${hexRgb(col)},0.2);color:${col};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 12px;border:2px solid ${col}">${initials(m.name)}</div> <div style="font-size:20px;font-weight:900">${m.name}</div> <div style="font-size:13px;color:var(--text2);margin-top:4px">${m.rank} · ${m.team}</div> <div style="display:flex;gap:16px;justify-content:center;margin-top:16px"> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--gold)">${m.pts||0}</div><div style="font-size:11px;color:var(--text3)">النقاط</div></div> <div style="width:1px;background:var(--border)"></div> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--green)">${attR}%</div><div style="font-size:11px;color:var(--text3)">الحضور</div></div> <div style="width:1px;background:var(--border)"></div> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--purple)">${(m.badges||[]).length}</div><div style="font-size:11px;color:var(--text3)">الأوسمة</div></div> </div> <div style="margin-top:10px"><span class="badge ${m.isPresent?'badge-green':'badge-red'}">${m.isPresent?'حاضر ✓':'غائب ✗'}</span></div> </div> ${isRoot?`
-<div class="manage-section"><div class="manage-section-title">تعديل الحضور</div>
-<div class="att-toggle">
-<button class="att-btn ${m.isPresent?'present-active':''}" onclick="Members.setAtt('${id}',true)">حاضر ✓</button>
-<button class="att-btn ${!m.isPresent?'absent-active':''}" onclick="Members.setAtt('${id}',false)">غائب ✗</button>
-</div>
-</div>
-<div class="manage-section"><div class="manage-section-title">تعديل النقاط</div>
-<input type="number" id="pts-v" placeholder="عدد النقاط" min="1">
-<div style="display:flex;gap:8px;margin-top:8px">
-<button class="btn btn-green btn-sm" style="flex:1;padding:13px" onclick="Members.pts('${id}',1)">إضافة +</button>
-<button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Members.pts('${id}',-1)">خصم −</button>
-</div>
-</div>
-<div class="manage-section"><div class="manage-section-title">منح وسام</div>
-<input id="bdg-v" placeholder="اسم الوسام">
-<button class="btn btn-gold" onclick="Members.badge('${id}')">منح الوسام 🏅</button>
-</div>
-<div class="manage-section"><div class="manage-section-title">تغيير الرمز السري</div>
-<input id="pin-v" placeholder="الرمز الجديد (4+ أرقام)" type="number">
-<button class="btn btn-ghost" onclick="Members.pin('${id}')">تحديث الرمز</button>
-</div>
-${id!==S.user.id?`<div class="manage-section"><div class="manage-section-title">حذف العضو</div> <button class="btn btn-red" onclick="Members.archive('${id}')">أرشفة العضو 🗂️</button> </div>`:’’}
-`:''} <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
-},
-setAtt(id,val){ DB.child(‘members’).child(id).update({isPresent:val}); App.log(`${S.user.name} سجّل [${S.members[id].name}] كـ ${val?'حاضر':'غائب'}`); UI.toast(val?‘تم تسجيل الحضور ✓’:‘تم تسجيل الغياب’); UI.closeModal(); },
-pts(id,dir){ const v=parseInt(document.getElementById(‘pts-v’).value); if(!v||v<=0){UI.toast(‘أدخل عدد صحيح’,‘error’);return;} DB.child(‘members’).child(id).update({pts:(S.members[id].pts||0)+v*dir}); App.log(`${S.user.name} ${dir>0?'أضاف':'خصم'} ${v} نقطة ${dir>0?'لـ':'من'} ${S.members[id].name}`); UI.toast(dir>0?`+${v} نقطة ✓`:`−${v} نقطة`); UI.closeModal(); },
-badge(id){ const b=document.getElementById(‘bdg-v’).value.trim(); if(!b){UI.toast(‘اكتب اسم الوسام’,‘error’);return;} DB.child(‘members’).child(id).update({badges:[…(S.members[id].badges||[]),b]}); App.log(`${S.user.name} منح وسام [${b}] لـ ${S.members[id].name}`); UI.toast(‘تم منح الوسام 🏅’); UI.closeModal(); },
-pin(id){ const np=document.getElementById(‘pin-v’).value.trim(); if(!np||np.length<4){UI.toast(‘الرمز يجب 4 أرقام على الأقل’,‘error’);return;} if(S.members[np]&&np!==id){UI.toast(‘الرمز مستخدم مسبقاً’,‘error’);return;} const old=S.members[id].pin; DB.child(‘members’).child(id).update({pin:np}); App.log(`${S.user.name} غيّر رمز ${S.members[id].name} من ${old} إلى ${np}`); UI.toast(‘تم تحديث الرمز ✓’); UI.closeModal(); },
-archive(id){ const m=S.members[id]; UI.confirm(`أرشفة ${m.name}`,`سيُنقل ${m.name} للأرشيف مع الاحتفاظ بسجله كاملاً`,‘أرشفة’,()=>{ DB.child(‘archived’).child(id).set({…m,archivedAt:new Date().toLocaleDateString(‘ar-SA’)}); DB.child(‘members’).child(id).remove(); App.log(`${S.user.name} أرشف [${m.name}]`); UI.toast(`تمت أرشفة ${m.name} 🗂️`); UI.closeModal(); }); }
+  openProfile(id){
+    const m=S.members[id]; if(!m)return;
+    const isRoot=S.user.role==='ROOT';
+    const col=teamColor(m.team);
+    let attC=0,totS=0;
+    S.sessions.forEach(s=>{ if(s.team===m.team){totS++; if(s.attendance&&s.attendance[id])attC++;} });
+    const attR=totS?Math.round(attC/totS*100):0;
+    UI.openModal(` <div style="text-align:center;margin-bottom:16px"> <div style="width:64px;height:64px;border-radius:18px;background:rgba(${hexRgb(col)},0.2);color:${col};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 12px;border:2px solid ${col}">${initials(m.name)}</div> <div style="font-size:20px;font-weight:900">${m.name}</div> <div style="font-size:13px;color:var(--text2);margin-top:4px">${m.rank} · ${m.team}</div> <div style="display:flex;gap:16px;justify-content:center;margin-top:16px"> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--gold)">${m.pts||0}</div><div style="font-size:11px;color:var(--text3)">النقاط</div></div> <div style="width:1px;background:var(--border)"></div> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--green)">${attR}%</div><div style="font-size:11px;color:var(--text3)">الحضور</div></div> <div style="width:1px;background:var(--border)"></div> <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:var(--purple)">${(m.badges||[]).length}</div><div style="font-size:11px;color:var(--text3)">الأوسمة</div></div> </div> <div style="margin-top:10px"><span class="badge ${m.isPresent?'badge-green':'badge-red'}">${m.isPresent?'حاضر ✓':'غائب ✗'}</span></div> </div> ${isRoot?`
+    <div class="manage-section"><div class="manage-section-title">تعديل الحضور</div>
+    <div class="att-toggle">
+    <button class="att-btn ${m.isPresent?'present-active':''}" onclick="Members.setAtt('${id}',true)">حاضر ✓</button>
+    <button class="att-btn ${!m.isPresent?'absent-active':''}" onclick="Members.setAtt('${id}',false)">غائب ✗</button>
+    </div>
+    </div>
+    <div class="manage-section"><div class="manage-section-title">تعديل النقاط</div>
+    <input type="number" id="pts-v" placeholder="عدد النقاط" min="1">
+    <div style="display:flex;gap:8px;margin-top:8px">
+    <button class="btn btn-green btn-sm" style="flex:1;padding:13px" onclick="Members.pts('${id}',1)">إضافة +</button>
+    <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px" onclick="Members.pts('${id}',-1)">خصم −</button>
+    </div>
+    </div>
+    <div class="manage-section"><div class="manage-section-title">منح وسام</div>
+    <input id="bdg-v" placeholder="اسم الوسام">
+    <button class="btn btn-gold" onclick="Members.badge('${id}')">منح الوسام 🏅</button>
+    </div>
+    <div class="manage-section"><div class="manage-section-title">تغيير الرمز السري</div>
+    <input id="pin-v" placeholder="الرمز الجديد (4+ أرقام)" type="number">
+    <button class="btn btn-ghost" onclick="Members.pin('${id}')">تحديث الرمز</button>
+    </div>
+    ${id!==S.user.id?`<div class="manage-section"><div class="manage-section-title">حذف العضو</div> <button class="btn btn-red" onclick="Members.archive('${id}')">أرشفة العضو 🗂️</button> </div>`:''}
+    `:''} <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
+  },
+  setAtt(id,val){ DB.child('members').child(id).update({isPresent:val}); App.log(`${S.user.name} سجّل [${S.members[id].name}] كـ ${val?'حاضر':'غائب'}`); UI.toast(val?'تم تسجيل الحضور ✓':'تم تسجيل الغياب'); UI.closeModal(); },
+  pts(id,dir){ const v=parseInt(document.getElementById('pts-v').value); if(!v||v<=0){UI.toast('أدخل عدد صحيح','error');return;} DB.child('members').child(id).update({pts:(S.members[id].pts||0)+v*dir}); App.log(`${S.user.name} ${dir>0?'أضاف':'خصم'} ${v} نقطة ${dir>0?'لـ':'من'} ${S.members[id].name}`); UI.toast(dir>0?`+${v} نقطة ✓`:`−${v} نقطة`); UI.closeModal(); },
+  badge(id){ const b=document.getElementById('bdg-v').value.trim(); if(!b){UI.toast('اكتب اسم الوسام','error');return;} DB.child('members').child(id).update({badges:[...(S.members[id].badges||[]),b]}); App.log(`${S.user.name} منح وسام [${b}] لـ ${S.members[id].name}`); UI.toast('تم منح الوسام 🏅'); UI.closeModal(); },
+  pin(id){ const np=document.getElementById('pin-v').value.trim(); if(!np||np.length<4){UI.toast('الرمز يجب 4 أرقام على الأقل','error');return;} if(S.members[np]&&np!==id){UI.toast('الرمز مستخدم مسبقاً','error');return;} const old=S.members[id]; DB.child('members').child(np).set({...old, pin:np}); DB.child('members').child(id).remove(); UI.toast('تم تحديث الرمز ✓'); UI.closeModal(); },
+  archive(id){ if(!confirm('هل أنت متأكد من أرشفة هذا العضو؟'))return; const m=S.members[id]; DB.child('archived').child(id).set({...m, archivedAt:Date.now()}); DB.child('members').child(id).remove(); UI.toast('تمت أرشفة العضو 🗂️'); UI.closeModal(); }
 };
 
 // ─── ATTENDANCE ───
 const Attendance = {
-_att:{}, _gps:’’,
-newSession(){
-const myM=Object.entries(S.members).filter(([,m])=>m.team===S.user.team);
-this._att={}; this._gps=’’;
-myM.forEach(([id])=>{this._att[id]=false;});
-UI.openModal(` <div class="modal-title">📋 جلسة حضور جديدة</div> <label>عنوان الجلسة</label> <input id="s-title" placeholder="مثال: اجتماع أسبوعي، رحلة، تدريب..."> <label>ملاحظات (اختياري)</label> <textarea id="s-notes" placeholder="ملاحظات..."></textarea> <label>تحديد الموقع</label> <button class="gps-btn" style="margin-top:8px" onclick="Attendance.getGPS()"><div class="gps-pulse"></div>تحديد موقعي تلقائياً</button> <div id="gps-res" style="font-size:12px;color:var(--text3);margin-top:6px"></div> <label style="margin-top:16px">تسجيل الحضور</label> <div id="att-list">${myM.map(([id,m])=>`
-<div style="display:flex;align-items:center;gap:8px;margin-top:8px">
-<span style="font-size:13px;flex:1">${m.name}</span>
-<button class="att-btn" id="ap-${id}" onclick="Attendance.toggle('${id}',true)">حاضر</button>
-<button class="att-btn absent-active" id="aa-${id}" onclick="Attendance.toggle('${id}',false)">غائب</button>
-</div>`).join('')}</div> <button class="btn btn-green" onclick="Attendance.save()">حفظ الجلسة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
-},
-toggle(id,val){
-this._att[id]=val;
-document.getElementById(`ap-${id}`).className=‘att-btn’+(val?’ present-active’:’’);
-document.getElementById(`aa-${id}`).className=‘att-btn’+(val?’’:’ absent-active’);
-},
-getGPS(){
-if(!navigator.geolocation){UI.toast(‘المتصفح لا يدعم GPS’,‘error’);return;}
-document.getElementById(‘gps-res’).textContent=‘جاري التحديد…’;
-navigator.geolocation.getCurrentPosition(p=>{
-this._gps=`${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
-document.getElementById(‘gps-res’).textContent=`📍 ${this._gps}`;
-UI.toast(‘تم تحديد الموقع ✓’);
-},()=>{ document.getElementById(‘gps-res’).textContent=‘تعذّر الوصول للموقع’; UI.toast(‘تعذّر تحديد الموقع’,‘error’); });
-},
-save(){
-const title=document.getElementById(‘s-title’).value.trim()||‘جلسة’;
-const notes=document.getElementById(‘s-notes’).value.trim();
-const id=Date.now().toString();
-DB.child(‘sessions’).child(id).set({id,title,notes,date:new Date().toLocaleDateString(‘ar-SA’),team:S.user.team,gps:this._gps,attendance:{…this._att},ts:Date.now(),createdBy:S.user.name});
-App.log(`${S.user.name} سجّل جلسة [${title}] لـ ${S.user.team}`);
-UI.toast(‘تم حفظ الجلسة ✓’);
-UI.closeModal();
-}
+  _att:{}, _gps:'',
+  newSession(){
+    const myM=Object.entries(S.members).filter(([,m])=>m.team===S.user.team);
+    this._att={}; this._gps='';
+    myM.forEach(([id])=>{this._att[id]=false;});
+    UI.openModal(` <div class="modal-title">📋 جلسة حضور جديدة</div> <label>عنوان الجلسة</label> <input id="s-title" placeholder="مثال: اجتماع أسبوعي، رحلة، تدريب..."> <label>ملاحظات (اختياري)</label> <textarea id="s-notes" placeholder="ملاحظات..."></textarea> <label>تحديد الموقع</label> <button class="gps-btn" style="margin-top:8px" onclick="Attendance.getGPS()"><div class="gps-pulse"></div>تحديد موقعي تلقائياً</button> <div id="gps-res" style="font-size:12px;color:var(--text3);margin-top:6px"></div> <label style="margin-top:16px">تسجيل الحضور</label> <div id="att-list">${myM.map(([id,m])=>`
+    <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+    <span style="font-size:13px;flex:1">${m.name}</span>
+    <button class="att-btn" id="ap-${id}" onclick="Attendance.toggle('${id}',true)">حاضر</button>
+    <button class="att-btn absent-active" id="aa-${id}" onclick="Attendance.toggle('${id}',false)">غائب</button>
+    </div>`).join('')}</div> <button class="btn btn-green" onclick="Attendance.save()">حفظ الجلسة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
+  },
+  toggle(id,val){
+    this._att[id]=val;
+    document.getElementById(`ap-${id}`).className='att-btn'+(val?' present-active':'');
+    document.getElementById(`aa-${id}`).className='att-btn'+(val?'':' absent-active');
+  },
+  getGPS(){
+    if(!navigator.geolocation){UI.toast('المتصفح لا يدعم GPS','error');return;}
+    document.getElementById('gps-res').textContent='جاري التحديد...';
+    navigator.geolocation.getCurrentPosition(p=>{
+      this._gps=`${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
+      document.getElementById('gps-res').textContent=`📍 ${this._gps}`;
+      UI.toast('تم تحديد الموقع ✓');
+    },()=>{ document.getElementById('gps-res').textContent='تعذّر الوصول للموقع'; UI.toast('تعذّر تحديد الموقع','error'); });
+  },
+  save(){
+    const title=document.getElementById('s-title').value.trim()||'جلسة';
+    const notes=document.getElementById('s-notes').value.trim();
+    const id=Date.now().toString();
+    DB.child('sessions').child(id).set({id,title,notes,date:new Date().toLocaleDateString('ar-SA'),team:S.user.team,gps:this._gps,attendance:{...this._att},ts:Date.now(),createdBy:S.user.name});
+    App.log(`${S.user.name} سجّل جلسة [${title}] لـ ${S.user.team}`);
+    UI.toast('تم حفظ الجلسة ✓');
+    UI.closeModal();
+  }
 };
 
 // ─── TASKS ───
 const Tasks = {
-complete(taskId,userId){
-const t=S.tasks.find(x=>x.id===taskId); if(!t)return;
-DB.child(‘tasks’).child(taskId).update({done:true,completedBy:userId,completedAt:Date.now()});
-DB.child(‘members’).child(userId).update({pts:(S.members[userId].pts||0)+(t.pts||0)});
-App.log(`${S.members[userId].name} أنجز [${t.title}] وحصل على ${t.pts||0} نقطة`);
-UI.toast(`أحسنت! +${t.pts||0} نقطة 🎉`);
-}
+  complete(taskId,userId){
+    const t=S.tasks.find(x=>x.id===taskId); if(!t)return;
+    DB.child('tasks').child(taskId).update({done:true,completedBy:userId,completedAt:Date.now()});
+    DB.child('members').child(userId).update({pts:(S.members[userId].pts||0)+(t.pts||0)});
+    App.log(`${S.members[userId].name} أنجز [${t.title}] وحصل على ${t.pts||0} نقطة`);
+    UI.toast(`أحسنت! +${t.pts||0} نقطة 🎉`);
+  }
 };
 
 // ─── ADMIN ───
 const Admin = {
-sendAnn(){ const txt=document.getElementById(‘ann-text’).value.trim(); if(!txt){UI.toast(‘اكتب الإعلان’,‘error’);return;} DB.child(‘announcements’).push({text:txt,author:S.user.name,ts:Date.now(),time:new Date().toLocaleDateString(‘ar-SA’)}); App.log(`${S.user.name} أرسل إعلاناً`); document.getElementById(‘ann-text’).value=’’; UI.toast(‘تم الإرسال 📢’); },
-showAdd(){
-const teams=[…new Set(Object.values(S.members).map(m=>m.team))];
-UI.openModal(` <div class="modal-title">➕ إضافة عضو جديد</div> <label>الاسم الكامل</label><input id="nm-n" placeholder="اسم الكشاف"> <label>الرتبة</label><input id="nm-r" placeholder="كشاف، قائد طليعة..."> <label>الطليعة</label> <select id="nm-t" onchange="Admin.teamChange()"> ${teams.map(t=>`<option>${t}</option>`).join('')} <option value="__new__">+ طليعة جديدة</option> </select> <div id="nm-tn" style="display:none"><input id="nm-tn-v" placeholder="اسم الطليعة الجديدة"></div> <label>الرمز السري</label><input id="nm-p" type="number" placeholder="رمز من 4 أرقام"> <label>الدور</label> <select id="nm-role"><option value="USER">كشاف</option><option value="LEADER">قائد طليعة</option></select> <button class="btn btn-green" onclick="Admin.addMember()">إضافة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
-},
-teamChange(){ const v=document.getElementById(‘nm-t’).value; document.getElementById(‘nm-tn’).style.display=v===’**new**’?‘block’:‘none’; },
-addMember(){
-const name=document.getElementById(‘nm-n’).value.trim();
-const rank=document.getElementById(‘nm-r’).value.trim()||‘كشاف’;
-let team=document.getElementById(‘nm-t’).value;
-if(team===’**new**’) team=document.getElementById(‘nm-tn-v’).value.trim();
-const pin=document.getElementById(‘nm-p’).value.trim();
-const role=document.getElementById(‘nm-role’).value;
-if(!name||!pin||pin.length<4){UI.toast(‘أكمل الحقول (الرمز 4+)’,‘error’);return;}
-if(S.members[pin]){UI.toast(‘الرمز مستخدم مسبقاً’,‘error’);return;}
-DB.child(‘members’).child(pin).set({name,rank,team,role,pts:0,pin,badges:[‘عضو جديد’],isPresent:false,joinDate:Date.now()});
-if(!S.inviteCodes[team]) Admin.genCode(team,false);
-App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
-UI.toast(`تمت إضافة ${name} ✓`);
-UI.closeModal();
-},
-showAddTask(){
-UI.openModal(` <div class="modal-title">📝 مهمة جديدة</div> <label>العنوان</label><input id="tk-t" placeholder="عنوان المهمة"> <label>الوصف</label><textarea id="tk-d" placeholder="تفاصيل المهمة..."></textarea> <label>النقاط عند الإنجاز</label><input id="tk-p" type="number" placeholder="0" min="0"> <label>تاريخ الانتهاء</label><input id="tk-due" type="date"> <label>تعيين لـ</label> <select id="tk-a"> <option value="all">الجميع</option> ${Object.entries(S.members).map(([id,m])=>`<option value="${id}">${m.name}</option>`).join('')} </select> <button class="btn btn-green" onclick="Admin.addTask()">إنشاء المهمة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
-},
-addTask(){
-const title=document.getElementById(‘tk-t’).value.trim();
-if(!title){UI.toast(‘اكتب عنوان المهمة’,‘error’);return;}
-const id=Date.now().toString();
-DB.child(‘tasks’).child(id).set({id,title,desc:document.getElementById(‘tk-d’).value.trim(),pts:parseInt(document.getElementById(‘tk-p’).value)||0,due:document.getElementById(‘tk-due’).value,assignedTo:document.getElementById(‘tk-a’).value,done:false,ts:Date.now(),createdBy:S.user.name});
-App.log(`${S.user.name} أضاف مهمة: ${title}`);
-UI.toast(‘تم إنشاء المهمة ✓’);
-UI.closeModal();
-},
-genCode(team,toast=true){ const c=(team.replace(/\s/g,’’).slice(0,3).toUpperCase()+(Math.floor(1000+Math.random()*9000))).toString(); DB.child(‘inviteCodes’).child(team).set(c); if(toast)UI.toast(`تم تجديد كود ${team} ✓`); },
-restoreMember(pin){ const m=S.archived[pin]; if(!m)return; DB.child(‘members’).child(pin).set({…m,archivedAt:undefined}); DB.child(‘archived’).child(pin).remove(); App.log(`${S.user.name} استعاد [${m.name}] من الأرشيف`); UI.toast(`تمت استعادة ${m.name} ✓`); }
+  sendAnn(){ const txt=document.getElementById('ann-text').value.trim(); if(!txt){UI.toast('اكتب الإعلان','error');return;} DB.child('announcements').push({text:txt,author:S.user.name,ts:Date.now(),time:new Date().toLocaleDateString('ar-SA')}); App.log(`${S.user.name} أرسل إعلاناً`); document.getElementById('ann-text').value=''; UI.toast('تم الإرسال 📢'); },
+  showAdd(){
+    const teams=[...new Set(Object.values(S.members).map(m=>m.team))];
+    UI.openModal(` <div class="modal-title">➕ إضافة عضو جديد</div> <label>الاسم الكامل</label><input id="nm-n" placeholder="اسم الكشاف"> <label>الرتبة</label><input id="nm-r" placeholder="كشاف، قائد طليعة..."> <label>الطليعة</label> <select id="nm-t" onchange="Admin.teamChange()"> ${teams.map(t=>`<option>${t}</option>`).join('')} <option value="__new__">+ طليعة جديدة</option> </select> <div id="nm-tn" style="display:none"><input id="nm-tn-v" placeholder="اسم الطليعة الجديدة"></div> <label>الرمز السري</label><input id="nm-p" type="number" placeholder="رمز من 4 أرقام"> <label>الدور</label> <select id="nm-role"><option value="USER">كشاف</option><option value="LEADER">قائد طليعة</option></select> <button class="btn btn-green" onclick="Admin.addMember()">إضافة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
+  },
+  teamChange(){ const v=document.getElementById('nm-t').value; document.getElementById('nm-tn').style.display=v==='__new__'?'block':'none'; },
+  addMember(){
+    const name=document.getElementById('nm-n').value.trim();
+    const rank=document.getElementById('nm-r').value.trim()||'كشاف';
+    let team=document.getElementById('nm-t').value;
+    if(team==='__new__') team=document.getElementById('nm-tn-v').value.trim();
+    const pin=document.getElementById('nm-p').value.trim();
+    const role=document.getElementById('nm-role').value;
+    if(!name||!pin||pin.length<4){UI.toast('أكمل الحقول (الرمز 4+)','error');return;}
+    if(S.members[pin]){UI.toast('الرمز مستخدم مسبقاً','error');return;}
+    DB.child('members').child(pin).set({name,rank,team,role,pts:0,pin,badges:['عضو جديد'],isPresent:false,joinDate:Date.now()});
+    if(!S.inviteCodes[team]) Admin.genCode(team,false);
+    App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
+    UI.toast(`تمت إضافة ${name} ✓`);
+    UI.closeModal();
+  },
+  showAddTask(){
+    UI.openModal(` <div class="modal-title">📝 مهمة جديدة</div> <label>العنوان</label><input id="tk-t" placeholder="عنوان المهمة"> <label>الوصف</label><textarea id="tk-d" placeholder="تفاصيل المهمة..."></textarea> <label>النقاط عند الإنجاز</label><input id="tk-p" type="number" placeholder="0" min="0"> <label>تاريخ الانتهاء</label><input id="tk-due" type="date"> <label>تعيين لـ</label> <select id="tk-a"> <option value="all">الجميع</option> ${Object.entries(S.members).map(([id,m])=>`<option value="${id}">${m.name}</option>`).join('')} </select> <button class="btn btn-green" onclick="Admin.addTask()">إنشاء المهمة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>`);
+  },
+  addTask(){
+    const title=document.getElementById('tk-t').value.trim();
+    if(!title){UI.toast('اكتب عنوان المهمة','error');return;}
+    const id=Date.now().toString();
+    DB.child('tasks').child(id).set({id,title,desc:document.getElementById('tk-d').value.trim(),pts:parseInt(document.getElementById('tk-p').value)||0,due:document.getElementById('tk-due').value,assignedTo:document.getElementById('tk-a').value,done:false,ts:Date.now(),createdBy:S.user.name});
+    App.log(`${S.user.name} أضاف مهمة: ${title}`);
+    UI.toast('تم إنشاء المهمة ✓');
+    UI.closeModal();
+  },
+  genCode(team,toast=true){ const c=(team.replace(/\s/g,'').slice(0,3).toUpperCase()+(Math.floor(1000+Math.random()*9000))).toString(); DB.child('inviteCodes').child(team).set(c); if(toast)UI.toast(`تم تجديد كود ${team} ✓`); },
+  restoreMember(pin){ const m=S.archived[pin]; if(!m)return; DB.child('members').child(pin).set({...m,archivedAt:undefined}); DB.child('archived').child(pin).remove(); App.log(`${S.user.name} استعاد [${m.name}] من الأرشيف`); UI.toast(`تمت استعادة ${m.name} ✓`); }
 };
 
 // ─── INIT ───
 window.onload=()=>{
-if(localStorage.getItem(‘awtad_theme’)===‘light’) document.body.classList.add(‘light’);
+  if(localStorage.getItem('awtad_theme')==='light') document.body.classList.add('light');
+  Login.auto();
 };
 </script>
 
