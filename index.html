@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أوتاد الإداري V11.2</title>
+    <title>AWTAD V11.3 | نظام أوتاد</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
@@ -35,7 +35,30 @@
 
 <div id="auth-gate" style="position:fixed; inset:0; background:var(--bg); z-index:5000; display:flex; align-items:center; justify-content:center;">
     <div style="width: 340px; text-align: center; padding: 30px; background: var(--card); border-radius: 20px; border: 1px solid var(--accent);">
-        <h2 style="color: var(--accent)">AWTAD V11.2</h2>
+        <h2 style="color: var(--accent)">AWTAD V11.3</h2>
         <input type="password" id="entry-pin" maxlength="4" placeholder="رمز الدخول" style="text-align:center; letter-spacing:8px;">
-        <button class="btn btn-p" onclick="Sys.login()">دخول النظام</button>
-        <button class="btn" style="background:var(--danger); color:white; font-size:10px; margin-top
+        <button class="btn btn-p" id="login-btn" onclick="Sys.login()">دخول النظام</button>
+        <button class="btn" style="background:var(--danger); color:white; font-size:10px; margin-top:20px;" onclick="Sys.factoryReset()">تهيئة النظام (للمشرفين)</button>
+    </div>
+</div>
+
+<nav id="main-nav" class="hidden">
+    <button class="nav-btn active" onclick="Sys.route('field', this)">👥 الميدان</button>
+    <button class="nav-btn" onclick="Sys.route('vote', this)">🗳️ التصويت</button>
+    <button class="nav-btn" id="req-nav" onclick="Sys.route('requests', this)">📩 الطلبات</button>
+    <button class="nav-btn" onclick="Sys.route('logs', this)">📜 السجلات</button>
+    <button class="nav-btn" id="adm-nav" onclick="Sys.route('admin', this)">⚙️ الإدارة</button>
+</nav>
+
+<div class="container hidden" id="main-container">
+    <div id="content-area"></div>
+</div>
+
+<div id="member-modal" class="modal hidden">
+    <div class="modal-content" id="member-detail-ui"></div>
+</div>
+
+<div id="badge-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3>🏅 موسوعة الأوسمة (100)</h3>
+        <input type="text
