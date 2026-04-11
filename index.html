@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWTAD V11.3 | نظام أوتاد</title>
+    <title>أوتاد | التحديث 1.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
@@ -22,23 +22,27 @@
         .leader-card { border-right: 5px solid var(--gold); }
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 600px; border: 1px solid var(--accent); max-height: 90vh; overflow-y: auto; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 16px; }
         .btn { padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; width: 100%; margin-top: 5px; }
         .btn-p { background: var(--accent); color: white; }
         .btn-s { background: var(--gold); color: black; }
         .btn-d { background: var(--danger); color: white; }
         .admin-box { border: 1px dashed var(--gold); padding: 15px; border-radius: 12px; margin-top: 15px; background: rgba(251, 191, 36, 0.05); }
         .hidden { display: none !important; }
+        .v-badge { background: var(--gold); color: black; padding: 2px 8px; border-radius: 5px; font-size: 10px; vertical-align: middle; margin-right: 5px; }
     </style>
 </head>
 <body>
 
 <div id="auth-gate" style="position:fixed; inset:0; background:var(--bg); z-index:5000; display:flex; align-items:center; justify-content:center;">
     <div style="width: 340px; text-align: center; padding: 30px; background: var(--card); border-radius: 20px; border: 1px solid var(--accent);">
-        <h2 style="color: var(--accent)">AWTAD V11.3</h2>
-        <input type="password" id="entry-pin" maxlength="4" placeholder="رمز الدخول" style="text-align:center; letter-spacing:8px;">
-        <button class="btn btn-p" id="login-btn" onclick="Sys.login()">دخول النظام</button>
-        <button class="btn" style="background:var(--danger); color:white; font-size:10px; margin-top:20px;" onclick="Sys.factoryReset()">تهيئة النظام (للمشرفين)</button>
+        <h2 style="color: var(--accent); margin-bottom: 5px;">AWTAD SYSTEM</h2>
+        <span class="v-badge">التحديث 1.0 (جديد)</span>
+        <div style="margin-top: 25px;">
+            <input type="password" id="entry-pin" maxlength="4" placeholder="أدخل رمز الدخول" style="text-align:center; letter-spacing:8px; font-size: 20px;">
+            <button class="btn btn-p" id="login-btn" onclick="Sys.login()">دخول</button>
+            <button class="btn" style="background:transparent; color:var(--sub); font-size:11px; margin-top:15px;" onclick="Sys.factoryReset()">تهيئة النظام (للمشرفين فقط)</button>
+        </div>
     </div>
 </div>
 
@@ -61,4 +65,198 @@
 <div id="badge-modal" class="modal hidden">
     <div class="modal-content">
         <h3>🏅 موسوعة الأوسمة (100)</h3>
-        <input type="text
+        <input type="text" id="b-search" placeholder="بحث..." oninput="Sys.searchBadges()">
+        <div id="badge-list" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; max-height:350px; overflow-y:auto;"></div>
+        <button class="btn btn-p" style="margin-top:10px" onclick="document.getElementById('badge-modal').classList.add('hidden')">إغلاق</button>
+    </div>
+</div>
+
+<script>
+const Sys = (() => {
+    const config = { apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE", databaseURL: "https://awtad-system-default-rtdb.firebaseio.com" };
+    firebase.initializeApp(config);
+    const db = firebase.database().ref("awtad_v1_stable");
+
+    let state = { user: null, members: {}, logs: [], votes: {}, reqs: {}, tab: 'field', voteConfig: { title: "لا يوجد موضوع حالياً" } };
+    const ADMIN_PINS = { "7777": "عبدالله العرفه", "9999": "سلمان الصويلح", "8888": "معاذ الشنقيطي" };
+    const MASTER_BADGES = Array.from({length: 100}, (_, i) => `وسام كشفي رقم ${i+1}`);
+
+    return {
+        login: async () => {
+            const pin = document.getElementById("entry-pin").value;
+            if(!pin) return;
+            
+            const btn = document.getElementById("login-btn");
+            btn.innerText = "جاري التحقق...";
+
+            // التحقق من رموز المشرفين محلياً لسرعة الدخول
+            if(ADMIN_PINS[pin]) {
+                state.user = { name: ADMIN_PINS[pin], role: 'ROOT', pin: pin };
+                Sys.enterApp();
+                return;
+            }
+
+            // التحقق من بقية الأعضاء من السيرفر
+            try {
+                const snap = await db.child("members").once("value");
+                const members = snap.val() || {};
+                const found = Object.entries(members).find(([id, m]) => m.pin === pin);
+                
+                if(found) {
+                    state.user = { ...found[1], id: found[0], role: 'USER' };
+                    Sys.enterApp();
+                } else {
+                    alert("الرمز غير صحيح.");
+                    btn.innerText = "دخول";
+                }
+            } catch(e) { alert("مشكلة في الاتصال."); btn.innerText = "دخول"; }
+        },
+
+        enterApp: () => {
+            document.getElementById("auth-gate").classList.add("hidden");
+            document.getElementById("main-nav").classList.remove("hidden");
+            document.getElementById("main-container").classList.remove("hidden");
+            if(state.user.role !== 'ROOT') {
+                document.getElementById("req-nav").classList.add("hidden");
+                document.getElementById("adm-nav").classList.add("hidden");
+            }
+            Sys.initSync();
+        },
+
+        initSync: () => {
+            db.child("members").on("value", s => { state.members = s.val() || {}; Sys.render(); });
+            db.child("logs").limitToLast(30).on("value", s => { state.logs = Object.values(s.val() || {}).reverse(); Sys.render(); });
+            db.child("votes/data").on("value", s => { state.votes = s.val() || {}; Sys.render(); });
+            db.child("votes/config").on("value", s => { state.voteConfig = s.val() || { title: "لا يوجد موضوع حالياً" }; Sys.render(); });
+            db.child("requests").on("value", s => { state.reqs = s.val() || {}; Sys.render(); });
+        },
+
+        route: (t, el) => {
+            state.tab = t;
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if(el) el.classList.add('active');
+            Sys.render();
+        },
+
+        render: () => {
+            const root = document.getElementById("content-area");
+            root.innerHTML = "";
+            const isAdmin = state.user.role === 'ROOT';
+
+            if(state.tab === 'field') {
+                ["طليعة 1", "طليعة 2", "طليعة 3", "طليعة 4"].forEach(t => {
+                    const group = Object.entries(state.members).filter(([id, m]) => m.team === t);
+                    const sorted = [...group.filter(m => m[1].role === 'LEADER'), ...group.filter(m => m[1].role !== 'LEADER').sort((a,b) => b[1].pts - a[1].pts)];
+                    let html = `<div style="margin-bottom:20px"><h3>${t}</h3><div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:10px">`;
+                    sorted.forEach(([id, m]) => {
+                        html += `<div class="member-card ${m.role === 'LEADER' ? 'leader-card' : ''}" onclick="Sys.openDossier('${id}')">
+                            <div style="display:flex; justify-content:space-between">
+                                <div><b>${m.name}</b><br><small>${m.role === 'LEADER' ? 'قائد' : 'كشاف'}</small></div>
+                                <div style="font-size:18px; font-weight:900; color:var(--gold)">${m.pts}</div>
+                            </div></div>`;
+                    });
+                    root.innerHTML += html + `</div></div>`;
+                });
+            }
+
+            if(state.tab === 'vote') {
+                root.innerHTML = `<h3>🗳️ نظام التصويت</h3>
+                <div style="background:var(--card); padding:20px; border-radius:15px">
+                    <p style="font-size:18px; color:var(--gold)"><b>الموضوع:</b> ${state.voteConfig.title}</p>
+                    <button class="btn btn-p" onclick="Sys.castVote('نعم')">نعم</button>
+                    <button class="btn btn-s" style="margin-top:10px" onclick="Sys.castVote('لا')">لا</button>
+                    ${isAdmin ? `<div class="admin-box" style="margin-top:20px">
+                        <h4>إدارة التصويت:</h4>
+                        <input id="new-vote-title" placeholder="اكتب موضوع التصويت الجديد">
+                        <button class="btn btn-p" onclick="Sys.updateVoteTitle()">تحديث الموضوع</button>
+                        <hr><p>نعم: ${Object.values(state.votes).filter(v=>v==='نعم').length} | لا: ${Object.values(state.votes).filter(v=>v==='لا').length}</p>
+                        <button class="btn btn-d" onclick="Sys.clearVotes()">تصفير النتائج</button>
+                    </div>` : ''}
+                </div>`;
+            }
+
+            if(state.tab === 'requests' && isAdmin) {
+                root.innerHTML = "<h3>📩 طلبات التعديل</h3>";
+                Object.entries(state.reqs).forEach(([rid, r]) => {
+                    root.innerHTML += `<div class="member-card"><b>${r.memberName}</b> يطلب تحديث البيانات.<br><small>جوال: ${r.newPhone} | هوية: ${r.newNid}</small><div style="display:flex; gap:10px; margin-top:10px"><button class="btn btn-p" onclick="Sys.approveReq('${rid}')">قبول</button><button class="btn btn-d" onclick="Sys.rejectReq('${rid}')">رفض</button></div></div>`;
+                });
+            }
+
+            if(state.tab === 'admin' && isAdmin) {
+                root.innerHTML = `<h3>⚙️ الإدارة</h3><div class="admin-box"><h4>إضافة عضو:</h4><input id="add-n" placeholder="الاسم"><select id="add-t"><option>طليعة 1</option><option>طليعة 2</option><option>طليعة 3</option><option>طليعة 4</option></select><button class="btn btn-p" onclick="Sys.addMember()">إضافة</button></div>`;
+            }
+
+            if(state.tab === 'logs') {
+                root.innerHTML = "<h3>📜 السجلات</h3>";
+                state.logs.forEach(l => { root.innerHTML += `<div class="member-card" style="font-size:12px">${l.time} | ${l.admin}: ${l.action} لـ ${l.target}</div>`; });
+            }
+        },
+
+        openDossier: (id) => {
+            const m = state.members[id];
+            const isMe = (state.user.id === id);
+            const isAdmin = (state.user.role === 'ROOT');
+            document.getElementById("member-detail-ui").innerHTML = `
+                <h2>${m.name}</h2>
+                <input id="d-phone" placeholder="الجوال" value="${m.phone || ''}" ${isMe ? '' : 'disabled'}>
+                <input id="d-nid" placeholder="الهوية" value="${m.nid || ''}" ${isMe ? '' : 'disabled'}>
+                ${isMe ? `<button class="btn btn-s" onclick="Sys.submitUpdateReq('${id}')">طلب تحديث</button>` : ''}
+                <hr><p>النقاط: ${m.pts} | الأوسمة: ${(m.badges||[]).length}</p>
+                ${isAdmin ? `<div class="admin-box">
+                    <input type="number" id="pts-v" placeholder="النقاط"><input type="text" id="pts-r" placeholder="السبب">
+                    <button class="btn btn-p" onclick="Sys.modPts('${id}', 1)">إضافة</button>
+                    <button class="btn btn-d" onclick="Sys.modPts('${id}', -1)">خصم</button>
+                    <button class="btn btn-s" onclick="Sys.showBadges('${id}')">الأوسمة</button>
+                    <button class="btn btn-d" onclick="Sys.deleteMember('${id}')">حذف نهائي</button>
+                </div>` : ''}
+                <button class="btn btn-p" onclick="Sys.closeModal()">إغلاق</button>`;
+            document.getElementById("member-modal").classList.remove("hidden");
+        },
+
+        updateVoteTitle: () => { db.child("votes/config").update({ title: document.getElementById("new-vote-title").value }); alert("تم"); },
+        submitUpdateReq: (id) => { db.child("requests").push({ memberId: id, memberName: state.members[id].name, newPhone: document.getElementById("d-phone").value, newNid: document.getElementById("d-nid").value }); alert("تم الطلب"); },
+        approveReq: (rid) => { const r = state.reqs[rid]; db.child("members").child(r.memberId).update({ phone: r.newPhone, nid: r.newNid }); db.child("requests").child(rid).remove(); },
+        rejectReq: (rid) => db.child("requests").child(rid).remove(),
+        modPts: (id, dir) => {
+            const v = parseInt(document.getElementById("pts-v").value);
+            const r = document.getElementById("pts-r").value;
+            if(!v || !r) return alert("أكمل البيانات");
+            db.child("members").child(id).update({ pts: (state.members[id].pts || 0) + (v * dir) });
+            db.child("logs").push({ admin: state.user.name, target: state.members[id].name, action: dir>0?"إضافة":"خصم", reason: r, time: new Date().toLocaleString() });
+            Sys.closeModal();
+        },
+        showBadges: (id) => { state.activeM = id; document.getElementById("badge-modal").classList.remove("hidden"); Sys.searchBadges(); },
+        searchBadges: () => {
+            document.getElementById("badge-list").innerHTML = MASTER_BADGES.filter(b=>b.includes(document.getElementById("b-search").value)).map(b=>`<div style="background:var(--bg); padding:10px; border-radius:8px; cursor:pointer; text-align:center;" onclick="Sys.assignBadge('${b}')">${b}</div>`).join('');
+        },
+        assignBadge: (b) => {
+            const cur = state.members[state.activeM].badges || [];
+            if(!cur.includes(b)) { cur.push(b); db.child("members").child(state.activeM).update({ badges: cur }); }
+            document.getElementById("badge-modal").classList.add("hidden");
+        },
+        addMember: () => {
+            const n = document.getElementById("add-n").value;
+            if(!n) return;
+            db.child("members").push({ name: n, team: document.getElementById("add-t").value, pts: 0, role: 'MEMBER', pin: (Math.floor(1000 + Math.random() * 9000)).toString(), badges: [] });
+            alert("تم");
+        },
+        deleteMember: (id) => { if(confirm("حذف؟")) { db.child("members").child(id).remove(); Sys.closeModal(); } },
+        castVote: (v) => { db.child("votes/data").child(state.user.name).set(v); alert("تم"); },
+        clearVotes: () => db.child("votes/data").remove(),
+        closeModal: () => document.getElementById("member-modal").classList.add("hidden"),
+        factoryReset: () => {
+            const p = document.getElementById("entry-pin").value;
+            if(!ADMIN_PINS[p]) return alert("المشرفين فقط");
+            if(!confirm("سيتم إنشاء 40 عضواً، استمر؟")) return;
+            let batch = {};
+            for(let i=0; i<40; i++) {
+                const id = "ID_" + Math.random().toString(36).substr(2, 6).toUpperCase();
+                batch[id] = { name: `كشاف رقم ${i+1}`, team: `طليعة ${(i % 4) + 1}`, pts: 0, role: 'MEMBER', pin: (1000 + i).toString(), badges: [] };
+            }
+            db.child("members").set(batch).then(() => alert("تمت التهيئة. الرموز تبدأ من 1000"));
+        }
+    };
+})();
+</script>
+</body>
+</html>
