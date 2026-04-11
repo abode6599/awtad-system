@@ -3,76 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أوتاد V2.0 | النظام الرسمي</title>
+    <title>أوتاد V3.0 | القيادة العليا</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <style>
-        :root { --bg: #050810; --card: #111827; --accent: #3b82f6; --gold: #fbbf24; --text: #f9fafb; --border: #1f2937; --danger: #ef4444; }
+        :root { --bg: #030712; --card: #111827; --accent: #2563eb; --gold: #eab308; --text: #f3f4f6; --danger: #dc2626; --border: #1f2937; }
         * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; }
-        nav { background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; position: fixed; bottom: 0; width: 100%; padding: 15px; z-index: 1000; }
-        .nav-btn { color: #94a3b8; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; }
-        .nav-btn.active { color: var(--accent); }
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-        .m-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 12px; }
-        .badge { background: rgba(59, 130, 246, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 8px; font-size: 11px; margin: 3px; display: inline-block; }
-        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: #0c111d; color: white; margin-bottom: 10px; }
-        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
+        
+        /* واجهة الدخول - خصوصية عالية */
+        #login-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-box { width: 90%; max-width: 350px; text-align: center; padding: 30px; background: var(--card); border-radius: 24px; border: 1px solid var(--accent); }
+        
+        /* الهيدر والداشبورد */
+        .header { padding: 30px 20px; text-align: center; background: linear-gradient(180deg, #111827 0%, #030712 100%); border-bottom: 1px solid var(--border); }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border); z-index: 1000; }
+        .nav-item { color: #6b7280; font-size: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .nav-item.active { color: var(--accent); transform: scale(1.1); }
+
+        /* البطاقات والقوائم */
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        .card { background: var(--card); border-radius: 20px; padding: 18px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .member-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #1f2937; cursor: pointer; }
+        
+        /* الأوسمة */
+        .badge-tag { background: rgba(37, 99, 235, 0.1); color: #60a5fa; padding: 4px 12px; border-radius: 8px; font-size: 11px; margin: 2px; display: inline-block; border: 1px solid rgba(37, 99, 235, 0.2); }
+        
+        /* المدخلات والأزرار */
+        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: #030712; color: white; margin-top: 10px; font-size: 16px; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; margin-top: 10px; }
         .btn-p { background: var(--accent); color: white; }
         .btn-d { background: var(--danger); color: white; }
         .btn-g { background: var(--gold); color: black; }
+        
         .hidden { display: none !important; }
-        .dash-top { text-align: center; padding: 40px 20px; background: linear-gradient(to bottom, #111827, #050810); }
+        .mod-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
 
-<div id="login-screen" style="position:fixed; inset:0; background:var(--bg); z-index:9999; display:flex; align-items:center; justify-content:center;">
-    <div style="width: 320px; text-align: center;">
-        <h1 style="color:var(--accent); font-weight:900;">AWTAD V2.0</h1>
-        <p style="color:#64748b; font-size:14px;">نظام قيادة فرقة أوتاد</p>
-        <input type="password" id="pin-in" placeholder="أدخل رمزك الخاص" style="text-align:center; letter-spacing:8px; font-size:20px;">
+<div id="login-screen">
+    <div class="login-box">
+        <h2 style="color:var(--accent); margin:0;">AWTAD V3.0</h2>
+        <p style="color:#94a3b8; font-size:12px; margin-bottom:20px;">نظام إدارة الفرقة الرسمي</p>
+        <input type="password" id="pin-field" placeholder="رمز الدخول الخاص" style="text-align:center; letter-spacing:8px;">
         <button class="btn btn-p" onclick="Sys.login()">دخول</button>
-        <button onclick="Sys.hardReset()" style="margin-top:20px; background:none; border:none; color:#1f2937; font-size:10px;">RESET SYSTEM</button>
+        <div onclick="Sys.hardReset()" style="margin-top:30px; font-size:9px; color:#1f2937; cursor:pointer;">HARD RESET SYSTEM</div>
     </div>
 </div>
 
-<div id="main-app" class="hidden">
-    <div class="dash-top" id="user-header"></div>
-    <div class="container" id="view-area"></div>
-    <nav>
-        <div class="nav-btn active" onclick="Sys.go('main', this)">🏠 الأساسية</div>
-        <div class="nav-btn" onclick="Sys.go('field', this)">🛡️ الميدان</div>
-        <div class="nav-btn" onclick="Sys.go('vote', this)">🗳️ التصويت</div>
-        <div id="adm-nav" class="nav-btn hidden" onclick="Sys.go('admin', this)">⚙️ التحكم</div>
-    </nav>
+<div id="app-view" class="hidden">
+    <div class="header" id="user-info"></div>
+    
+    <div class="container" id="main-content"></div>
+
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="Sys.route('home', this)">الرئيسية</div>
+        <div class="nav-item" onclick="Sys.route('field', this)">الميدان</div>
+        <div class="nav-item" onclick="Sys.route('vote', this)">التصويت</div>
+        <div id="admin-only" class="nav-item hidden" onclick="Sys.route('admin', this)">الإدارة</div>
+    </div>
 </div>
 
-<div id="modal" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:5000; display:flex; align-items:center; justify-content:center; padding:20px;">
-    <div id="modal-content" class="m-card" style="width:100%; max-width:450px;"></div>
+<div id="mod-overlay" class="mod-overlay hidden">
+    <div class="card" style="width:100%; max-width:400px;" id="mod-content"></div>
 </div>
 
 <script>
 const Sys = (() => {
     const config = { apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE", databaseURL: "https://awtad-system-default-rtdb.firebaseio.com" };
     firebase.initializeApp(config);
-    const db = firebase.database().ref("awtad_pro_v2");
+    const db = firebase.database().ref("awtad_v3_final");
 
-    let state = { user: null, members: {}, tab: 'main', votes: {}, logs: [], requests: {} };
-    const MASTER_KEY = "7777"; // رمز التهيئة الخاص بك
-    const ALL_BADGES = ["المسعف", "المؤذن", "المصور", "التقني", "صديق البيئة", "السباح", "القارئ", "الرسام", "المتحدث", "المنقذ"];
-    const NAMES = ["عبدالله العرفه", "سلمان الصويلح", "معاذ الشنقيطي", "عزام خبراني", "الوليد الحازمي", "وضاح الصويلح", "راكان شراحيلي", "حاتم خريزي"];
+    let state = { user: null, members: {}, tab: 'home', votes: {}, logs: [] };
+    const ADMIN_KEY = "7777";
+    const BADGES = ["المسعف", "المؤذن", "المصور", "التقني", "صديق البيئة", "السباح", "القارئ", "المنقذ"];
 
     return {
         hardReset: async () => {
-            const k = prompt("أدخل رمز المالك للتهيئة:");
-            if(k !== MASTER_KEY) return alert("غير مصرح لك!");
+            const k = prompt("رمز المالك للتهيئة:");
+            if(k !== ADMIN_KEY) return;
+            const leaders = ["عبدالله العرفه", "سلمان الصويلح", "معاذ الشنقيطي"];
             let data = {};
             for(let i=0; i<40; i++) {
-                const id = "M" + (1000 + i);
+                const id = "ID_" + (1000+i);
                 data[id] = {
-                    name: NAMES[i] || `كشاف ${i+1}`,
+                    name: leaders[i] || `كشاف رقم ${i+1}`,
                     team: `طليعة ${(i%4)+1}`,
                     pts: 0,
                     role: i < 3 ? 'ROOT' : 'MEMBER',
@@ -80,132 +97,123 @@ const Sys = (() => {
                     badges: ["عضو جديد"]
                 };
             }
-            await db.set({ members: data, vote_title: "هل البرنامج الحالي ممتاز؟", logs: {init: "نظام مشغل"} });
-            alert("تمت التهيئة بنجاح! الرموز 1000-1039");
+            await db.set({ members: data, vote_q: "ما هو تقييمك لأداء الفرقة اليوم؟", logs: {init: "تشغيل النظام"} });
+            alert("تمت التهيئة. عبدالله (1000)، سلمان (1001)، معاذ (1002).");
         },
 
         login: async () => {
-            const p = document.getElementById("pin-in").value;
-            const s = await db.child("members").once("value");
-            const m = s.val() || {};
+            const p = document.getElementById("pin-field").value;
+            const snap = await db.child("members").once("value");
+            const m = snap.val() || {};
             const found = Object.entries(m).find(([id, u]) => u.pin === p);
 
             if(found) {
                 state.user = { ...found[1], id: found[0] };
                 document.getElementById("login-screen").classList.add("hidden");
-                document.getElementById("main-app").classList.remove("hidden");
-                if(state.user.role === 'ROOT') document.getElementById("adm-nav").classList.remove("hidden");
+                document.getElementById("app-view").classList.remove("hidden");
+                if(state.user.role === 'ROOT') document.getElementById("admin-only").classList.remove("hidden");
                 Sys.sync();
-            } else alert("الرمز غير صحيح");
+            } else alert("الرمز خطأ يا بطل");
         },
 
         sync: () => {
             db.on("value", s => {
                 const d = s.val() || {};
                 state.members = d.members || {};
-                state.votes = d.votes || {};
                 state.logs = Object.values(d.logs || {}).reverse();
-                state.requests = d.requests || {};
-                state.voteTitle = d.vote_title;
+                state.voteQ = d.vote_q;
+                state.votes = d.votes || {};
                 Sys.render();
             });
         },
 
-        go: (t, el) => {
+        route: (t, el) => {
             state.tab = t;
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             Sys.render();
         },
 
         render: () => {
-            const root = document.getElementById("view-area");
-            const head = document.getElementById("user-header");
-            const u = state.members[state.user.id];
+            const root = document.getElementById("main-content");
+            const info = document.getElementById("user-info");
+            const me = state.members[state.user.id];
             
-            head.innerHTML = `<h1>${u.name}</h1><p style="color:var(--gold)">النقاط: ${u.pts} | الطليعة: ${u.team}</p>`;
+            info.innerHTML = `<h2 style="margin:0">${me.name}</h2><p style="color:var(--gold); font-size:14px;">النقاط: ${me.pts} | الطليعة: ${me.team}</p>`;
             root.innerHTML = "";
 
-            if(state.tab === 'main') {
-                root.innerHTML = `<h3>أوسمتي</h3><div class="m-card">${u.badges.map(b=>`<span class="badge">${b}</span>`).join('')}</div>
-                <h3>سجل الطلبات</h3>`;
-                Object.entries(state.requests).forEach(([rid, req]) => {
-                    if(state.user.role === 'ROOT') {
-                        root.innerHTML += `<div class="m-card" style="font-size:13px"><b>${req.name}</b> يطلب: ${req.txt}
-                        <button class="btn btn-p" onclick="Sys.resolveReq('${rid}')" style="padding:5px; margin-top:10px;">إتمام</button></div>`;
-                    }
-                });
-                root.innerHTML += `<button class="btn btn-g" onclick="Sys.ask()">ارسال طلب للمشرفين</button>`;
+            if(state.tab === 'home') {
+                root.innerHTML = `<h3>أوسمتي الفخرية</h3><div class="card">${me.badges.map(b=>`<span class="badge-tag">${b}</span>`).join('')}</div>
+                <h3>آخر العمليات</h3>${state.logs.slice(0,5).map(l=>`<div style="font-size:11px; color:#6b7280; margin-bottom:5px;">• ${l.txt}</div>`).join('')}`;
             }
 
             if(state.tab === 'field') {
-                const sorted = Object.entries(state.members).sort((a,b) => b[1].pts - a[1].pts);
-                sorted.forEach(([id, m]) => {
-                    root.innerHTML += `<div class="m-card" onclick="Sys.open('${id}')" style="display:flex; justify-content:space-between">
-                        <span>${m.name} <small style="color:#4b5563">(${m.team})</small></span>
-                        <b style="color:var(--gold)">${m.pts}</b>
-                    </div>`;
+                ["طليعة 1", "طليعة 2", "طليعة 3", "طليعة 4"].forEach(t => {
+                    const group = Object.entries(state.members).filter(m => m[1].team === t).sort((a,b)=>b[1].pts - a[1].pts);
+                    root.innerHTML += `<h4 style="color:var(--accent)">${t}</h4>`;
+                    group.forEach(([id, m]) => {
+                        root.innerHTML += `<div class="card member-row" onclick="Sys.manage('${id}')">
+                            <span>${m.name}</span> <b style="color:var(--gold)">${m.pts}</b>
+                        </div>`;
+                    });
                 });
             }
 
             if(state.tab === 'vote') {
-                root.innerHTML = `<div class="m-card" style="text-align:center"><h3>${state.voteTitle}</h3>
-                <button class="btn btn-p" onclick="Sys.vote('نعم')">نعم</button><br><br>
-                <button class="btn btn-d" onclick="Sys.vote('لا')">لا</button></div>`;
+                root.innerHTML = `<div class="card" style="text-align:center"><h3>${state.voteQ}</h3>
+                <button class="btn btn-p" onclick="Sys.cast('نعم')">نعم</button>
+                <button class="btn btn-d" onclick="Sys.cast('لا')">لا</button></div>`;
             }
 
             if(state.tab === 'admin' && state.user.role === 'ROOT') {
-                root.innerHTML = `<h3>إدارة النظام</h3><input id="new-vt" placeholder="موضوع تصويت جديد">
-                <button class="btn btn-p" onclick="Sys.setVT()">تحديث التصويت</button>
-                <div class="m-card" style="margin-top:20px">نعم: ${Object.values(state.votes).filter(v=>v==='نعم').length} | لا: ${Object.values(state.votes).filter(v=>v==='لا').length}</div>`;
+                root.innerHTML = `<h3>لوحة التحكم</h3>
+                <input id="new-q" placeholder="تغيير سؤال التصويت">
+                <button class="btn btn-p" onclick="Sys.setQ()">تحديث السؤال</button>
+                <div class="card" style="margin-top:20px;">
+                    <p>نتائج التصويت: نعم (${Object.values(state.votes).filter(v=>v==='نعم').length}) | لا (${Object.values(state.votes).filter(v=>v==='لا').length})</p>
+                    <button class="btn btn-d" onclick="Sys.clearVotes()">تصفير التصويت</button>
+                </div>`;
             }
         },
 
-        open: (id) => {
+        manage: (id) => {
             if(state.user.role !== 'ROOT') return;
             const m = state.members[id];
-            document.getElementById("modal-content").innerHTML = `
-                <h2>${m.name}</h2>
-                <input type="number" id="pts-amt" placeholder="المقدار">
+            document.getElementById("mod-content").innerHTML = `
+                <h3 style="margin:0">${m.name}</h3>
+                <input type="number" id="amt" placeholder="المقدار">
                 <div style="display:flex; gap:10px">
-                    <button class="btn btn-p" onclick="Sys.mod('${id}', 1)">إضافة</button>
-                    <button class="btn btn-d" onclick="Sys.mod('${id}', -1)">خصم</button>
+                    <button class="btn btn-p" onclick="Sys.updatePts('${id}', 1)">إضافة +</button>
+                    <button class="btn btn-d" onclick="Sys.updatePts('${id}', -1)">خصم -</button>
                 </div>
-                <select id="bg-sel">${ALL_BADGES.map(b=>`<option>${b}</option>`).join('')}</select>
-                <button class="btn btn-g" onclick="Sys.give('${id}')">منح الوسام</button>
-                <button class="btn" style="background:#374151; margin-top:10px" onclick="Sys.close()">إغلاق</button>
+                <select id="bg-in">${BADGES.map(b=>`<option>${b}</option>`).join('')}</select>
+                <button class="btn btn-g" onclick="Sys.giveBadge('${id}')">منح الوسام</button>
+                <button class="btn" style="background:#374151" onclick="Sys.close()">رجوع</button>
             `;
-            document.getElementById("modal").classList.remove("hidden");
+            document.getElementById("mod-overlay").classList.remove("hidden");
         },
 
-        mod: (id, d) => {
-            const a = parseInt(document.getElementById("pts-amt").value);
-            if(!a) return;
-            const newPts = (state.members[id].pts || 0) + (a * d);
-            db.child("members").child(id).update({ pts: newPts });
-            db.child("logs").push({ txt: `${state.user.name} قام بتعديل نقاط ${state.members[id].name}` });
+        updatePts: (id, d) => {
+            const v = parseInt(document.getElementById("amt").value);
+            if(!v) return;
+            db.child("members").child(id).update({ pts: (state.members[id].pts || 0) + (v * d) });
+            db.child("logs").push({ txt: `قام ${state.user.name} بتعديل نقاط ${state.members[id].name}` });
             Sys.close();
         },
 
-        give: (id) => {
-            const b = document.getElementById("bg-sel").value;
-            let current = state.members[id].badges || [];
-            if(!current.includes(b)) {
-                current.push(b);
-                db.child("members").child(id).update({ badges: current });
-                alert("تم منح الوسام");
-            }
+        giveBadge: (id) => {
+            const b = document.getElementById("bg-in").value;
+            let curr = state.members[id].badges || [];
+            if(!curr.includes(b)) curr.push(b);
+            db.child("members").child(id).update({ badges: curr });
+            db.child("logs").push({ txt: `منح ${state.user.name} وسام ${b} لـ ${state.members[id].name}` });
             Sys.close();
         },
 
-        ask: () => {
-            const t = prompt("ماذا تريد أن تطلب؟");
-            if(t) db.child("requests").push({ name: state.user.name, txt: t });
-        },
-        resolveReq: (rid) => db.child("requests").child(rid).remove(),
-        vote: (v) => db.child("votes").child(state.user.id).set(v),
-        setVT: () => { db.child("vote_title").set(document.getElementById("new-vt").value); db.child("votes").remove(); },
-        close: () => document.getElementById("modal").classList.add("hidden")
+        cast: (v) => { db.child("votes").child(state.user.id).set(v); alert("تم الحفظ"); },
+        setQ: () => { db.child("vote_q").set(document.getElementById("new-q").value); db.child("votes").remove(); },
+        clearVotes: () => db.child("votes").remove(),
+        close: () => document.getElementById("mod-overlay").classList.add("hidden")
     };
 })();
 </script>
