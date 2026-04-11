@@ -35,7 +35,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 /* LOGIN */
 #login-screen{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
 .login-wrap{width:100%;max-width:380px;text-align:center}
-.login-logo{font-size:52px;font-weight:900;color:var(--green);letter-spacing:-2px;line-height:1;text-shadow:0 0 40px rgba(74,222,128,0.4);margin-bottom:4px}
+.login-logo{font-size:52px;font-weight:900;color:var(--green);letter-spacing:-2px;line-height:1;text-shadow:0 0 40px rgba(74,222,128,0.4);margin-bottom:4px;cursor:pointer;user-select:none}
 .login-sub{color:var(--text3);font-size:13px;margin-bottom:36px;letter-spacing:3px}
 .login-box{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:32px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
 .pin-display{display:flex;justify-content:center;gap:12px;margin-bottom:28px}
@@ -210,7 +210,7 @@ label{font-size:13px;color:var(--text2);font-weight:600;display:block;margin-top
 
 <div id="login-screen">
   <div class="login-wrap">
-    <div class="login-logo" onclick="App.hardReset()">أوتاد</div>
+    <div class="login-logo" id="logo-btn">أوتاد</div>
     <div class="login-sub">نظام إدارة الفرقة الكشفية</div>
     <div class="login-box">
       <div class="pin-display" id="pin-display">
@@ -308,6 +308,13 @@ const App = {
       S.logs = Object.values(d.logs||{}).sort((a,b)=>b.ts-a.ts);
       S.inviteCodes = d.inviteCodes || {};
       S.archived = d.archived || {};
+      
+      // Auto-init if members is empty
+      if(Object.keys(S.members).length === 0) {
+        console.log("Auto-initializing database...");
+        this.hardResetSilent();
+      }
+
       if(S.user) { S.user = S.members[S.user.id]; Render.all(); }
     });
   },
@@ -324,6 +331,10 @@ const App = {
   log(txt){ DB.child('logs').push({txt,ts:Date.now(),time:new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'})}); },
   hardReset: async ()=>{
     const k=prompt('أدخل رمز المالك:'); if(k!=='7777')return;
+    await App.hardResetSilent();
+    alert('تمت التهيئة بنجاح!');
+  },
+  hardResetSilent: async ()=>{
     const m={};
     [{n:'سلمان الصويلح',r:'قائد الفرقة',p:'1111'},{n:'معاذ الشنقيطي',r:'نائب قائد الفرقة',p:'2222'},{n:'عبدالله العرفه',r:'قائد طليعة',p:'1000'}]
       .forEach(a=>{ m[a.p]={name:a.n,role:'ROOT',rank:a.r,team:'الفرقة الرئيسية',pts:0,pin:a.p,badges:['مؤسس'],isPresent:false,joinDate:Date.now()}; });
@@ -332,7 +343,6 @@ const App = {
       m[p]={name:n,role:i===0?'LEADER':'USER',rank:i===0?'قائد طليعة':'كشاف',team:'طليعة النسر',pts:0,pin:p,badges:['عضو جديد'],isPresent:false,joinDate:Date.now()};
     });
     await DB.set({members:m,inviteCodes:{'الفرقة الرئيسية':'FRQ001','طليعة النسر':'NSR2024'},logs:{init:{txt:'تم تأسيس النظام',ts:Date.now(),time:'00:00'}},announcements:{},sessions:{},tasks:{},archived:{}});
-    alert('تمت التهيئة!\nعبدالله: 1000 | سلمان: 1111 | معاذ: 2222\nطليعة النسر: 2000,2001,2002');
   }
 };
 
@@ -342,7 +352,11 @@ const Login = {
   del(){ S.pin=S.pin.slice(0,-1); this.update(); },
   update(){ document.querySelectorAll('.pin-dot').forEach((d,i)=>d.className=i<S.pin.length?'pin-dot filled':'pin-dot'); },
   submit(){
-    const p=S.pin; if(!S.members[p]){ document.getElementById('login-error').textContent='الرمز غير صحيح'; S.pin=''; this.update(); return; }
+    const p=S.pin; 
+    if(!S.members || !S.members[p]){ 
+      document.getElementById('login-error').textContent='الرمز غير صحيح'; 
+      S.pin=''; this.update(); return; 
+    }
     S.user={...S.members[p],id:p}; localStorage.setItem('awtad_pin',p);
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
@@ -543,6 +557,16 @@ const Admin = {
 // ─── INIT ───
 window.onload=()=>{
   if(localStorage.getItem('awtad_theme')==='light') document.body.classList.add('light');
+  
+  // Attach hardReset to logo
+  const logo = document.getElementById('logo-btn');
+  if(logo) {
+    logo.addEventListener('click', () => {
+      App.hardReset();
+    });
+  }
+
+  App.init();
   Login.auto();
 };
 </script>
