@@ -29,9 +29,6 @@
   --text:#1a2e1a; --text2:#3a5a3a; --text3:#6a8a6a;
 }
 
-/* ═══════════════════════════════════════
-BASE
-═══════════════════════════════════════ */
 * { box-sizing:border-box; margin:0; padding:0; font-family:'Cairo',sans-serif; -webkit-tap-highlight-color:transparent; }
 button, input, select, textarea { outline:none; -webkit-appearance:none; appearance:none; }
 body { background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
@@ -48,9 +45,6 @@ input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
 input[type=number] { -moz-appearance:textfield; }
 
-/* ═══════════════════════════════════════
-LOGIN
-═══════════════════════════════════════ */
 #login-screen {
 position:fixed; inset:0; z-index:10000;
 background:var(--bg); display:flex; align-items:center; justify-content:center; padding:20px;
@@ -74,12 +68,8 @@ transition:all 0.15s; font-family:'Cairo',sans-serif;
 .num-btn.enter { background:var(--green2); color:#000; font-size:15px; font-weight:900; border:none; }
 .login-error { color:var(--red); font-size:13px; margin-top:14px; min-height:18px; }
 
-/* ═══════════════════════════════════════
-APP SHELL
-═══════════════════════════════════════ */
 #app { display:none; position:relative; z-index:1; padding-bottom:80px; }
 
-/* HEADER */
 .header {
 position:sticky; top:0; z-index:100;
 background:rgba(6,13,6,0.88); backdrop-filter:blur(16px);
@@ -101,7 +91,6 @@ font-family:'Cairo',sans-serif; font-weight:700; transition:all 0.2s;
 }
 .icon-btn:active { transform:scale(0.9); }
 
-/* NAV */
 nav {
 position:fixed; bottom:0; width:100%; z-index:1000;
 background:var(--card); border-top:1px solid var(--border);
@@ -118,17 +107,14 @@ transition:all 0.2s; min-width:50px;
 .nav-item.active { color:var(--green); }
 .nav-item.active .nav-icon { transform:translateY(-2px); }
 
-/* PAGES */
 .page { display:none; padding:16px; max-width:680px; margin:0 auto; }
 .page.active { display:block; }
 
-/* CARDS */
 .card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:18px; margin-bottom:12px; position:relative; overflow:hidden; }
 .card-title { font-size:12px; color:var(--text2); font-weight:700; letter-spacing:1px; margin-bottom:10px; }
 .section-title { font-size:11px; font-weight:700; color:var(--text3); letter-spacing:2px; margin:20px 0 10px; display:flex; align-items:center; gap:8px; }
 .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
-/* BUTTONS */
 .btn {
 width:100%; padding:15px; border-radius:14px; border:none;
 font-weight:900; font-size:15px; cursor:pointer;
@@ -142,7 +128,6 @@ font-family:'Cairo',sans-serif; transition:all 0.2s; margin-top:10px;
 .btn-ghost { background:var(--card2); color:var(--text); border:1px solid var(--border); }
 .btn-sm { padding:10px 16px; font-size:13px; width:auto; margin:0; }
 
-/* INPUTS */
 input, select, textarea {
 width:100%; padding:14px 16px; border-radius:13px;
 border:1px solid var(--border2); background:var(--bg2); color:var(--text);
@@ -154,7 +139,6 @@ textarea { resize:none; min-height:80px; }
 select option { background:var(--card); }
 label { font-size:13px; color:var(--text2); font-weight:600; display:block; margin-top:14px; }
 
-/* BADGES & DOTS */
 .badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:8px; font-size:11px; font-weight:700; }
 .badge-green { background:rgba(74,222,128,0.15); color:var(--green); }
 .badge-gold { background:rgba(251,191,36,0.15); color:var(--gold); }
@@ -166,9 +150,6 @@ label { font-size:13px; color:var(--text2); font-weight:600; display:block; marg
 .dot-red { background:var(--red); box-shadow:0 0 8px var(--red); }
 .hidden { display:none !important; }
 
-/* ═══════════════════════════════════════
-HOME PAGE
-═══════════════════════════════════════ */
 .pts-card { text-align:center; padding:28px 20px; background:linear-gradient(135deg, var(--card) 0%, var(--card2) 100%); }
 .pts-num { font-size:60px; font-weight:900; color:var(--gold); line-height:1; }
 .pts-label { font-size:11px; color:var(--text3); margin-top:4px; letter-spacing:2px; }
@@ -181,15 +162,11 @@ HOME PAGE
 .badge-item { background:var(--card2); border:1px solid var(--border2); border-radius:12px; padding:8px 14px; font-size:12px; font-weight:700; color:var(--text2); display:flex; align-items:center; gap:6px; }
 .badge-item.earned { color:var(--gold); border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); }
 
-/* TASKS */
 .task-item { padding:14px; border-radius:14px; background:var(--card2); border:1px solid var(--border); margin-bottom:8px; }
 .task-title { font-size:14px; font-weight:700; }
 .task-desc { font-size:12px; color:var(--text2); margin-top:4px; line-height:1.4; }
 .task-footer { display:flex; gap:8px; margin-top:10px; align-items:center; flex-wrap:wrap; }
 
-/* ═══════════════════════════════════════
-FIELD PAGE
-═══════════════════════════════════════ */
 .team-header { display:flex; align-items:center; gap:10px; padding:14px 0 8px; border-bottom:1px solid var(--border); margin-bottom:8px; }
 .team-color { width:4px; height:36px; border-radius:4px; flex-shrink:0; }
 .team-name { font-size:16px; font-weight:900; }
@@ -202,9 +179,6 @@ FIELD PAGE
 .member-rank { font-size:11px; color:var(--text2); margin-top:2px; }
 .member-pts { font-size:15px; font-weight:900; color:var(--gold); }
 
-/* ═══════════════════════════════════════
-LEADERBOARD
-═══════════════════════════════════════ */
 .lb-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; background:var(--card2); border:1px solid var(--border); margin-bottom:6px; }
 .lb-rank { font-size:20px; font-weight:900; width:32px; text-align:center; flex-shrink:0; }
 .lb-rank.gold { color:var(--gold); }
@@ -226,9 +200,6 @@ transition:all 0.2s; font-family:'Cairo',sans-serif;
 }
 .lb-tab.active { background:rgba(74,222,128,0.15); color:var(--green); border-color:rgba(74,222,128,0.3); }
 
-/* ═══════════════════════════════════════
-DASHBOARD
-═══════════════════════════════════════ */
 .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
 .stat-box { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px 14px; text-align:center; }
 .stat-num { font-size:28px; font-weight:900; line-height:1; }
@@ -238,9 +209,6 @@ DASHBOARD
 .log-time { font-size:11px; color:var(--green); font-weight:700; white-space:nowrap; margin-top:2px; flex-shrink:0; }
 .log-txt { font-size:12px; color:var(--text2); line-height:1.4; }
 
-/* ═══════════════════════════════════════
-ATTENDANCE
-═══════════════════════════════════════ */
 .att-session-card { background:var(--card2); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:8px; }
 .att-session-title { font-size:14px; font-weight:700; }
 .att-session-date { font-size:12px; color:var(--text3); margin-top:2px; }
@@ -267,9 +235,6 @@ cursor:pointer; font-family:'Cairo',sans-serif; transition:all 0.2s;
 .att-btn.present-active { background:rgba(74,222,128,0.2); color:var(--green); border-color:rgba(74,222,128,0.4); }
 .att-btn.absent-active { background:rgba(244,63,94,0.15); color:var(--red); border-color:rgba(244,63,94,0.3); }
 
-/* ═══════════════════════════════════════
-MODAL
-═══════════════════════════════════════ */
 #modal-overlay {
 display:none; position:fixed; inset:0; z-index:20000;
 background:rgba(0,0,0,0.85); backdrop-filter:blur(6px);
@@ -293,9 +258,6 @@ display:block; -webkit-appearance:none; appearance:none;
 .manage-section { margin-top:18px; padding-top:18px; border-top:1px solid var(--border); }
 .manage-section-title { font-size:11px; color:var(--text3); font-weight:700; letter-spacing:1.5px; margin-bottom:8px; }
 
-/* ═══════════════════════════════════════
-CONFIRM
-═══════════════════════════════════════ */
 #confirm-overlay {
 display:none; position:fixed; inset:0; z-index:25000;
 background:rgba(0,0,0,0.85); align-items:center; justify-content:center; padding:20px;
@@ -307,7 +269,6 @@ background:rgba(0,0,0,0.85); align-items:center; justify-content:center; padding
 .confirm-btns { display:flex; gap:10px; }
 .confirm-btns .btn { margin:0; }
 
-/* TOAST */
 #toast {
 position:fixed; bottom:90px; left:50%;
 transform:translateX(-50%) translateY(20px);
@@ -320,24 +281,20 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
 #toast.success { border-color:rgba(74,222,128,0.4); color:var(--green); }
 #toast.error { border-color:rgba(244,63,94,0.4); color:var(--red); }
 
-/* ARCHIVE */
 .archive-item { padding:12px 14px; border-radius:14px; background:var(--card2); border:1px solid var(--border); margin-bottom:6px; opacity:0.75; display:flex; align-items:center; gap:12px; }
 .archive-name { font-size:14px; font-weight:700; }
 .archive-meta { font-size:11px; color:var(--text3); margin-top:2px; }
 
-/* REGISTER PAGE */
 .reg-hero { text-align:center; padding:32px 20px 20px; }
 .reg-logo { font-size:44px; font-weight:900; color:var(--green); }
 .reg-title { font-size:18px; font-weight:700; margin-top:8px; }
 .reg-sub { font-size:13px; color:var(--text2); margin-top:4px; }
 
-/* LEADER MANAGE CARD */
 .leader-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:18px; margin-bottom:12px; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════ LOGIN ═══════════ -->
 <div id="login-screen">
   <div class="login-wrap">
     <div class="login-logo">أوتاد</div>
@@ -366,13 +323,10 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
       <div class="login-error" id="login-err"></div>
     </div>
     <div onclick="App.hardReset()" style="margin-top:40px;color:var(--border2);font-size:10px;cursor:pointer;text-align:center;letter-spacing:1px;">تهيئة النظام</div>
-    <div onclick="showRegister()" style="margin-top:12px;color:var(--text3);font-size:11px;cursor:pointer;text-align:center;">انضم بكود دعوة</div>
   </div>
 </div>
 
-<!-- ═══════════ APP ═══════════ -->
 <div id="app">
-  <!-- Header -->
   <div class="header">
     <div class="header-user">
       <div class="avatar" id="h-avatar" style="color:var(--green);border-color:var(--green);">؟</div>
@@ -387,7 +341,6 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
     </div>
   </div>
 
-  <!-- Pages -->
   <div class="page active" id="page-home"></div>
   <div class="page" id="page-field"></div>
   <div class="page" id="page-attendance"></div>
@@ -396,7 +349,6 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
   <div class="page" id="page-lmanage"></div>
   <div class="page" id="page-manage"></div>
 
-  <!-- Nav -->
   <nav>
     <div class="nav-item active" onclick="App.tab('home',this)">
       <span class="nav-icon">🏠</span>الرئيسية
@@ -422,12 +374,10 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
   </nav>
 </div>
 
-<!-- Modal -->
 <div id="modal-overlay" onclick="UI.closeModal(event)">
   <div id="modal-box"></div>
 </div>
 
-<!-- Confirm -->
 <div id="confirm-overlay">
   <div id="confirm-box">
     <div class="confirm-title" id="confirm-title"></div>
@@ -439,13 +389,9 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
 <script>
-/* ══════════════════════════════════════
-   FIREBASE
-══════════════════════════════════════ */
 const fbConfig = {
   apiKey: "AIzaSyA6P2gbckRDtKUqb8mVZcibXR4soZezFxE",
   databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
@@ -453,9 +399,6 @@ const fbConfig = {
 firebase.initializeApp(fbConfig);
 const DB = firebase.database().ref("awtad_v5");
 
-/* ══════════════════════════════════════
-   UTILS
-══════════════════════════════════════ */
 const TC = ['#4ade80','#60a5fa','#f59e0b','#a78bfa','#f43f5e','#34d399','#fb923c','#e879f9'];
 function teamColor(name) {
   if (!name) return TC[0];
@@ -478,9 +421,6 @@ function today() {
   return new Date().toLocaleDateString('ar-SA');
 }
 
-/* ══════════════════════════════════════
-   STATE
-══════════════════════════════════════ */
 const S = {
   user: null,
   members: {},
@@ -488,16 +428,12 @@ const S = {
   announcements: [],
   sessions: [],
   tasks: [],
-  inviteCodes: {},
   archived: {},
   tab: 'home',
   lbTab: 'global',
   charts: {}
 };
 
-/* ══════════════════════════════════════
-   PIN
-══════════════════════════════════════ */
 const PIN = {
   val: '',
   press(n) {
@@ -533,9 +469,6 @@ const PIN = {
   }
 };
 
-/* ══════════════════════════════════════
-   UI HELPERS
-══════════════════════════════════════ */
 const UI = {
   toast(msg, type = 'success') {
     const t = document.getElementById('toast');
@@ -571,9 +504,6 @@ const UI = {
   }
 };
 
-/* ══════════════════════════════════════
-   APP CORE
-══════════════════════════════════════ */
 const App = {
   boot() {
     document.getElementById('login-screen').style.display = 'none';
@@ -597,7 +527,6 @@ const App = {
       S.announcements= Object.values(d.announcements|| {}).sort((a,b) => b.ts - a.ts);
       S.sessions     = Object.values(d.sessions     || {}).sort((a,b) => b.ts - a.ts);
       S.tasks        = Object.values(d.tasks        || {}).sort((a,b) => b.ts - a.ts);
-      S.inviteCodes  = d.inviteCodes  || {};
 
       const me = S.members[S.user.id];
       if (me) {
@@ -644,33 +573,72 @@ const App = {
   hardReset: async () => {
     const k = prompt('أدخل رمز المالك:');
     if (k !== '7777') return;
-    const m = {};
-    [
-      { n:'سلمان الصويلح',  r:'قائد الفرقة',       p:'1111' },
-      { n:'معاذ الشنقيطي', r:'نائب قائد الفرقة',   p:'2222' },
-      { n:'عبدالله العرفه', r:'قائد طليعة',          p:'1000' }
-    ].forEach(a => {
-      m[a.p] = { name:a.n, role:'ROOT', rank:a.r, team:'الفرقة الرئيسية', pts:0, pin:a.p, badges:['مؤسس'], isPresent:false, joinDate:Date.now() };
-    });
-    ['الوليد فيصل الحازمي','يحيى علي شراحيلي','صالح سعيد حبتور'].forEach((n, i) => {
-      const p = (2000 + i).toString();
-      m[p] = { name:n, role:i===0?'LEADER':'USER', rank:i===0?'قائد طليعة':'كشاف', team:'طليعة النسر', pts:0, pin:p, badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
-    });
+
+    // القادة الرئيسيون
+    const members = {};
+    members['1090'] = { name:'سلمان الصويلح', role:'ROOT', rank:'قائد الفرقة', team:'الفرقة الرئيسية', pts:0, pin:'1090', badges:['مؤسس'], isPresent:false, joinDate:Date.now() };
+    members['1080'] = { name:'معاذ الشنقيطي', role:'ROOT', rank:'نائب قائد الوحدة', team:'الفرقة الرئيسية', pts:0, pin:'1080', badges:['مؤسس'], isPresent:false, joinDate:Date.now() };
+    members['6599'] = { name:'عبدالله العرفه', role:'ROOT', rank:'عريف أول', team:'الفرقة الرئيسية', pts:0, pin:'6599', badges:['مؤسس'], isPresent:false, joinDate:Date.now() };
+
+    // طليعة 1
+    members['1149916643'] = { name:'صالح سعيد صالح حبتور', role:'LEADER', rank:'قائد طليعة', team:'طليعة 1', pts:0, pin:'1149916643', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1146756604'] = { name:'حسن محمد حسن الشهري', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1146756604', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1145192223'] = { name:'ريان محمد احمد جعام', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1145192223', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['0111052173'] = { name:'غازي ابراهيم على سعيد العجمي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'0111052173', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1157051739'] = { name:'يزيد يحي عيسي خال', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1157051739', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1150537148'] = { name:'زياد سعيد محمد آل احمد العجلاني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1150537148', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1158717536'] = { name:'الوليد فيصل عبدالله الحازمي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1158717536', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1146194400'] = { name:'فهد فيصل خالد المهيني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1146194400', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1150983151'] = { name:'يحي علي يحيى شراحيلي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1150983151', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1149391128'] = { name:'عزام حيدر حسن خبراني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1149391128', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+
+    // طليعة 2
+    members['1152663553'] = { name:'ياسر موسى يحي ابو حيه', role:'LEADER', rank:'قائد طليعة', team:'طليعة 2', pts:0, pin:'1152663553', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1152451256'] = { name:'حاتم هشام حمزه خريزي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1152451256', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1150570198'] = { name:'محمد جابر علي آل جمحان عسيري', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1150570198', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1151320379'] = { name:'رياض محمد سليم الزهراني', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1151320379', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1151153754'] = { name:'ابراهيم فرحان جابر التليدي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1151153754', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1152864144'] = { name:'غازي باني مفضى الفدعاني العنزي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1152864144', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1149997080'] = { name:'صالح عبدالله علي الخثعمي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1149997080', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1152223028'] = { name:'اصيل متعب مدعج العالي العتيبي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1152223028', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1193372115'] = { name:'فواز سعيد عوض الشهراني', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1193372115', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1154592537'] = { name:'علي مرضي علي آل داحشه الغامدي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1154592537', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+
+    // طليعة 3
+    members['1153930803'] = { name:'بسام علي جابر قرادي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 3', pts:0, pin:'1153930803', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1146153513'] = { name:'علي بندر علي الرمثي الشهراني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1146153513', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1152356109'] = { name:'راكان سلمان علي شراحيلي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1152356109', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1152130900'] = { name:'زايد محمد مفلح الفاضلي القحطاني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1152130900', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1153093875'] = { name:'راشد سعيدان سعيد الراشدي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1153093875', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1147815250'] = { name:'عبدالعزيز محمد مفلح الفاضلي القحطاني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1147815250', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1154277246'] = { name:'عيسى غازي مسند العويمري الرشيدي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1154277246', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1147688624'] = { name:'بدر عبدالله يحي خظي كعبي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1147688624', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1152864557'] = { name:'عبدالله عادل عبدالله قشاش', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1152864557', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1155606302'] = { name:'حسام سعد عبدالله الشهراني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1155606302', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+
+    // طليعة 4
+    members['1145624308'] = { name:'مشعل محمد مرعي آل معمر القحطاني', role:'LEADER', rank:'قائد طليعة', team:'طليعة 4', pts:0, pin:'1145624308', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1145624290'] = { name:'مشاري محمد مرعي آل معمر القحطاني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145624290', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1148865380'] = { name:'وضاح ماجد سلمان الناصر الصويلح', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1148865380', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1149206243'] = { name:'محمد حسين حمد فقيه', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1149206243', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1148256413'] = { name:'فارس بريحي محمد العمري', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1148256413', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1146847395'] = { name:'رائد حسين علي حوباني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1146847395', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1146847387'] = { name:'راكان حسين علي حوباني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1146847387', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1147807240'] = { name:'عبدالله سعيد محمد آل عايض القرني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1147807240', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1145593594'] = { name:'ناصر مفلح عواض الحضيري المطيري', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145593594', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1145673270'] = { name:'مبارك مرزوق عبدالله خميس', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145673270', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+
     await DB.set({
-      members: m,
-      inviteCodes: { 'الفرقة الرئيسية':'FRQ001', 'طليعة النسر':'NSR2024' },
-      logs: { init:{ txt:'تم تأسيس النظام', ts:Date.now(), time:'00:00' } },
+      members: members,
+      logs: { init:{ txt:'تم تأسيس النظام بالبيانات الجديدة', ts:Date.now(), time:'00:00' } },
       announcements: {}, sessions: {}, tasks: {}, archived: {}
     });
-    alert('تمت التهيئة!\nعبدالله: 1000 | سلمان: 1111 | معاذ: 2222\nطليعة النسر: 2000، 2001، 2002');
+    alert('تمت التهيئة!\nالقادة:\nسلمان: 1090\nمعاذ: 1080\nعبدالله: 6599\n\nالطلائع 1-4 جاهزة.');
+    location.reload();
   }
 };
 
-/* ══════════════════════════════════════
-   RENDER ENGINE
-══════════════════════════════════════ */
 const Render = {
-
   home() {
     const me = S.members[S.user.id];
     if (!me) return;
@@ -748,7 +716,7 @@ const Render = {
     const root = document.getElementById('page-field');
     const isRoot   = S.user.role === 'ROOT';
     const isLeader = S.user.role === 'LEADER' || isRoot;
-    const teams = [...new Set(Object.values(S.members).map(m => m.team))];
+    const teams = [...new Set(Object.values(S.members).map(m => m.team))].filter(t => t !== 'الفرقة الرئيسية');
 
     let html = '';
     teams.forEach(team => {
@@ -777,7 +745,7 @@ const Render = {
               <div class="member-name">${m.name}</div>
               <div class="member-rank">
                 ${m.rank}
-                ${m.role==='ROOT'   ? '<span class="badge badge-gold" style="margin-right:4px;">قائد فرقة</span>' : ''}
+                ${m.role==='ROOT'   ? '<span class="badge badge-gold" style="margin-right:4px;">قيادة</span>' : ''}
                 ${m.role==='LEADER' ? '<span class="badge badge-blue" style="margin-right:4px;">قائد طليعة</span>' : ''}
               </div>
             </div>
@@ -787,7 +755,7 @@ const Render = {
       });
     });
 
-    root.innerHTML = `<div class="section-title">⚔️ الفرقة الكشفية</div>${html}`;
+    root.innerHTML = `<div class="section-title">⚔️ طلائع الفرقة</div>${html}`;
   },
 
   attendance() {
@@ -877,7 +845,7 @@ const Render = {
     if (S.user.role !== 'ROOT') return;
     const root = document.getElementById('page-dashboard');
     const members = Object.values(S.members);
-    const teams   = [...new Set(members.map(m => m.team))];
+    const teams   = [...new Set(members.map(m => m.team))].filter(t => t !== 'الفرقة الرئيسية');
     const present = members.filter(m => m.isPresent).length;
     const totalPts = members.reduce((s, m) => s + (m.pts||0), 0);
 
@@ -976,16 +944,7 @@ const Render = {
   manage() {
     if (S.user.role !== 'ROOT') return;
     const root = document.getElementById('page-manage');
-    const teams = [...new Set(Object.values(S.members).map(m => m.team))];
-
-    const invHtml = teams.map(t => `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;font-weight:700;">${t}</div>
-          <div style="font-size:20px;font-weight:900;color:var(--green);letter-spacing:3px;margin-top:2px;">${S.inviteCodes[t] || '---'}</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="Admin.genCode('${t}')">تجديد</button>
-      </div>`).join('');
+    const teams = [...new Set(Object.values(S.members).map(m => m.team))].filter(t => t !== 'الفرقة الرئيسية');
 
     const archHtml = Object.values(S.archived).map(m => `
       <div class="archive-item">
@@ -1008,17 +967,12 @@ const Render = {
         <button class="btn btn-gold btn-sm" style="flex:1;padding:13px;" onclick="Admin.showAdd()">إضافة عضو</button>
         <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px;" onclick="Admin.showAddTask()">إضافة مهمة</button>
       </div>
-      <div class="section-title">🔑 رموز الدعوة</div>
-      <div class="card">${invHtml}</div>
       <div class="section-title">🗂️ الأرشيف</div>
       ${archHtml}
     `;
   }
 };
 
-/* ══════════════════════════════════════
-   MEMBERS
-══════════════════════════════════════ */
 const Members = {
   openProfile(id) {
     const m = S.members[id];
@@ -1118,6 +1072,7 @@ const Members = {
   changePin(id) {
     const np = document.getElementById('pin-v').value.trim();
     if (!np || np.length < 4) { UI.toast('الرمز يجب 4 أرقام على الأقل', 'error'); return; }
+    // FIX: التحقق من وجود الرمز مع استثناء العضو الحالي
     if (S.members[np] && np !== id) { UI.toast('الرمز مستخدم مسبقاً', 'error'); return; }
     const oldData = { ...S.members[id], pin: np };
     DB.child('members').child(np).set(oldData).then(() => {
@@ -1146,16 +1101,13 @@ const Members = {
   }
 };
 
-/* ══════════════════════════════════════
-   ATTENDANCE
-══════════════════════════════════════ */
 const Attendance = {
   _att: {},
   _gps: '',
 
   newSession() {
     const isRoot = S.user.role === 'ROOT';
-    const teams  = [...new Set(Object.values(S.members).map(m => m.team))];
+    const teams  = [...new Set(Object.values(S.members).map(m => m.team))].filter(t => t !== 'الفرقة الرئيسية');
     this._att = {};
     this._gps = '';
 
@@ -1247,9 +1199,6 @@ const Attendance = {
   }
 };
 
-/* ══════════════════════════════════════
-   TASKS
-══════════════════════════════════════ */
 const Tasks = {
   _completing: new Set(),
   complete(taskId, userId) {
@@ -1265,9 +1214,6 @@ const Tasks = {
   }
 };
 
-/* ══════════════════════════════════════
-   ADMIN
-══════════════════════════════════════ */
 const Admin = {
   sendAnn() {
     const txt = document.getElementById('ann-text')?.value.trim();
@@ -1280,7 +1226,7 @@ const Admin = {
   },
 
   showAdd() {
-    const teams = [...new Set(Object.values(S.members).map(m => m.team))];
+    const teams = [...new Set(Object.values(S.members).map(m => m.team))].filter(t => t !== 'الفرقة الرئيسية');
     UI.openModal(`
       <div class="modal-title">➕ إضافة عضو جديد</div>
       <label>الاسم الكامل</label>
@@ -1288,13 +1234,9 @@ const Admin = {
       <label>الرتبة</label>
       <input id="nm-r" placeholder="كشاف، قائد طليعة...">
       <label>الطليعة</label>
-      <select id="nm-t" onchange="Admin.teamChange()">
+      <select id="nm-t">
         ${teams.map(t => `<option value="${t}">${t}</option>`).join('')}
-        <option value="__new__">+ طليعة جديدة</option>
       </select>
-      <div id="nm-tn" style="display:none;">
-        <input id="nm-tn-v" placeholder="اسم الطليعة الجديدة">
-      </div>
       <label>الرمز السري</label>
       <input id="nm-p" type="number" placeholder="رمز من 4 أرقام على الأقل">
       <label>الدور</label>
@@ -1307,24 +1249,16 @@ const Admin = {
     `);
   },
 
-  teamChange() {
-    const v = document.getElementById('nm-t')?.value;
-    const wrap = document.getElementById('nm-tn');
-    if (wrap) wrap.style.display = v === '__new__' ? 'block' : 'none';
-  },
-
   addMember() {
     const name = document.getElementById('nm-n')?.value.trim();
     const rank = document.getElementById('nm-r')?.value.trim() || 'كشاف';
-    let   team = document.getElementById('nm-t')?.value;
-    if (team === '__new__') team = document.getElementById('nm-tn-v')?.value.trim();
+    const team = document.getElementById('nm-t')?.value;
     const pin  = document.getElementById('nm-p')?.value.trim();
     const role = document.getElementById('nm-role')?.value;
     if (!name || !pin || pin.length < 4) { UI.toast('أكمل الحقول (الرمز 4+ أرقام)', 'error'); return; }
     if (!team) { UI.toast('اختر طليعة', 'error'); return; }
     if (S.members[pin]) { UI.toast('الرمز مستخدم مسبقاً', 'error'); return; }
     DB.child('members').child(pin).set({ name, rank, team, role, pts:0, pin, badges:['عضو جديد'], isPresent:false, joinDate:Date.now() });
-    if (!S.inviteCodes[team]) Admin.genCode(team, false);
     App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
     UI.toast(`تمت إضافة ${name} ✓`);
     UI.closeModal();
@@ -1368,13 +1302,6 @@ const Admin = {
     UI.closeModal();
   },
 
-  genCode(team, showToast = true) {
-    const prefix = team.replace(/\s/g,'').slice(0,3).toUpperCase();
-    const code   = prefix + Math.floor(1000 + Math.random() * 9000);
-    DB.child('inviteCodes').child(team).set(code);
-    if (showToast) UI.toast(`تم تجديد كود ${team} ✓`);
-  },
-
   restoreMember(pin) {
     const m = S.archived[pin];
     if (!m) return;
@@ -1387,55 +1314,6 @@ const Admin = {
   }
 };
 
-/* ══════════════════════════════════════
-   SELF-REGISTER
-══════════════════════════════════════ */
-function showRegister() {
-  document.getElementById('login-screen').innerHTML = `
-    <div style="width:100%;max-width:380px;padding:20px;margin:auto;">
-      <div class="reg-hero">
-        <div class="reg-logo">أوتاد</div>
-        <div class="reg-title">انضم للفرقة الكشفية</div>
-        <div class="reg-sub">أدخل كود الدعوة الخاص بطليعتك</div>
-      </div>
-      <div class="login-box">
-        <input id="reg-code" placeholder="كود الدعوة" style="text-align:center;letter-spacing:4px;font-size:18px;">
-        <input id="reg-name" placeholder="اسمك الكامل">
-        <input id="reg-pin" type="number" placeholder="اختر رمزاً سرياً (4 أرقام)">
-        <button class="btn btn-green" onclick="Register.submit()">انضم الآن ⚔️</button>
-        <div style="margin-top:14px;font-size:12px;color:var(--text3);text-align:center;cursor:pointer;" onclick="location.reload()">لدي رمز — تسجيل الدخول</div>
-      </div>
-    </div>`;
-}
-
-const Register = {
-  async submit() {
-    const code = document.getElementById('reg-code')?.value.trim();
-    const name = document.getElementById('reg-name')?.value.trim();
-    const pin  = document.getElementById('reg-pin')?.value.trim();
-    if (!code || !name || !pin || pin.length < 4) {
-      UI.toast('أكمل جميع الحقول (الرمز 4 أرقام)', 'error');
-      return;
-    }
-    const snap  = await DB.child('inviteCodes').once('value');
-    const codes = snap.val() || {};
-    const team  = Object.keys(codes).find(t => codes[t] === code);
-    if (!team) { UI.toast('كود الدعوة غير صحيح', 'error'); return; }
-    const mSnap = await DB.child('members').child(pin).once('value');
-    if (mSnap.val()) { UI.toast('هذا الرمز مستخدم، اختر رمزاً آخر', 'error'); return; }
-    await DB.child('members').child(pin).set({
-      name, rank:'كشاف', team, role:'USER',
-      pts:0, pin, badges:['عضو جديد'], isPresent:false, joinDate:Date.now()
-    });
-    DB.child('logs').push({ txt:`انضم عضو جديد: ${name} في ${team}`, ts:Date.now(), time:now() });
-    UI.toast(`مرحباً ${name}! انضممت لـ ${team} ✓`);
-    setTimeout(() => location.reload(), 1800);
-  }
-};
-
-/* ══════════════════════════════════════
-   INIT
-══════════════════════════════════════ */
 window.onload = () => {
   if (localStorage.getItem('awtad_theme') === 'light') document.body.classList.add('light');
 };
