@@ -425,7 +425,7 @@ const fbConfig = {
   databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
 };
 firebase.initializeApp(fbConfig);
-const DB = firebase.database().ref("awtad_v9");
+const DB = firebase.database().ref("awtad_v10"); // إصدار جديد
 
 /* ══════════════════════════════════════
    UTILS
@@ -640,64 +640,66 @@ const App = {
 
   async hardReset() {
     const members = {};
+    
+    // القيادة العليا (أرقامهم لم تتغير)
     members['1090'] = { name:'سلمان الصويلح', role:'ROOT', rank:'قائد الفرقة', team:'الفرقة الرئيسية', pts:0, pin:'1090', badges:['مؤسس'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
     members['1080'] = { name:'معاذ الشنقيطي', role:'ROOT', rank:'نائب قائد الوحدة', team:'الفرقة الرئيسية', pts:0, pin:'1080', badges:['مؤسس'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
     members['6599'] = { name:'عبدالله العرفه', role:'ROOT', rank:'عريف أول', team:'الفرقة الرئيسية', pts:0, pin:'6599', badges:['مؤسس'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
 
     // طليعة 1
-    members['1158717536'] = { name:'الوليد فيصل عبدالله الحازمي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 1', pts:0, pin:'1158717536', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1149916643'] = { name:'صالح سعيد صالح حبتور', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1149916643', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1146756604'] = { name:'حسن محمد حسن الشهري', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1146756604', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1145192223'] = { name:'ريان محمد احمد جعام', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1145192223', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['0111052173'] = { name:'غازي ابراهيم على سعيد العجمي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'0111052173', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1157051739'] = { name:'يزيد يحي عيسي خال', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1157051739', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1150537148'] = { name:'زياد سعيد محمد آل احمد العجلاني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1150537148', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1146194400'] = { name:'فهد فيصل خالد المهيني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1146194400', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1150983151'] = { name:'يحي علي يحيى شراحيلي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1150983151', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1149391128'] = { name:'عزام حيدر حسن خبراني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1149391128', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['0730'] = { name:'الوليد فيصل عبدالله الحازمي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 1', pts:0, pin:'0730', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['4829'] = { name:'صالح سعيد صالح حبتور', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'4829', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['9164'] = { name:'حسن محمد حسن الشهري', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'9164', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['2547'] = { name:'ريان محمد احمد جعام', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'2547', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['6381'] = { name:'غازي ابراهيم على سعيد العجمي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'6381', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['1056'] = { name:'يزيد يحي عيسي خال', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1056', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['8472'] = { name:'زياد سعيد محمد آل احمد العجلاني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'8472', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['3290'] = { name:'فهد فيصل خالد المهيني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'3290', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['5713'] = { name:'يحي علي يحيى شراحيلي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'5713', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['7604'] = { name:'عزام حيدر حسن خبراني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'7604', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
 
     // طليعة 2
-    members['1152451256'] = { name:'حاتم هشام حمزه خريزي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 2', pts:0, pin:'1152451256', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1152663553'] = { name:'ياسر موسى يحي ابو حيه', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1152663553', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1150570198'] = { name:'محمد جابر علي آل جمحان عسيري', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1150570198', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1151320379'] = { name:'رياض محمد سليم الزهراني', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1151320379', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1151153754'] = { name:'ابراهيم فرحان جابر التليدي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1151153754', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1152864144'] = { name:'غازي باني مفضى الفدعاني العنزي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1152864144', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1149997080'] = { name:'صالح عبدالله علي الخثعمي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1149997080', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1152223028'] = { name:'اصيل متعب مدعج العالي العتيبي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1152223028', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1193372115'] = { name:'فواز سعيد عوض الشهراني', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1193372115', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1154592537'] = { name:'علي مرضي علي آل داحشه الغامدي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1154592537', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['0920'] = { name:'حاتم هشام حمزه خريزي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 2', pts:0, pin:'0920', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['4158'] = { name:'ياسر موسى يحي ابو حيه', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'4158', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['6892'] = { name:'محمد جابر علي آل جمحان عسيري', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'6892', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['2345'] = { name:'رياض محمد سليم الزهراني', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'2345', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['8701'] = { name:'ابراهيم فرحان جابر التليدي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'8701', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['3467'] = { name:'غازي باني مفضى الفدعاني العنزي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'3467', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['5219'] = { name:'صالح عبدالله علي الخثعمي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'5219', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['9834'] = { name:'اصيل متعب مدعج العالي العتيبي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'9834', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['1573'] = { name:'فواز سعيد عوض الشهراني', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1573', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['4026'] = { name:'علي مرضي علي آل داحشه الغامدي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'4026', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
 
     // طليعة 3
-    members['1152356109'] = { name:'راكان سلمان علي شراحيلي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 3', pts:0, pin:'1152356109', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1153930803'] = { name:'بسام علي جابر قرادي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1153930803', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1146153513'] = { name:'علي بندر علي الرمثي الشهراني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1146153513', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1152130900'] = { name:'زايد محمد مفلح الفاضلي القحطاني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1152130900', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1153093875'] = { name:'راشد سعيدان سعيد الراشدي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1153093875', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1147815250'] = { name:'عبدالعزيز محمد مفلح الفاضلي القحطاني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1147815250', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1154277246'] = { name:'عيسى غازي مسند العويمري الرشيدي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1154277246', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1147688624'] = { name:'بدر عبدالله يحي خظي كعبي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1147688624', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1152864557'] = { name:'عبدالله عادل عبدالله قشاش', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1152864557', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1155606302'] = { name:'حسام سعد عبدالله الشهراني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1155606302', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['0640'] = { name:'راكان سلمان علي شراحيلي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 3', pts:0, pin:'0640', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['7389'] = { name:'بسام علي جابر قرادي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'7389', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['2951'] = { name:'علي بندر علي الرمثي الشهراني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'2951', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['8136'] = { name:'زايد محمد مفلح الفاضلي القحطاني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'8136', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['4702'] = { name:'راشد سعيدان سعيد الراشدي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'4702', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['6248'] = { name:'عبدالعزيز محمد مفلح الفاضلي القحطاني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'6248', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['1894'] = { name:'عيسى غازي مسند العويمري الرشيدي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1894', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['5370'] = { name:'بدر عبدالله يحي خظي كعبي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'5370', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['3065'] = { name:'عبدالله عادل عبدالله قشاش', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'3065', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['9521'] = { name:'حسام سعد عبدالله الشهراني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'9521', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
 
     // طليعة 4
-    members['1148865380'] = { name:'وضاح ماجد سلمان الناصر الصويلح', role:'LEADER', rank:'قائد طليعة', team:'طليعة 4', pts:0, pin:'1148865380', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1145624308'] = { name:'مشعل محمد مرعي آل معمر القحطاني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145624308', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1145624290'] = { name:'مشاري محمد مرعي آل معمر القحطاني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145624290', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1149206243'] = { name:'محمد حسين حمد فقيه', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1149206243', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1148256413'] = { name:'فارس بريحي محمد العمري', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1148256413', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1146847395'] = { name:'رائد حسين علي حوباني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1146847395', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1146847387'] = { name:'راكان حسين علي حوباني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1146847387', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1147807240'] = { name:'عبدالله سعيد محمد آل عايض القرني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1147807240', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1145593594'] = { name:'ناصر مفلح عواض الحضيري المطيري', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145593594', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
-    members['1145673270'] = { name:'مبارك مرزوق عبدالله خميس', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145673270', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['0810'] = { name:'وضاح ماجد سلمان الناصر الصويلح', role:'LEADER', rank:'قائد طليعة', team:'طليعة 4', pts:0, pin:'0810', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['6734'] = { name:'مشعل محمد مرعي آل معمر القحطاني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'6734', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['2489'] = { name:'مشاري محمد مرعي آل معمر القحطاني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'2489', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['8015'] = { name:'محمد حسين حمد فقيه', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'8015', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['4297'] = { name:'فارس بريحي محمد العمري', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'4297', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['1568'] = { name:'رائد حسين علي حوباني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1568', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['5842'] = { name:'راكان حسين علي حوباني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'5842', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['3906'] = { name:'عبدالله سعيد محمد آل عايض القرني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'3906', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['7153'] = { name:'ناصر مفلح عواض الحضيري المطيري', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'7153', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
+    members['8620'] = { name:'مبارك مرزوق عبدالله خميس', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'8620', badges:['عضو جديد'], isPresent:false, joinDate:Date.now(), idNumber:'', mobile:'' };
 
     await DB.set({
       members: members,
-      logs: { init:{ txt:'تم تأسيس النظام', ts:Date.now(), time:'00:00' } },
+      logs: { init:{ txt:'تم تأسيس النظام بالأرقام الجديدة (4 خانات)', ts:Date.now(), time:'00:00' } },
       announcements: {}, sessions: {}, tasks: {}, archived: {}
     });
-    alert('تمت التهيئة بنجاح!\nالقادة:\nسلمان: 1090\nمعاذ: 1080\nعبدالله: 6599');
+    alert('تمت التهيئة بنجاح!\nالقادة:\nسلمان: 1090\nمعاذ: 1080\nعبدالله: 6599\n\nجميع الأرقام 4 خانات كما هو مطلوب.');
     location.reload();
   }
 };
@@ -791,7 +793,6 @@ const Render = {
     teams.forEach(team => {
       if (!isRoot && S.user.team !== team) return;
       let members = Object.entries(S.members).filter(([, m]) => m.team === team);
-      // ترتيب: قائد > نائب > أبجدي
       members.sort((a, b) => {
         const rA = a[1].role, rB = b[1].role;
         if (rA === 'LEADER' && rB !== 'LEADER') return -1;
