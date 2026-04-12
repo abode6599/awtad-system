@@ -284,13 +284,6 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
 .archive-item { padding:12px 14px; border-radius:14px; background:var(--card2); border:1px solid var(--border); margin-bottom:6px; opacity:0.75; display:flex; align-items:center; gap:12px; }
 .archive-name { font-size:14px; font-weight:700; }
 .archive-meta { font-size:11px; color:var(--text3); margin-top:2px; }
-
-.reg-hero { text-align:center; padding:32px 20px 20px; }
-.reg-logo { font-size:44px; font-weight:900; color:var(--green); }
-.reg-title { font-size:18px; font-weight:700; margin-top:8px; }
-.reg-sub { font-size:13px; color:var(--text2); margin-top:4px; }
-
-.leader-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:18px; margin-bottom:12px; }
 </style>
 </head>
 <body>
@@ -397,7 +390,7 @@ const fbConfig = {
   databaseURL: "https://awtad-system-default-rtdb.firebaseio.com"
 };
 firebase.initializeApp(fbConfig);
-const DB = firebase.database().ref("awtad_v5");
+const DB = firebase.database().ref("awtad_v6");
 
 const TC = ['#4ade80','#60a5fa','#f59e0b','#a78bfa','#f43f5e','#34d399','#fb923c','#e879f9'];
 function teamColor(name) {
@@ -574,27 +567,27 @@ const App = {
     const k = prompt('أدخل رمز المالك:');
     if (k !== '7777') return;
 
-    // القادة الرئيسيون
     const members = {};
+    // القادة الرئيسيون
     members['1090'] = { name:'سلمان الصويلح', role:'ROOT', rank:'قائد الفرقة', team:'الفرقة الرئيسية', pts:0, pin:'1090', badges:['مؤسس'], isPresent:false, joinDate:Date.now() };
     members['1080'] = { name:'معاذ الشنقيطي', role:'ROOT', rank:'نائب قائد الوحدة', team:'الفرقة الرئيسية', pts:0, pin:'1080', badges:['مؤسس'], isPresent:false, joinDate:Date.now() };
     members['6599'] = { name:'عبدالله العرفه', role:'ROOT', rank:'عريف أول', team:'الفرقة الرئيسية', pts:0, pin:'6599', badges:['مؤسس'], isPresent:false, joinDate:Date.now() };
 
-    // طليعة 1
-    members['1149916643'] = { name:'صالح سعيد صالح حبتور', role:'LEADER', rank:'قائد طليعة', team:'طليعة 1', pts:0, pin:'1149916643', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    // طليعة 1 - القائد: الوليد الحازمي
+    members['1158717536'] = { name:'الوليد فيصل عبدالله الحازمي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 1', pts:0, pin:'1158717536', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1149916643'] = { name:'صالح سعيد صالح حبتور', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1149916643', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1146756604'] = { name:'حسن محمد حسن الشهري', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1146756604', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1145192223'] = { name:'ريان محمد احمد جعام', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1145192223', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['0111052173'] = { name:'غازي ابراهيم على سعيد العجمي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'0111052173', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1157051739'] = { name:'يزيد يحي عيسي خال', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1157051739', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1150537148'] = { name:'زياد سعيد محمد آل احمد العجلاني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1150537148', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
-    members['1158717536'] = { name:'الوليد فيصل عبدالله الحازمي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1158717536', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1146194400'] = { name:'فهد فيصل خالد المهيني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1146194400', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1150983151'] = { name:'يحي علي يحيى شراحيلي', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1150983151', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1149391128'] = { name:'عزام حيدر حسن خبراني', role:'USER', rank:'كشاف', team:'طليعة 1', pts:0, pin:'1149391128', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
 
-    // طليعة 2
-    members['1152663553'] = { name:'ياسر موسى يحي ابو حيه', role:'LEADER', rank:'قائد طليعة', team:'طليعة 2', pts:0, pin:'1152663553', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
-    members['1152451256'] = { name:'حاتم هشام حمزه خريزي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1152451256', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    // طليعة 2 - القائد: حاتم خريزي
+    members['1152451256'] = { name:'حاتم هشام حمزه خريزي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 2', pts:0, pin:'1152451256', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1152663553'] = { name:'ياسر موسى يحي ابو حيه', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1152663553', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1150570198'] = { name:'محمد جابر علي آل جمحان عسيري', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1150570198', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1151320379'] = { name:'رياض محمد سليم الزهراني', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1151320379', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1151153754'] = { name:'ابراهيم فرحان جابر التليدي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1151153754', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
@@ -604,10 +597,10 @@ const App = {
     members['1193372115'] = { name:'فواز سعيد عوض الشهراني', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1193372115', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1154592537'] = { name:'علي مرضي علي آل داحشه الغامدي', role:'USER', rank:'كشاف', team:'طليعة 2', pts:0, pin:'1154592537', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
 
-    // طليعة 3
-    members['1153930803'] = { name:'بسام علي جابر قرادي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 3', pts:0, pin:'1153930803', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    // طليعة 3 - القائد: راكان شراحيلي
+    members['1152356109'] = { name:'راكان سلمان علي شراحيلي', role:'LEADER', rank:'قائد طليعة', team:'طليعة 3', pts:0, pin:'1152356109', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1153930803'] = { name:'بسام علي جابر قرادي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1153930803', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1146153513'] = { name:'علي بندر علي الرمثي الشهراني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1146153513', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
-    members['1152356109'] = { name:'راكان سلمان علي شراحيلي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1152356109', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1152130900'] = { name:'زايد محمد مفلح الفاضلي القحطاني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1152130900', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1153093875'] = { name:'راشد سعيدان سعيد الراشدي', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1153093875', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1147815250'] = { name:'عبدالعزيز محمد مفلح الفاضلي القحطاني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1147815250', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
@@ -616,10 +609,10 @@ const App = {
     members['1152864557'] = { name:'عبدالله عادل عبدالله قشاش', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1152864557', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1155606302'] = { name:'حسام سعد عبدالله الشهراني', role:'USER', rank:'كشاف', team:'طليعة 3', pts:0, pin:'1155606302', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
 
-    // طليعة 4
-    members['1145624308'] = { name:'مشعل محمد مرعي آل معمر القحطاني', role:'LEADER', rank:'قائد طليعة', team:'طليعة 4', pts:0, pin:'1145624308', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    // طليعة 4 - القائد: وضاح الصويلح
+    members['1148865380'] = { name:'وضاح ماجد سلمان الناصر الصويلح', role:'LEADER', rank:'قائد طليعة', team:'طليعة 4', pts:0, pin:'1148865380', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
+    members['1145624308'] = { name:'مشعل محمد مرعي آل معمر القحطاني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145624308', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1145624290'] = { name:'مشاري محمد مرعي آل معمر القحطاني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1145624290', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
-    members['1148865380'] = { name:'وضاح ماجد سلمان الناصر الصويلح', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1148865380', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1149206243'] = { name:'محمد حسين حمد فقيه', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1149206243', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1148256413'] = { name:'فارس بريحي محمد العمري', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1148256413', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
     members['1146847395'] = { name:'رائد حسين علي حوباني', role:'USER', rank:'كشاف', team:'طليعة 4', pts:0, pin:'1146847395', badges:['عضو جديد'], isPresent:false, joinDate:Date.now() };
@@ -978,7 +971,9 @@ const Members = {
     const m = S.members[id];
     if (!m) return;
     const canManage = S.user.role === 'ROOT' || (S.user.role === 'LEADER' && m.team === S.user.team);
+    const isRoot = S.user.role === 'ROOT';
     const col = teamColor(m.team);
+    const teams = [...new Set(Object.values(S.members).map(mb => mb.team))].filter(t => t !== 'الفرقة الرئيسية');
 
     let attC = 0, totS = 0;
     S.sessions.forEach(s => {
@@ -1032,6 +1027,24 @@ const Members = {
           <input type="number" id="pin-v" placeholder="الرمز الجديد (4+ أرقام)">
           <button class="btn btn-ghost" onclick="Members.changePin('${id}')">تحديث الرمز</button>
         </div>
+        ${isRoot ? `
+          <div class="manage-section">
+            <div class="manage-section-title">تغيير الدور</div>
+            <select id="role-v">
+              <option value="USER" ${m.role==='USER'?'selected':''}>كشاف</option>
+              <option value="LEADER" ${m.role==='LEADER'?'selected':''}>قائد طليعة</option>
+              <option value="VICE_LEADER" ${m.role==='VICE_LEADER'?'selected':''}>نائب قائد طليعة</option>
+            </select>
+            <button class="btn btn-blue btn-sm" style="margin-top:8px;" onclick="Members.changeRole('${id}')">تحديث الدور</button>
+          </div>
+          <div class="manage-section">
+            <div class="manage-section-title">نقل إلى طليعة أخرى</div>
+            <select id="team-v">
+              ${teams.map(t => `<option value="${t}" ${m.team===t?'selected':''}>${t}</option>`).join('')}
+            </select>
+            <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="Members.changeTeam('${id}')">نقل الطليعة</button>
+          </div>
+        ` : ''}
         ${id !== S.user.id ? `
           <div class="manage-section">
             <div class="manage-section-title">حذف العضو</div>
@@ -1069,19 +1082,48 @@ const Members = {
     UI.closeModal();
   },
 
-  changePin(id) {
+  async changePin(id) {
     const np = document.getElementById('pin-v').value.trim();
     if (!np || np.length < 4) { UI.toast('الرمز يجب 4 أرقام على الأقل', 'error'); return; }
-    // FIX: التحقق من وجود الرمز مع استثناء العضو الحالي
-    if (S.members[np] && np !== id) { UI.toast('الرمز مستخدم مسبقاً', 'error'); return; }
-    const oldData = { ...S.members[id], pin: np };
-    DB.child('members').child(np).set(oldData).then(() => {
-      if (np !== id) DB.child('members').child(id).remove();
+    
+    try {
+      // التحقق من وجود الرمز في قاعدة البيانات مباشرة
+      const snap = await DB.child('members').child(np).once('value');
+      if (snap.exists() && np !== id) {
+        UI.toast('الرمز مستخدم مسبقاً', 'error');
+        return;
+      }
+      
+      const oldData = { ...S.members[id], pin: np };
+      await DB.child('members').child(np).set(oldData);
+      if (np !== id) await DB.child('members').child(id).remove();
       if (S.user.id === id) S.user.id = np;
       App.log(`${S.user.name} غيّر رمز ${S.members[id].name} من ${id} إلى ${np}`);
       UI.toast('تم تحديث الرمز السري ✓');
       UI.closeModal();
+    } catch (e) {
+      UI.toast('حدث خطأ أثناء تحديث الرمز', 'error');
+    }
+  },
+
+  changeRole(id) {
+    const newRole = document.getElementById('role-v').value;
+    const roleNames = { 'USER': 'كشاف', 'LEADER': 'قائد طليعة', 'VICE_LEADER': 'نائب قائد طليعة' };
+    DB.child('members').child(id).update({ 
+      role: newRole,
+      rank: roleNames[newRole]
     });
+    App.log(`${S.user.name} غيّر دور ${S.members[id].name} إلى ${roleNames[newRole]}`);
+    UI.toast(`تم تحديث الدور ✓`);
+    UI.closeModal();
+  },
+
+  changeTeam(id) {
+    const newTeam = document.getElementById('team-v').value;
+    DB.child('members').child(id).update({ team: newTeam });
+    App.log(`${S.user.name} نقل ${S.members[id].name} إلى ${newTeam}`);
+    UI.toast(`تم النقل إلى ${newTeam} ✓`);
+    UI.closeModal();
   },
 
   archive(id) {
@@ -1243,25 +1285,41 @@ const Admin = {
       <select id="nm-role">
         <option value="USER">كشاف</option>
         <option value="LEADER">قائد طليعة</option>
+        <option value="VICE_LEADER">نائب قائد طليعة</option>
       </select>
       <button class="btn btn-green" onclick="Admin.addMember()">إضافة العضو ✓</button>
       <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>
     `);
   },
 
-  addMember() {
+  async addMember() {
     const name = document.getElementById('nm-n')?.value.trim();
     const rank = document.getElementById('nm-r')?.value.trim() || 'كشاف';
     const team = document.getElementById('nm-t')?.value;
     const pin  = document.getElementById('nm-p')?.value.trim();
     const role = document.getElementById('nm-role')?.value;
+    
     if (!name || !pin || pin.length < 4) { UI.toast('أكمل الحقول (الرمز 4+ أرقام)', 'error'); return; }
     if (!team) { UI.toast('اختر طليعة', 'error'); return; }
-    if (S.members[pin]) { UI.toast('الرمز مستخدم مسبقاً', 'error'); return; }
-    DB.child('members').child(pin).set({ name, rank, team, role, pts:0, pin, badges:['عضو جديد'], isPresent:false, joinDate:Date.now() });
-    App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
-    UI.toast(`تمت إضافة ${name} ✓`);
-    UI.closeModal();
+    
+    try {
+      const snap = await DB.child('members').child(pin).once('value');
+      if (snap.exists()) {
+        UI.toast('الرمز مستخدم مسبقاً', 'error');
+        return;
+      }
+      
+      const roleNames = { 'USER': 'كشاف', 'LEADER': 'قائد طليعة', 'VICE_LEADER': 'نائب قائد طليعة' };
+      await DB.child('members').child(pin).set({ 
+        name, rank: roleNames[role], team, role, pts:0, pin, 
+        badges: ['عضو جديد'], isPresent: false, joinDate: Date.now() 
+      });
+      App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
+      UI.toast(`تمت إضافة ${name} ✓`);
+      UI.closeModal();
+    } catch (e) {
+      UI.toast('حدث خطأ أثناء الإضافة', 'error');
+    }
   },
 
   showAddTask() {
