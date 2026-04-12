@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -21,7 +20,6 @@
   --red:#f43f5e; --blue:#60a5fa; --purple:#a78bfa;
   --text:#e2f5e2; --text2:#86b886; --text3:#4a7a4a;
 }
-/* FIX #7: --green3 في light mode */
 .light {
   --bg:#f0f7f0; --bg2:#e4f0e4; --card:#ffffff; --card2:#f5faf5;
   --border:#c8e6c8; --border2:#a5d6a5;
@@ -34,51 +32,47 @@
 /* ═══════════════════════════════════════
 BASE
 ═══════════════════════════════════════ */
-
-- { box-sizing:border-box; margin:0; padding:0; font-family:‘Cairo’,sans-serif; -webkit-tap-highlight-color:transparent; }
-  /* FIX #4,#5: outline none global لكل clickable */
-  button, input, select, textarea { outline:none; -webkit-appearance:none; appearance:none; }
-  body { background:var(–bg); color:var(–text); min-height:100vh; overflow-x:hidden; }
-  body::before {
-  content:’’; position:fixed; inset:0; z-index:0; pointer-events:none;
+* { box-sizing:border-box; margin:0; padding:0; font-family:'Cairo',sans-serif; -webkit-tap-highlight-color:transparent; }
+button, input, select, textarea { outline:none; -webkit-appearance:none; appearance:none; }
+body { background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
   background:
   radial-gradient(ellipse 80% 60% at 50% -10%, rgba(74,222,128,0.07) 0%, transparent 70%),
   radial-gradient(ellipse 40% 40% at 90% 90%, rgba(251,191,36,0.04) 0%, transparent 60%);
-  }
-  ::-webkit-scrollbar { width:4px; }
-  ::-webkit-scrollbar-track { background:var(–bg); }
-  ::-webkit-scrollbar-thumb { background:var(–border2); border-radius:4px; }
-  /* FIX #6: إزالة أسهم input number */
-  input[type=number]::-webkit-outer-spin-button,
-  input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
-  input[type=number] { -moz-appearance:textfield; }
+}
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+input[type=number] { -moz-appearance:textfield; }
 
 /* ═══════════════════════════════════════
 LOGIN
 ═══════════════════════════════════════ */
 #login-screen {
 position:fixed; inset:0; z-index:10000;
-background:var(–bg); display:flex; align-items:center; justify-content:center; padding:20px;
+background:var(--bg); display:flex; align-items:center; justify-content:center; padding:20px;
 }
 .login-wrap { width:100%; max-width:380px; text-align:center; }
-.login-logo { font-size:52px; font-weight:900; color:var(–green); letter-spacing:-2px; line-height:1; text-shadow:0 0 40px rgba(74,222,128,0.4); margin-bottom:4px; }
-.login-sub { color:var(–text3); font-size:13px; margin-bottom:36px; letter-spacing:3px; }
-.login-box { background:var(–card); border:1px solid var(–border2); border-radius:24px; padding:32px 28px; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+.login-logo { font-size:52px; font-weight:900; color:var(--green); letter-spacing:-2px; line-height:1; text-shadow:0 0 40px rgba(74,222,128,0.4); margin-bottom:4px; }
+.login-sub { color:var(--text3); font-size:13px; margin-bottom:36px; letter-spacing:3px; }
+.login-box { background:var(--card); border:1px solid var(--border2); border-radius:24px; padding:32px 28px; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
 .pin-display { display:flex; justify-content:center; gap:12px; margin-bottom:28px; }
-.pin-dot { width:14px; height:14px; border-radius:50%; background:var(–border2); border:2px solid var(–border2); transition:all 0.2s; }
-.pin-dot.filled { background:var(–green); border-color:var(–green); box-shadow:0 0 10px rgba(74,222,128,0.5); }
+.pin-dot { width:14px; height:14px; border-radius:50%; background:var(--border2); border:2px solid var(--border2); transition:all 0.2s; }
+.pin-dot.filled { background:var(--green); border-color:var(--green); box-shadow:0 0 10px rgba(74,222,128,0.5); }
 .numpad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-/* FIX #5: iOS styling fix */
 .num-btn {
-background:var(–card2); border:1px solid var(–border); border-radius:14px;
-padding:18px; font-size:22px; font-weight:700; color:var(–text); cursor:pointer;
-transition:all 0.15s; font-family:‘Cairo’,sans-serif;
+background:var(--card2); border:1px solid var(--border); border-radius:14px;
+padding:18px; font-size:22px; font-weight:700; color:var(--text); cursor:pointer;
+transition:all 0.15s; font-family:'Cairo',sans-serif;
 -webkit-appearance:none; appearance:none;
 }
-.num-btn:active { transform:scale(0.93); background:var(–border); }
-.num-btn.del { font-size:16px; color:var(–text2); }
-.num-btn.enter { background:var(–green2); color:#000; font-size:15px; font-weight:900; border:none; }
-.login-error { color:var(–red); font-size:13px; margin-top:14px; min-height:18px; }
+.num-btn:active { transform:scale(0.93); background:var(--border); }
+.num-btn.del { font-size:16px; color:var(--text2); }
+.num-btn.enter { background:var(--green2); color:#000; font-size:15px; font-weight:900; border:none; }
+.login-error { color:var(--red); font-size:13px; margin-top:14px; min-height:18px; }
 
 /* ═══════════════════════════════════════
 APP SHELL
@@ -89,39 +83,39 @@ APP SHELL
 .header {
 position:sticky; top:0; z-index:100;
 background:rgba(6,13,6,0.88); backdrop-filter:blur(16px);
-border-bottom:1px solid var(–border);
+border-bottom:1px solid var(--border);
 padding:14px 20px; display:flex; align-items:center; justify-content:space-between;
 }
 .light .header { background:rgba(240,247,240,0.92); }
 .header-user { display:flex; align-items:center; gap:12px; }
 .avatar { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; flex-shrink:0; border:2px solid currentColor; }
 .header-name { font-size:15px; font-weight:700; }
-.header-rank { font-size:11px; color:var(–text2); margin-top:1px; }
+.header-rank { font-size:11px; color:var(--text2); margin-top:1px; }
 .header-actions { display:flex; gap:8px; }
 .icon-btn {
 height:36px; padding:0 12px; border-radius:10px;
-background:var(–card2); border:1px solid var(–border);
+background:var(--card2); border:1px solid var(--border);
 display:flex; align-items:center; justify-content:center;
-cursor:pointer; font-size:13px; color:var(–text2);
-font-family:‘Cairo’,sans-serif; font-weight:700; transition:all 0.2s;
+cursor:pointer; font-size:13px; color:var(--text2);
+font-family:'Cairo',sans-serif; font-weight:700; transition:all 0.2s;
 }
 .icon-btn:active { transform:scale(0.9); }
 
 /* NAV */
 nav {
 position:fixed; bottom:0; width:100%; z-index:1000;
-background:var(–card); border-top:1px solid var(–border);
+background:var(--card); border-top:1px solid var(--border);
 display:flex; justify-content:space-around; align-items:center;
 padding:8px 0 14px;
 }
 .nav-item {
 display:flex; flex-direction:column; align-items:center; gap:2px;
-color:var(–text3); font-size:10px; font-weight:700;
+color:var(--text3); font-size:10px; font-weight:700;
 cursor:pointer; padding:4px 8px; border-radius:12px;
 transition:all 0.2s; min-width:50px;
 }
 .nav-icon { font-size:20px; transition:transform 0.2s; display:block; }
-.nav-item.active { color:var(–green); }
+.nav-item.active { color:var(--green); }
 .nav-item.active .nav-icon { transform:translateY(-2px); }
 
 /* PAGES */
@@ -129,135 +123,135 @@ transition:all 0.2s; min-width:50px;
 .page.active { display:block; }
 
 /* CARDS */
-.card { background:var(–card); border:1px solid var(–border); border-radius:20px; padding:18px; margin-bottom:12px; position:relative; overflow:hidden; }
-.card-title { font-size:12px; color:var(–text2); font-weight:700; letter-spacing:1px; margin-bottom:10px; }
-.section-title { font-size:11px; font-weight:700; color:var(–text3); letter-spacing:2px; margin:20px 0 10px; display:flex; align-items:center; gap:8px; }
-.section-title::after { content:’’; flex:1; height:1px; background:var(–border); }
+.card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:18px; margin-bottom:12px; position:relative; overflow:hidden; }
+.card-title { font-size:12px; color:var(--text2); font-weight:700; letter-spacing:1px; margin-bottom:10px; }
+.section-title { font-size:11px; font-weight:700; color:var(--text3); letter-spacing:2px; margin:20px 0 10px; display:flex; align-items:center; gap:8px; }
+.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
 /* BUTTONS */
 .btn {
 width:100%; padding:15px; border-radius:14px; border:none;
 font-weight:900; font-size:15px; cursor:pointer;
-font-family:‘Cairo’,sans-serif; transition:all 0.2s; margin-top:10px;
+font-family:'Cairo',sans-serif; transition:all 0.2s; margin-top:10px;
 -webkit-appearance:none; appearance:none;
 }
 .btn:active { transform:scale(0.97); }
-.btn-green { background:var(–green2); color:#000; }
-.btn-gold { background:var(–gold2); color:#000; }
-.btn-red { background:var(–red); color:#fff; }
-.btn-ghost { background:var(–card2); color:var(–text); border:1px solid var(–border); }
+.btn-green { background:var(--green2); color:#000; }
+.btn-gold { background:var(--gold2); color:#000; }
+.btn-red { background:var(--red); color:#fff; }
+.btn-ghost { background:var(--card2); color:var(--text); border:1px solid var(--border); }
 .btn-sm { padding:10px 16px; font-size:13px; width:auto; margin:0; }
 
 /* INPUTS */
 input, select, textarea {
 width:100%; padding:14px 16px; border-radius:13px;
-border:1px solid var(–border2); background:var(–bg2); color:var(–text);
-font-size:15px; font-family:‘Cairo’,sans-serif;
+border:1px solid var(--border2); background:var(--bg2); color:var(--text);
+font-size:15px; font-family:'Cairo',sans-serif;
 margin-top:10px; transition:border 0.2s;
 }
-input:focus, select:focus, textarea:focus { border-color:var(–green); }
+input:focus, select:focus, textarea:focus { border-color:var(--green); }
 textarea { resize:none; min-height:80px; }
-select option { background:var(–card); }
-label { font-size:13px; color:var(–text2); font-weight:600; display:block; margin-top:14px; }
+select option { background:var(--card); }
+label { font-size:13px; color:var(--text2); font-weight:600; display:block; margin-top:14px; }
 
 /* BADGES & DOTS */
 .badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:8px; font-size:11px; font-weight:700; }
-.badge-green { background:rgba(74,222,128,0.15); color:var(–green); }
-.badge-gold { background:rgba(251,191,36,0.15); color:var(–gold); }
-.badge-red { background:rgba(244,63,94,0.15); color:var(–red); }
-.badge-blue { background:rgba(96,165,250,0.15); color:var(–blue); }
-.badge-purple { background:rgba(167,139,250,0.15); color:var(–purple); }
+.badge-green { background:rgba(74,222,128,0.15); color:var(--green); }
+.badge-gold { background:rgba(251,191,36,0.15); color:var(--gold); }
+.badge-red { background:rgba(244,63,94,0.15); color:var(--red); }
+.badge-blue { background:rgba(96,165,250,0.15); color:var(--blue); }
+.badge-purple { background:rgba(167,139,250,0.15); color:var(--purple); }
 .dot { width:9px; height:9px; border-radius:50%; display:inline-block; flex-shrink:0; }
-.dot-green { background:var(–green); box-shadow:0 0 8px var(–green); }
-.dot-red { background:var(–red); box-shadow:0 0 8px var(–red); }
+.dot-green { background:var(--green); box-shadow:0 0 8px var(--green); }
+.dot-red { background:var(--red); box-shadow:0 0 8px var(--red); }
 .hidden { display:none !important; }
 
 /* ═══════════════════════════════════════
 HOME PAGE
 ═══════════════════════════════════════ */
-.pts-card { text-align:center; padding:28px 20px; background:linear-gradient(135deg, var(–card) 0%, var(–card2) 100%); }
-.pts-num { font-size:60px; font-weight:900; color:var(–gold); line-height:1; }
-.pts-label { font-size:11px; color:var(–text3); margin-top:4px; letter-spacing:2px; }
-.ann-item { padding:14px 0; border-bottom:1px solid var(–border); display:flex; gap:12px; }
+.pts-card { text-align:center; padding:28px 20px; background:linear-gradient(135deg, var(--card) 0%, var(--card2) 100%); }
+.pts-num { font-size:60px; font-weight:900; color:var(--gold); line-height:1; }
+.pts-label { font-size:11px; color:var(--text3); margin-top:4px; letter-spacing:2px; }
+.ann-item { padding:14px 0; border-bottom:1px solid var(--border); display:flex; gap:12px; }
 .ann-item:last-child { border-bottom:none; }
 .ann-text { font-size:14px; line-height:1.5; }
-.ann-time { font-size:11px; color:var(–text3); margin-top:4px; }
-.ann-author { font-size:11px; color:var(–green); font-weight:700; }
+.ann-time { font-size:11px; color:var(--text3); margin-top:4px; }
+.ann-author { font-size:11px; color:var(--green); font-weight:700; }
 .badges-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
-.badge-item { background:var(–card2); border:1px solid var(–border2); border-radius:12px; padding:8px 14px; font-size:12px; font-weight:700; color:var(–text2); display:flex; align-items:center; gap:6px; }
-.badge-item.earned { color:var(–gold); border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); }
+.badge-item { background:var(--card2); border:1px solid var(--border2); border-radius:12px; padding:8px 14px; font-size:12px; font-weight:700; color:var(--text2); display:flex; align-items:center; gap:6px; }
+.badge-item.earned { color:var(--gold); border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); }
 
 /* TASKS */
-.task-item { padding:14px; border-radius:14px; background:var(–card2); border:1px solid var(–border); margin-bottom:8px; }
+.task-item { padding:14px; border-radius:14px; background:var(--card2); border:1px solid var(--border); margin-bottom:8px; }
 .task-title { font-size:14px; font-weight:700; }
-.task-desc { font-size:12px; color:var(–text2); margin-top:4px; line-height:1.4; }
+.task-desc { font-size:12px; color:var(--text2); margin-top:4px; line-height:1.4; }
 .task-footer { display:flex; gap:8px; margin-top:10px; align-items:center; flex-wrap:wrap; }
 
 /* ═══════════════════════════════════════
 FIELD PAGE
 ═══════════════════════════════════════ */
-.team-header { display:flex; align-items:center; gap:10px; padding:14px 0 8px; border-bottom:1px solid var(–border); margin-bottom:8px; }
+.team-header { display:flex; align-items:center; gap:10px; padding:14px 0 8px; border-bottom:1px solid var(--border); margin-bottom:8px; }
 .team-color { width:4px; height:36px; border-radius:4px; flex-shrink:0; }
 .team-name { font-size:16px; font-weight:900; }
-.team-count { font-size:12px; color:var(–text3); }
-.team-pts-total { font-size:14px; color:var(–gold); font-weight:700; margin-right:auto; }
-.member-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; background:var(–card2); border:1px solid var(–border); margin-bottom:6px; cursor:pointer; transition:all 0.2s; }
+.team-count { font-size:12px; color:var(--text3); }
+.team-pts-total { font-size:14px; color:var(--gold); font-weight:700; margin-right:auto; }
+.member-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; background:var(--card2); border:1px solid var(--border); margin-bottom:6px; cursor:pointer; transition:all 0.2s; }
 .member-row:active { transform:scale(0.98); }
 .member-avatar { width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; flex-shrink:0; }
 .member-name { font-size:14px; font-weight:700; }
-.member-rank { font-size:11px; color:var(–text2); margin-top:2px; }
-.member-pts { font-size:15px; font-weight:900; color:var(–gold); }
+.member-rank { font-size:11px; color:var(--text2); margin-top:2px; }
+.member-pts { font-size:15px; font-weight:900; color:var(--gold); }
 
 /* ═══════════════════════════════════════
 LEADERBOARD
 ═══════════════════════════════════════ */
-.lb-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; background:var(–card2); border:1px solid var(–border); margin-bottom:6px; }
+.lb-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; background:var(--card2); border:1px solid var(--border); margin-bottom:6px; }
 .lb-rank { font-size:20px; font-weight:900; width:32px; text-align:center; flex-shrink:0; }
-.lb-rank.gold { color:var(–gold); }
+.lb-rank.gold { color:var(--gold); }
 .lb-rank.silver { color:#94a3b8; }
 .lb-rank.bronze { color:#cd7f32; }
 .lb-info { flex:1; min-width:0; }
 .lb-name { font-size:14px; font-weight:700; }
-.lb-team { font-size:11px; color:var(–text2); }
-.lb-pts { font-size:18px; font-weight:900; color:var(–gold); flex-shrink:0; }
-.lb-bar-wrap { height:3px; background:var(–border); border-radius:3px; margin-top:4px; }
+.lb-team { font-size:11px; color:var(--text2); }
+.lb-pts { font-size:18px; font-weight:900; color:var(--gold); flex-shrink:0; }
+.lb-bar-wrap { height:3px; background:var(--border); border-radius:3px; margin-top:4px; }
 .lb-bar { height:3px; border-radius:3px; }
 .lb-tabs { display:flex; gap:8px; margin-bottom:14px; }
 .lb-tab {
 flex:1; text-align:center; padding:10px; border-radius:12px;
-font-size:13px; font-weight:700; background:var(–card2);
-border:1px solid var(–border); cursor:pointer; color:var(–text2);
-transition:all 0.2s; font-family:‘Cairo’,sans-serif;
+font-size:13px; font-weight:700; background:var(--card2);
+border:1px solid var(--border); cursor:pointer; color:var(--text2);
+transition:all 0.2s; font-family:'Cairo',sans-serif;
 -webkit-appearance:none; appearance:none;
 }
-.lb-tab.active { background:rgba(74,222,128,0.15); color:var(–green); border-color:rgba(74,222,128,0.3); }
+.lb-tab.active { background:rgba(74,222,128,0.15); color:var(--green); border-color:rgba(74,222,128,0.3); }
 
 /* ═══════════════════════════════════════
 DASHBOARD
 ═══════════════════════════════════════ */
 .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-.stat-box { background:var(–card); border:1px solid var(–border); border-radius:16px; padding:16px 14px; text-align:center; }
+.stat-box { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px 14px; text-align:center; }
 .stat-num { font-size:28px; font-weight:900; line-height:1; }
-.stat-lbl { font-size:11px; color:var(–text3); margin-top:4px; }
+.stat-lbl { font-size:11px; color:var(--text3); margin-top:4px; }
 .chart-wrap { position:relative; height:200px; }
-.log-item { padding:10px 0; border-bottom:1px solid var(–border); display:flex; gap:10px; }
-.log-time { font-size:11px; color:var(–green); font-weight:700; white-space:nowrap; margin-top:2px; flex-shrink:0; }
-.log-txt { font-size:12px; color:var(–text2); line-height:1.4; }
+.log-item { padding:10px 0; border-bottom:1px solid var(--border); display:flex; gap:10px; }
+.log-time { font-size:11px; color:var(--green); font-weight:700; white-space:nowrap; margin-top:2px; flex-shrink:0; }
+.log-txt { font-size:12px; color:var(--text2); line-height:1.4; }
 
 /* ═══════════════════════════════════════
 ATTENDANCE
 ═══════════════════════════════════════ */
-.att-session-card { background:var(–card2); border:1px solid var(–border); border-radius:16px; padding:14px; margin-bottom:8px; }
+.att-session-card { background:var(--card2); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:8px; }
 .att-session-title { font-size:14px; font-weight:700; }
-.att-session-date { font-size:12px; color:var(–text3); margin-top:2px; }
-.att-member-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid var(–border); font-size:13px; }
+.att-session-date { font-size:12px; color:var(--text3); margin-top:2px; }
+.att-member-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid var(--border); font-size:13px; }
 .gps-btn {
 display:flex; align-items:center; justify-content:center; gap:8px;
 background:linear-gradient(135deg, #065f46, #047857);
 border:1px solid #059669; border-radius:16px; padding:16px;
 cursor:pointer; margin-bottom:12px; transition:all 0.2s;
-color:var(–green3); font-weight:700; font-size:15px;
-font-family:‘Cairo’,sans-serif; width:100%;
+color:var(--green3); font-weight:700; font-size:15px;
+font-family:'Cairo',sans-serif; width:100%;
 -webkit-appearance:none; appearance:none;
 }
 .gps-btn:active { transform:scale(0.97); }
@@ -265,16 +259,16 @@ font-family:‘Cairo’,sans-serif; width:100%;
 @keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(74,222,128,0.4); } 50%{ box-shadow:0 0 0 8px rgba(74,222,128,0); } }
 .att-toggle { display:flex; gap:8px; margin-top:8px; }
 .att-btn {
-flex:1; padding:10px; border-radius:12px; border:1px solid var(–border);
-background:var(–card2); color:var(–text2); font-weight:700; font-size:13px;
-cursor:pointer; font-family:‘Cairo’,sans-serif; transition:all 0.2s;
+flex:1; padding:10px; border-radius:12px; border:1px solid var(--border);
+background:var(--card2); color:var(--text2); font-weight:700; font-size:13px;
+cursor:pointer; font-family:'Cairo',sans-serif; transition:all 0.2s;
 -webkit-appearance:none; appearance:none;
 }
-.att-btn.present-active { background:rgba(74,222,128,0.2); color:var(–green); border-color:rgba(74,222,128,0.4); }
-.att-btn.absent-active { background:rgba(244,63,94,0.15); color:var(–red); border-color:rgba(244,63,94,0.3); }
+.att-btn.present-active { background:rgba(74,222,128,0.2); color:var(--green); border-color:rgba(74,222,128,0.4); }
+.att-btn.absent-active { background:rgba(244,63,94,0.15); color:var(--red); border-color:rgba(244,63,94,0.3); }
 
 /* ═══════════════════════════════════════
-MODAL — FIX #1: display conflict
+MODAL
 ═══════════════════════════════════════ */
 #modal-overlay {
 display:none; position:fixed; inset:0; z-index:20000;
@@ -283,34 +277,33 @@ padding:20px; align-items:flex-end; justify-content:center;
 }
 #modal-overlay.open { display:flex; }
 #modal-box {
-background:var(–card); border:1px solid var(–border2);
+background:var(--card); border:1px solid var(--border2);
 border-radius:24px 24px 20px 20px; padding:24px;
 width:100%; max-width:500px; max-height:90vh;
 overflow-y:auto; animation:slideUp 0.3s ease;
 }
 @keyframes slideUp { from { transform:translateY(100px); opacity:0; } to { transform:translateY(0); opacity:1; } }
 .modal-title { font-size:18px; font-weight:900; margin-bottom:16px; }
-/* FIX #3: modal-close button border */
 .modal-close {
-background:var(–card2); border:1px solid var(–border); border-radius:10px;
-padding:10px 20px; cursor:pointer; font-size:13px; color:var(–text2);
-font-family:‘Cairo’,sans-serif; font-weight:700; margin-top:14px; width:100%;
+background:var(--card2); border:1px solid var(--border); border-radius:10px;
+padding:10px 20px; cursor:pointer; font-size:13px; color:var(--text2);
+font-family:'Cairo',sans-serif; font-weight:700; margin-top:14px; width:100%;
 display:block; -webkit-appearance:none; appearance:none;
 }
-.manage-section { margin-top:18px; padding-top:18px; border-top:1px solid var(–border); }
-.manage-section-title { font-size:11px; color:var(–text3); font-weight:700; letter-spacing:1.5px; margin-bottom:8px; }
+.manage-section { margin-top:18px; padding-top:18px; border-top:1px solid var(--border); }
+.manage-section-title { font-size:11px; color:var(--text3); font-weight:700; letter-spacing:1.5px; margin-bottom:8px; }
 
 /* ═══════════════════════════════════════
-CONFIRM — FIX #2: display conflict
+CONFIRM
 ═══════════════════════════════════════ */
 #confirm-overlay {
 display:none; position:fixed; inset:0; z-index:25000;
 background:rgba(0,0,0,0.85); align-items:center; justify-content:center; padding:20px;
 }
 #confirm-overlay.open { display:flex; }
-#confirm-box { background:var(–card); border:1px solid var(–border2); border-radius:20px; padding:24px; width:100%; max-width:340px; text-align:center; }
+#confirm-box { background:var(--card); border:1px solid var(--border2); border-radius:20px; padding:24px; width:100%; max-width:340px; text-align:center; }
 .confirm-title { font-size:17px; font-weight:900; margin-bottom:8px; }
-.confirm-msg { font-size:13px; color:var(–text2); margin-bottom:20px; line-height:1.5; }
+.confirm-msg { font-size:13px; color:var(--text2); margin-bottom:20px; line-height:1.5; }
 .confirm-btns { display:flex; gap:10px; }
 .confirm-btns .btn { margin:0; }
 
@@ -318,35 +311,33 @@ background:rgba(0,0,0,0.85); align-items:center; justify-content:center; padding
 #toast {
 position:fixed; bottom:90px; left:50%;
 transform:translateX(-50%) translateY(20px);
-background:var(–card2); border:1px solid var(–border2);
+background:var(--card2); border:1px solid var(--border2);
 border-radius:14px; padding:12px 20px;
 font-size:14px; font-weight:700; z-index:30000;
 opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
 }
 #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-#toast.success { border-color:rgba(74,222,128,0.4); color:var(–green); }
-#toast.error { border-color:rgba(244,63,94,0.4); color:var(–red); }
+#toast.success { border-color:rgba(74,222,128,0.4); color:var(--green); }
+#toast.error { border-color:rgba(244,63,94,0.4); color:var(--red); }
 
 /* ARCHIVE */
-.archive-item { padding:12px 14px; border-radius:14px; background:var(–card2); border:1px solid var(–border); margin-bottom:6px; opacity:0.75; display:flex; align-items:center; gap:12px; }
+.archive-item { padding:12px 14px; border-radius:14px; background:var(--card2); border:1px solid var(--border); margin-bottom:6px; opacity:0.75; display:flex; align-items:center; gap:12px; }
 .archive-name { font-size:14px; font-weight:700; }
-.archive-meta { font-size:11px; color:var(–text3); margin-top:2px; }
+.archive-meta { font-size:11px; color:var(--text3); margin-top:2px; }
 
 /* REGISTER PAGE */
 .reg-hero { text-align:center; padding:32px 20px 20px; }
-.reg-logo { font-size:44px; font-weight:900; color:var(–green); }
+.reg-logo { font-size:44px; font-weight:900; color:var(--green); }
 .reg-title { font-size:18px; font-weight:700; margin-top:8px; }
-.reg-sub { font-size:13px; color:var(–text2); margin-top:4px; }
+.reg-sub { font-size:13px; color:var(--text2); margin-top:4px; }
 
 /* LEADER MANAGE CARD */
-.leader-card { background:var(–card); border:1px solid var(–border); border-radius:20px; padding:18px; margin-bottom:12px; }
+.leader-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:18px; margin-bottom:12px; }
 </style>
-
 </head>
 <body>
 
 <!-- ═══════════ LOGIN ═══════════ -->
-
 <div id="login-screen">
   <div class="login-wrap">
     <div class="login-logo">أوتاد</div>
@@ -380,7 +371,6 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
 </div>
 
 <!-- ═══════════ APP ═══════════ -->
-
 <div id="app">
   <!-- Header -->
   <div class="header">
@@ -398,18 +388,15 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
   </div>
 
   <!-- Pages -->
-
   <div class="page active" id="page-home"></div>
   <div class="page" id="page-field"></div>
   <div class="page" id="page-attendance"></div>
   <div class="page" id="page-leaderboard"></div>
   <div class="page" id="page-dashboard"></div>
-  <!-- FIX #14: صفحة إدارة منفصلة للـ LEADER -->
   <div class="page" id="page-lmanage"></div>
   <div class="page" id="page-manage"></div>
 
   <!-- Nav -->
-
   <nav>
     <div class="nav-item active" onclick="App.tab('home',this)">
       <span class="nav-icon">🏠</span>الرئيسية
@@ -423,7 +410,6 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
     <div class="nav-item" onclick="App.tab('leaderboard',this)">
       <span class="nav-icon">🏆</span>الترتيب
     </div>
-    <!-- FIX #14: تبويب إدارة الطليعة للـ LEADER -->
     <div class="nav-item hidden" id="nav-lmanage" onclick="App.tab('lmanage',this)">
       <span class="nav-icon">⚔️</span>طليعتي
     </div>
@@ -437,13 +423,11 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
 </div>
 
 <!-- Modal -->
-
 <div id="modal-overlay" onclick="UI.closeModal(event)">
   <div id="modal-box"></div>
 </div>
 
 <!-- Confirm -->
-
 <div id="confirm-overlay">
   <div id="confirm-box">
     <div class="confirm-title" id="confirm-title"></div>
@@ -456,7 +440,6 @@ opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap;
 </div>
 
 <!-- Toast -->
-
 <div id="toast"></div>
 
 <script>
@@ -509,7 +492,6 @@ const S = {
   archived: {},
   tab: 'home',
   lbTab: 'global',
-  // FIX #9: chart instances registry
   charts: {}
 };
 
@@ -596,7 +578,6 @@ const App = {
   boot() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    // FIX #14: صلاحيات الـ NAV حسب الدور
     if (S.user.role === 'ROOT') {
       document.getElementById('nav-dashboard').classList.remove('hidden');
       document.getElementById('nav-manage').classList.remove('hidden');
@@ -633,7 +614,6 @@ const App = {
     });
   },
 
-  // FIX #10: التحقق من صحة الـ tab قبل render
   tab(name, el) {
     const validTabs = ['home','field','attendance','leaderboard','dashboard','manage','lmanage'];
     if (!validTabs.includes(name)) return;
@@ -696,7 +676,6 @@ const Render = {
     if (!me) return;
     const root = document.getElementById('page-home');
 
-    // Attendance rate
     let attCount = 0, totalSess = 0;
     S.sessions.forEach(s => {
       if (s.team === me.team) {
@@ -706,7 +685,6 @@ const Render = {
     });
     const attRate = totalSess ? Math.round(attCount / totalSess * 100) : 0;
 
-    // My tasks (not done)
     const myTasks = S.tasks.filter(t =>
       !t.done && (t.assignedTo === S.user.id || t.assignedTo === 'all')
     );
@@ -895,7 +873,6 @@ const Render = {
     `;
   },
 
-  // FIX #9: تدمير الـ charts القديمة قبل رسم جديدة
   dashboard() {
     if (S.user.role !== 'ROOT') return;
     const root = document.getElementById('page-dashboard');
@@ -938,7 +915,6 @@ const Render = {
       </div>
     `;
 
-    // FIX #9: destroy old charts before creating new
     setTimeout(() => {
       ['ch-att','ch-teams'].forEach(id => {
         const existing = Chart.getChart(id);
@@ -970,7 +946,6 @@ const Render = {
     }, 120);
   },
 
-  // FIX #14: صفحة إدارة الطليعة للـ LEADER
   lmanage() {
     if (S.user.role !== 'LEADER') return;
     const root = document.getElementById('page-lmanage');
@@ -1026,405 +1001,444 @@ const Render = {
       <div class="section-title">📣 إرسال إعلان</div>
       <div class="card">
         <textarea id="ann-text" placeholder="اكتب الإعلان هنا..."></textarea>
-
-```
-    <button class="btn btn-green" onclick="Admin.sendAnn()">إرسال للجميع 📢</button>
-  </div>
-
-  <div class="section-title">➕ إدارة الأعضاء</div>
-  <div class="card" style="display:flex;gap:8px;">
-    <button class="btn btn-gold btn-sm" style="flex:1;padding:13px;" onclick="Admin.showAdd()">إضافة عضو</button>
-    <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px;" onclick="Admin.showAddTask()">إضافة مهمة</button>
-  </div>
-
-  <div class="section-title">🔑 رموز الدعوة</div>
-  <div class="card">${invHtml}</div>
-
-  <div class="section-title">🗂️ الأرشيف</div>
-  ${archHtml}
-`;
-```
-
-}
+        <button class="btn btn-green" onclick="Admin.sendAnn()">إرسال للجميع 📢</button>
+      </div>
+      <div class="section-title">➕ إدارة الأعضاء</div>
+      <div class="card" style="display:flex;gap:8px;">
+        <button class="btn btn-gold btn-sm" style="flex:1;padding:13px;" onclick="Admin.showAdd()">إضافة عضو</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px;" onclick="Admin.showAddTask()">إضافة مهمة</button>
+      </div>
+      <div class="section-title">🔑 رموز الدعوة</div>
+      <div class="card">${invHtml}</div>
+      <div class="section-title">🗂️ الأرشيف</div>
+      ${archHtml}
+    `;
+  }
 };
 
 /* ══════════════════════════════════════
-MEMBERS
+   MEMBERS
 ══════════════════════════════════════ */
 const Members = {
-openProfile(id) {
-const m = S.members[id];
-if (!m) return;
-// قائد الطليعة يرى طليعته فقط، ROOT يرى الكل
-const canManage = S.user.role === ‘ROOT’ || (S.user.role === ‘LEADER’ && m.team === S.user.team);
-const col = teamColor(m.team);
+  openProfile(id) {
+    const m = S.members[id];
+    if (!m) return;
+    const canManage = S.user.role === 'ROOT' || (S.user.role === 'LEADER' && m.team === S.user.team);
+    const col = teamColor(m.team);
 
-```
-let attC = 0, totS = 0;
-S.sessions.forEach(s => {
-  if (s.team === m.team) {
-    totS++;
-    if (s.attendance && s.attendance[id]) attC++;
+    let attC = 0, totS = 0;
+    S.sessions.forEach(s => {
+      if (s.team === m.team) {
+        totS++;
+        if (s.attendance && s.attendance[id]) attC++;
+      }
+    });
+    const attR = totS ? Math.round(attC / totS * 100) : 0;
+
+    UI.openModal(`
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="width:64px;height:64px;border-radius:18px;background:rgba(${hexRgb(col)},0.2);color:${col};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 12px;border:2px solid ${col};">${initials(m.name)}</div>
+        <div style="font-size:20px;font-weight:900;">${m.name}</div>
+        <div style="font-size:13px;color:var(--text2);margin-top:4px;">${m.rank} · ${m.team}</div>
+        <div style="display:flex;gap:16px;justify-content:center;margin-top:16px;">
+          <div style="text-align:center;"><div style="font-size:26px;font-weight:900;color:var(--gold);">${m.pts||0}</div><div style="font-size:11px;color:var(--text3);">النقاط</div></div>
+          <div style="width:1px;background:var(--border);"></div>
+          <div style="text-align:center;"><div style="font-size:26px;font-weight:900;color:var(--green);">${attR}%</div><div style="font-size:11px;color:var(--text3);">الحضور</div></div>
+          <div style="width:1px;background:var(--border);"></div>
+          <div style="text-align:center;"><div style="font-size:26px;font-weight:900;color:var(--purple);">${(m.badges||[]).length}</div><div style="font-size:11px;color:var(--text3);">الأوسمة</div></div>
+        </div>
+        <div style="margin-top:10px;">
+          <span class="badge ${m.isPresent?'badge-green':'badge-red'}">${m.isPresent?'حاضر ✓':'غائب ✗'}</span>
+        </div>
+      </div>
+
+      ${canManage ? `
+        <div class="manage-section">
+          <div class="manage-section-title">تعديل الحضور</div>
+          <div class="att-toggle">
+            <button class="att-btn ${m.isPresent?'present-active':''}" onclick="Members.setAtt('${id}',true)">حاضر ✓</button>
+            <button class="att-btn ${!m.isPresent?'absent-active':''}" onclick="Members.setAtt('${id}',false)">غائب ✗</button>
+          </div>
+        </div>
+        <div class="manage-section">
+          <div class="manage-section-title">تعديل النقاط</div>
+          <input type="number" id="pts-v" placeholder="عدد النقاط" min="1">
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn btn-green btn-sm" style="flex:1;padding:13px;" onclick="Members.pts('${id}',1)">إضافة +</button>
+            <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px;" onclick="Members.pts('${id}',-1)">خصم −</button>
+          </div>
+        </div>
+        <div class="manage-section">
+          <div class="manage-section-title">منح وسام</div>
+          <input id="bdg-v" placeholder="اسم الوسام">
+          <button class="btn btn-gold" onclick="Members.badge('${id}')">منح الوسام 🏅</button>
+        </div>
+        <div class="manage-section">
+          <div class="manage-section-title">تغيير الرمز السري</div>
+          <input type="number" id="pin-v" placeholder="الرمز الجديد (4+ أرقام)">
+          <button class="btn btn-ghost" onclick="Members.changePin('${id}')">تحديث الرمز</button>
+        </div>
+        ${id !== S.user.id ? `
+          <div class="manage-section">
+            <div class="manage-section-title">حذف العضو</div>
+            <button class="btn btn-red" onclick="Members.archive('${id}')">أرشفة العضو 🗂️</button>
+          </div>` : ''}
+      ` : ''}
+      <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>
+    `);
+  },
+
+  setAtt(id, val) {
+    DB.child('members').child(id).update({ isPresent: val });
+    App.log(`${S.user.name} سجّل [${S.members[id].name}] كـ ${val?'حاضر':'غائب'}`);
+    UI.toast(val ? 'تم تسجيل الحضور ✓' : 'تم تسجيل الغياب');
+    UI.closeModal();
+  },
+
+  pts(id, dir) {
+    const v = parseInt(document.getElementById('pts-v').value);
+    if (!v || v <= 0) { UI.toast('أدخل عدد صحيح', 'error'); return; }
+    const cur = S.members[id].pts || 0;
+    DB.child('members').child(id).update({ pts: cur + v * dir });
+    App.log(`${S.user.name} ${dir>0?'أضاف':'خصم'} ${v} نقطة ${dir>0?'لـ':'من'} ${S.members[id].name}`);
+    UI.toast(dir > 0 ? `+${v} نقطة ✓` : `−${v} نقطة`);
+    UI.closeModal();
+  },
+
+  badge(id) {
+    const b = document.getElementById('bdg-v').value.trim();
+    if (!b) { UI.toast('اكتب اسم الوسام', 'error'); return; }
+    const badges = [...(S.members[id].badges || []), b];
+    DB.child('members').child(id).update({ badges });
+    App.log(`${S.user.name} منح وسام [${b}] لـ ${S.members[id].name}`);
+    UI.toast('تم منح الوسام 🏅');
+    UI.closeModal();
+  },
+
+  changePin(id) {
+    const np = document.getElementById('pin-v').value.trim();
+    if (!np || np.length < 4) { UI.toast('الرمز يجب 4 أرقام على الأقل', 'error'); return; }
+    if (S.members[np] && np !== id) { UI.toast('الرمز مستخدم مسبقاً', 'error'); return; }
+    const oldData = { ...S.members[id], pin: np };
+    DB.child('members').child(np).set(oldData).then(() => {
+      if (np !== id) DB.child('members').child(id).remove();
+      if (S.user.id === id) S.user.id = np;
+      App.log(`${S.user.name} غيّر رمز ${S.members[id].name} من ${id} إلى ${np}`);
+      UI.toast('تم تحديث الرمز السري ✓');
+      UI.closeModal();
+    });
+  },
+
+  archive(id) {
+    const m = S.members[id];
+    UI.confirm(
+      `أرشفة ${m.name}`,
+      `سيُنقل ${m.name} للأرشيف مع الاحتفاظ بسجله كاملاً. يمكن استعادته لاحقاً.`,
+      'أرشفة',
+      () => {
+        DB.child('archived').child(id).set({ ...m, archivedAt: today() });
+        DB.child('members').child(id).remove();
+        App.log(`${S.user.name} أرشف [${m.name}]`);
+        UI.toast(`تمت أرشفة ${m.name} 🗂️`);
+        UI.closeModal();
+      }
+    );
   }
-});
-const attR = totS ? Math.round(attC / totS * 100) : 0;
-
-UI.openModal(`
-  <div style="text-align:center;margin-bottom:16px;">
-    <div style="width:64px;height:64px;border-radius:18px;background:rgba(${hexRgb(col)},0.2);color:${col};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 12px;border:2px solid ${col};">${initials(m.name)}</div>
-    <div style="font-size:20px;font-weight:900;">${m.name}</div>
-    <div style="font-size:13px;color:var(--text2);margin-top:4px;">${m.rank} · ${m.team}</div>
-    <div style="display:flex;gap:16px;justify-content:center;margin-top:16px;">
-      <div style="text-align:center;"><div style="font-size:26px;font-weight:900;color:var(--gold);">${m.pts||0}</div><div style="font-size:11px;color:var(--text3);">النقاط</div></div>
-      <div style="width:1px;background:var(--border);"></div>
-      <div style="text-align:center;"><div style="font-size:26px;font-weight:900;color:var(--green);">${attR}%</div><div style="font-size:11px;color:var(--text3);">الحضور</div></div>
-      <div style="width:1px;background:var(--border);"></div>
-      <div style="text-align:center;"><div style="font-size:26px;font-weight:900;color:var(--purple);">${(m.badges||[]).length}</div><div style="font-size:11px;color:var(--text3);">الأوسمة</div></div>
-    </div>
-    <div style="margin-top:10px;">
-      <span class="badge ${m.isPresent?'badge-green':'badge-red'}">${m.isPresent?'حاضر ✓':'غائب ✗'}</span>
-    </div>
-  </div>
-
-  ${canManage ? `
-    <div class="manage-section">
-      <div class="manage-section-title">تعديل الحضور</div>
-      <div class="att-toggle">
-        <button class="att-btn ${m.isPresent?'present-active':''}" onclick="Members.setAtt('${id}',true)">حاضر ✓</button>
-        <button class="att-btn ${!m.isPresent?'absent-active':''}" onclick="Members.setAtt('${id}',false)">غائب ✗</button>
-      </div>
-    </div>
-    <div class="manage-section">
-      <div class="manage-section-title">تعديل النقاط</div>
-      <input type="number" id="pts-v" placeholder="عدد النقاط" min="1">
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button class="btn btn-green btn-sm" style="flex:1;padding:13px;" onclick="Members.pts('${id}',1)">إضافة +</button>
-        <button class="btn btn-ghost btn-sm" style="flex:1;padding:13px;" onclick="Members.pts('${id}',-1)">خصم −</button>
-      </div>
-    </div>
-    <div class="manage-section">
-      <div class="manage-section-title">منح وسام</div>
-      <input id="bdg-v" placeholder="اسم الوسام">
-      <button class="btn btn-gold" onclick="Members.badge('${id}')">منح الوسام 🏅</button>
-    </div>
-    <div class="manage-section">
-      <div class="manage-section-title">تغيير الرمز السري</div>
-      <input type="number" id="pin-v" placeholder="الرمز الجديد (4+ أرقام)">
-      <button class="btn btn-ghost" onclick="Members.changePin('${id}')">تحديث الرمز</button>
-    </div>
-    ${id !== S.user.id ? `
-      <div class="manage-section">
-        <div class="manage-section-title">حذف العضو</div>
-        <button class="btn btn-red" onclick="Members.archive('${id}')">أرشفة العضو 🗂️</button>
-      </div>` : ''}
-  ` : ''}
-  <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>
-`);
-```
-
-},
-
-setAtt(id, val) {
-DB.child(‘members’).child(id).update({ isPresent: val });
-App.log(`${S.user.name} سجّل [${S.members[id].name}] كـ ${val?'حاضر':'غائب'}`);
-UI.toast(val ? ‘تم تسجيل الحضور ✓’ : ‘تم تسجيل الغياب’);
-UI.closeModal();
-},
-
-pts(id, dir) {
-const v = parseInt(document.getElementById(‘pts-v’).value);
-if (!v || v <= 0) { UI.toast(‘أدخل عدد صحيح’, ‘error’); return; }
-const cur = S.members[id].pts || 0;
-DB.child(‘members’).child(id).update({ pts: cur + v * dir });
-App.log(`${S.user.name} ${dir>0?'أضاف':'خصم'} ${v} نقطة ${dir>0?'لـ':'من'} ${S.members[id].name}`);
-UI.toast(dir > 0 ? `+${v} نقطة ✓` : `−${v} نقطة`);
-UI.closeModal();
-},
-
-badge(id) {
-const b = document.getElementById(‘bdg-v’).value.trim();
-if (!b) { UI.toast(‘اكتب اسم الوسام’, ‘error’); return; }
-const badges = […(S.members[id].badges || []), b];
-DB.child(‘members’).child(id).update({ badges });
-App.log(`${S.user.name} منح وسام [${b}] لـ ${S.members[id].name}`);
-UI.toast(‘تم منح الوسام 🏅’);
-UI.closeModal();
-},
-
-// FIX #8: تغيير PIN صحيح — ننشئ node جديد ونحذف القديم
-changePin(id) {
-const np = document.getElementById(‘pin-v’).value.trim();
-if (!np || np.length < 4) { UI.toast(‘الرمز يجب 4 أرقام على الأقل’, ‘error’); return; }
-if (S.members[np] && np !== id) { UI.toast(‘الرمز مستخدم مسبقاً’, ‘error’); return; }
-const oldData = { …S.members[id], pin: np };
-// احذف القديم، أنشئ جديد بالـ key الجديد
-DB.child(‘members’).child(np).set(oldData).then(() => {
-if (np !== id) DB.child(‘members’).child(id).remove();
-// لو المستخدم الحالي هو من تغير رمزه، حدّث الـ state
-if (S.user.id === id) S.user.id = np;
-App.log(`${S.user.name} غيّر رمز ${S.members[id].name} من ${id} إلى ${np}`);
-UI.toast(‘تم تحديث الرمز السري ✓’);
-UI.closeModal();
-});
-},
-
-archive(id) {
-const m = S.members[id];
-UI.confirm(
-`أرشفة ${m.name}`,
-`سيُنقل ${m.name} للأرشيف مع الاحتفاظ بسجله كاملاً. يمكن استعادته لاحقاً.`,
-‘أرشفة’,
-() => {
-DB.child(‘archived’).child(id).set({ …m, archivedAt: today() });
-DB.child(‘members’).child(id).remove();
-App.log(`${S.user.name} أرشف [${m.name}]`);
-UI.toast(`تمت أرشفة ${m.name} 🗂️`);
-UI.closeModal();
-}
-);
-}
 };
 
 /* ══════════════════════════════════════
-ATTENDANCE
+   ATTENDANCE
 ══════════════════════════════════════ */
 const Attendance = {
-_att: {},
-_gps: ‘’,
+  _att: {},
+  _gps: '',
 
-newSession() {
-// FIX #11: ROOT يختار الطليعة، LEADER يرى طليعته تلقائياً
-const isRoot = S.user.role === ‘ROOT’;
-const teams  = […new Set(Object.values(S.members).map(m => m.team))];
-this._att = {};
-this._gps = ‘’;
+  newSession() {
+    const isRoot = S.user.role === 'ROOT';
+    const teams  = [...new Set(Object.values(S.members).map(m => m.team))];
+    this._att = {};
+    this._gps = '';
 
-```
-const teamSelectHtml = isRoot ? `
-  <label>اختر الطليعة</label>
-  <select id="sess-team" onchange="Attendance.loadTeamMembers()">
-    ${teams.map(t => `<option value="${t}">${t}</option>`).join('')}
-  </select>` : '';
+    const teamSelectHtml = isRoot ? `
+      <label>اختر الطليعة</label>
+      <select id="sess-team" onchange="Attendance.loadTeamMembers()">
+        ${teams.map(t => `<option value="${t}">${t}</option>`).join('')}
+      </select>` : '';
 
-// تحميل أعضاء الطليعة الافتراضية
-const defaultTeam = isRoot ? (teams[0] || '') : S.user.team;
-const defaultMembers = Object.entries(S.members).filter(([, m]) => m.team === defaultTeam);
-defaultMembers.forEach(([id]) => { this._att[id] = false; });
+    const defaultTeam = isRoot ? (teams[0] || '') : S.user.team;
+    const defaultMembers = Object.entries(S.members).filter(([, m]) => m.team === defaultTeam);
+    defaultMembers.forEach(([id]) => { this._att[id] = false; });
 
-UI.openModal(`
-  <div class="modal-title">📋 جلسة حضور جديدة</div>
-  <label>عنوان الجلسة</label>
-  <input id="s-title" placeholder="اجتماع أسبوعي، رحلة، تدريب...">
-  <label>ملاحظات (اختياري)</label>
-  <textarea id="s-notes" placeholder="ملاحظات..."></textarea>
-  ${teamSelectHtml}
-  <label>تحديد الموقع</label>
-  <button class="gps-btn" style="margin-top:8px;" onclick="Attendance.getGPS()">
-    <div class="gps-pulse"></div>تحديد موقعي تلقائياً
-  </button>
-  <div id="gps-res" style="font-size:12px;color:var(--text3);margin-top:6px;"></div>
-  <label style="margin-top:16px;">تسجيل الحضور</label>
-  <div id="att-list">${this._buildMemberList(defaultMembers)}</div>
-  <button class="btn btn-green" onclick="Attendance.save()">حفظ الجلسة ✓</button>
-  <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>
-`);
-```
+    UI.openModal(`
+      <div class="modal-title">📋 جلسة حضور جديدة</div>
+      <label>عنوان الجلسة</label>
+      <input id="s-title" placeholder="اجتماع أسبوعي، رحلة، تدريب...">
+      <label>ملاحظات (اختياري)</label>
+      <textarea id="s-notes" placeholder="ملاحظات..."></textarea>
+      ${teamSelectHtml}
+      <label>تحديد الموقع</label>
+      <button class="gps-btn" style="margin-top:8px;" onclick="Attendance.getGPS()">
+        <div class="gps-pulse"></div>تحديد موقعي تلقائياً
+      </button>
+      <div id="gps-res" style="font-size:12px;color:var(--text3);margin-top:6px;"></div>
+      <label style="margin-top:16px;">تسجيل الحضور</label>
+      <div id="att-list">${this._buildMemberList(defaultMembers)}</div>
+      <button class="btn btn-green" onclick="Attendance.save()">حفظ الجلسة ✓</button>
+      <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>
+    `);
+  },
 
-},
+  _buildMemberList(memberEntries) {
+    return memberEntries.map(([id, m]) => `
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+        <span style="font-size:13px;flex:1;">${m.name}</span>
+        <button class="att-btn" id="ap-${id}" onclick="Attendance.toggle('${id}',true)">حاضر</button>
+        <button class="att-btn absent-active" id="aa-${id}" onclick="Attendance.toggle('${id}',false)">غائب</button>
+      </div>`).join('');
+  },
 
-_buildMemberList(memberEntries) {
-return memberEntries.map(([id, m]) => ` <div style="display:flex;align-items:center;gap:8px;margin-top:8px;"> <span style="font-size:13px;flex:1;">${m.name}</span> <button class="att-btn" id="ap-${id}" onclick="Attendance.toggle('${id}',true)">حاضر</button> <button class="att-btn absent-active" id="aa-${id}" onclick="Attendance.toggle('${id}',false)">غائب</button> </div>`).join(’’);
-},
+  loadTeamMembers() {
+    const team = document.getElementById('sess-team').value;
+    const members = Object.entries(S.members).filter(([, m]) => m.team === team);
+    this._att = {};
+    members.forEach(([id]) => { this._att[id] = false; });
+    document.getElementById('att-list').innerHTML = this._buildMemberList(members);
+  },
 
-loadTeamMembers() {
-const team = document.getElementById(‘sess-team’).value;
-const members = Object.entries(S.members).filter(([, m]) => m.team === team);
-this._att = {};
-members.forEach(([id]) => { this._att[id] = false; });
-document.getElementById(‘att-list’).innerHTML = this._buildMemberList(members);
-},
+  toggle(id, val) {
+    this._att[id] = val;
+    const pb = document.getElementById(`ap-${id}`);
+    const ab = document.getElementById(`aa-${id}`);
+    if (pb) pb.className = 'att-btn' + (val ? ' present-active' : '');
+    if (ab) ab.className = 'att-btn' + (val ? '' : ' absent-active');
+  },
 
-toggle(id, val) {
-this._att[id] = val;
-const pb = document.getElementById(`ap-${id}`);
-const ab = document.getElementById(`aa-${id}`);
-if (pb) pb.className = ‘att-btn’ + (val ? ’ present-active’ : ‘’);
-if (ab) ab.className = ‘att-btn’ + (val ? ‘’ : ’ absent-active’);
-},
+  getGPS() {
+    if (!navigator.geolocation) { UI.toast('المتصفح لا يدعم GPS', 'error'); return; }
+    const res = document.getElementById('gps-res');
+    if (res) res.textContent = 'جاري التحديد…';
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        this._gps = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
+        if (res) res.textContent = `📍 ${this._gps}`;
+        UI.toast('تم تحديد الموقع ✓');
+      },
+      () => {
+        if (res) res.textContent = 'تعذّر الوصول للموقع';
+        UI.toast('تعذّر تحديد الموقع', 'error');
+      }
+    );
+  },
 
-getGPS() {
-if (!navigator.geolocation) { UI.toast(‘المتصفح لا يدعم GPS’, ‘error’); return; }
-const res = document.getElementById(‘gps-res’);
-if (res) res.textContent = ‘جاري التحديد…’;
-navigator.geolocation.getCurrentPosition(
-p => {
-this._gps = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
-if (res) res.textContent = `📍 ${this._gps}`;
-UI.toast(‘تم تحديد الموقع ✓’);
-},
-() => {
-if (res) res.textContent = ‘تعذّر الوصول للموقع’;
-UI.toast(‘تعذّر تحديد الموقع’, ‘error’);
-}
-);
-},
-
-save() {
-const title  = (document.getElementById(‘s-title’)?.value.trim())  || ‘جلسة’;
-const notes  = (document.getElementById(‘s-notes’)?.value.trim())  || ‘’;
-const teamEl = document.getElementById(‘sess-team’);
-const team   = teamEl ? teamEl.value : S.user.team;
-const id     = Date.now().toString();
-DB.child(‘sessions’).child(id).set({
-id, title, notes, date: today(), team,
-gps: this._gps, attendance: { …this._att },
-ts: Date.now(), createdBy: S.user.name
-});
-App.log(`${S.user.name} سجّل جلسة [${title}] لـ ${team}`);
-UI.toast(‘تم حفظ الجلسة ✓’);
-UI.closeModal();
-}
+  save() {
+    const title  = (document.getElementById('s-title')?.value.trim())  || 'جلسة';
+    const notes  = (document.getElementById('s-notes')?.value.trim())  || '';
+    const teamEl = document.getElementById('sess-team');
+    const team   = teamEl ? teamEl.value : S.user.team;
+    const id     = Date.now().toString();
+    DB.child('sessions').child(id).set({
+      id, title, notes, date: today(), team,
+      gps: this._gps, attendance: { ...this._att },
+      ts: Date.now(), createdBy: S.user.name
+    });
+    App.log(`${S.user.name} سجّل جلسة [${title}] لـ ${team}`);
+    UI.toast('تم حفظ الجلسة ✓');
+    UI.closeModal();
+  }
 };
 
 /* ══════════════════════════════════════
-TASKS — FIX #12: منع الإنجاز المزدوج
+   TASKS
 ══════════════════════════════════════ */
 const Tasks = {
-_completing: new Set(),
-complete(taskId, userId) {
-if (this._completing.has(taskId)) return;
-this._completing.add(taskId);
-const t = S.tasks.find(x => x.id === taskId);
-if (!t || t.done) { this._completing.delete(taskId); return; }
-DB.child(‘tasks’).child(taskId).update({ done:true, completedBy:userId, completedAt:Date.now() });
-DB.child(‘members’).child(userId).update({ pts: (S.members[userId].pts||0) + (t.pts||0) });
-App.log(`${S.members[userId].name} أنجز [${t.title}] وحصل على ${t.pts||0} نقطة`);
-UI.toast(`أحسنت! +${t.pts||0} نقطة 🎉`);
-setTimeout(() => this._completing.delete(taskId), 3000);
-}
+  _completing: new Set(),
+  complete(taskId, userId) {
+    if (this._completing.has(taskId)) return;
+    this._completing.add(taskId);
+    const t = S.tasks.find(x => x.id === taskId);
+    if (!t || t.done) { this._completing.delete(taskId); return; }
+    DB.child('tasks').child(taskId).update({ done:true, completedBy:userId, completedAt:Date.now() });
+    DB.child('members').child(userId).update({ pts: (S.members[userId].pts||0) + (t.pts||0) });
+    App.log(`${S.members[userId].name} أنجز [${t.title}] وحصل على ${t.pts||0} نقطة`);
+    UI.toast(`أحسنت! +${t.pts||0} نقطة 🎉`);
+    setTimeout(() => this._completing.delete(taskId), 3000);
+  }
 };
 
 /* ══════════════════════════════════════
-ADMIN
+   ADMIN
 ══════════════════════════════════════ */
 const Admin = {
-sendAnn() {
-const txt = document.getElementById(‘ann-text’)?.value.trim();
-if (!txt) { UI.toast(‘اكتب الإعلان أولاً’, ‘error’); return; }
-DB.child(‘announcements’).push({ text:txt, author:S.user.name, ts:Date.now(), time:today() });
-App.log(`${S.user.name} أرسل إعلاناً`);
-const el = document.getElementById(‘ann-text’);
-if (el) el.value = ‘’;
-UI.toast(‘تم إرسال الإعلان 📢’);
-},
+  sendAnn() {
+    const txt = document.getElementById('ann-text')?.value.trim();
+    if (!txt) { UI.toast('اكتب الإعلان أولاً', 'error'); return; }
+    DB.child('announcements').push({ text:txt, author:S.user.name, ts:Date.now(), time:today() });
+    App.log(`${S.user.name} أرسل إعلاناً`);
+    const el = document.getElementById('ann-text');
+    if (el) el.value = '';
+    UI.toast('تم إرسال الإعلان 📢');
+  },
 
-showAdd() {
-const teams = […new Set(Object.values(S.members).map(m => m.team))];
-UI.openModal(`<div class="modal-title">➕ إضافة عضو جديد</div> <label>الاسم الكامل</label> <input id="nm-n" placeholder="اسم الكشاف"> <label>الرتبة</label> <input id="nm-r" placeholder="كشاف، قائد طليعة..."> <label>الطليعة</label> <select id="nm-t" onchange="Admin.teamChange()"> ${teams.map(t =>`<option value="${t}">${t}</option>`).join('')} <option value="__new__">+ طليعة جديدة</option> </select> <div id="nm-tn" style="display:none;"> <input id="nm-tn-v" placeholder="اسم الطليعة الجديدة"> </div> <label>الرمز السري</label> <input id="nm-p" type="number" placeholder="رمز من 4 أرقام على الأقل"> <label>الدور</label> <select id="nm-role"> <option value="USER">كشاف</option> <option value="LEADER">قائد طليعة</option> </select> <button class="btn btn-green" onclick="Admin.addMember()">إضافة العضو ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button> `);
-},
+  showAdd() {
+    const teams = [...new Set(Object.values(S.members).map(m => m.team))];
+    UI.openModal(`
+      <div class="modal-title">➕ إضافة عضو جديد</div>
+      <label>الاسم الكامل</label>
+      <input id="nm-n" placeholder="اسم الكشاف">
+      <label>الرتبة</label>
+      <input id="nm-r" placeholder="كشاف، قائد طليعة...">
+      <label>الطليعة</label>
+      <select id="nm-t" onchange="Admin.teamChange()">
+        ${teams.map(t => `<option value="${t}">${t}</option>`).join('')}
+        <option value="__new__">+ طليعة جديدة</option>
+      </select>
+      <div id="nm-tn" style="display:none;">
+        <input id="nm-tn-v" placeholder="اسم الطليعة الجديدة">
+      </div>
+      <label>الرمز السري</label>
+      <input id="nm-p" type="number" placeholder="رمز من 4 أرقام على الأقل">
+      <label>الدور</label>
+      <select id="nm-role">
+        <option value="USER">كشاف</option>
+        <option value="LEADER">قائد طليعة</option>
+      </select>
+      <button class="btn btn-green" onclick="Admin.addMember()">إضافة العضو ✓</button>
+      <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>
+    `);
+  },
 
-teamChange() {
-const v = document.getElementById(‘nm-t’)?.value;
-const wrap = document.getElementById(‘nm-tn’);
-if (wrap) wrap.style.display = v === ‘**new**’ ? ‘block’ : ‘none’;
-},
+  teamChange() {
+    const v = document.getElementById('nm-t')?.value;
+    const wrap = document.getElementById('nm-tn');
+    if (wrap) wrap.style.display = v === '__new__' ? 'block' : 'none';
+  },
 
-addMember() {
-const name = document.getElementById(‘nm-n’)?.value.trim();
-const rank = document.getElementById(‘nm-r’)?.value.trim() || ‘كشاف’;
-let   team = document.getElementById(‘nm-t’)?.value;
-if (team === ‘**new**’) team = document.getElementById(‘nm-tn-v’)?.value.trim();
-const pin  = document.getElementById(‘nm-p’)?.value.trim();
-const role = document.getElementById(‘nm-role’)?.value;
-if (!name || !pin || pin.length < 4) { UI.toast(‘أكمل الحقول (الرمز 4+ أرقام)’, ‘error’); return; }
-if (!team) { UI.toast(‘اختر طليعة’, ‘error’); return; }
-if (S.members[pin]) { UI.toast(‘الرمز مستخدم مسبقاً’, ‘error’); return; }
-DB.child(‘members’).child(pin).set({ name, rank, team, role, pts:0, pin, badges:[‘عضو جديد’], isPresent:false, joinDate:Date.now() });
-if (!S.inviteCodes[team]) Admin.genCode(team, false);
-App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
-UI.toast(`تمت إضافة ${name} ✓`);
-UI.closeModal();
-},
+  addMember() {
+    const name = document.getElementById('nm-n')?.value.trim();
+    const rank = document.getElementById('nm-r')?.value.trim() || 'كشاف';
+    let   team = document.getElementById('nm-t')?.value;
+    if (team === '__new__') team = document.getElementById('nm-tn-v')?.value.trim();
+    const pin  = document.getElementById('nm-p')?.value.trim();
+    const role = document.getElementById('nm-role')?.value;
+    if (!name || !pin || pin.length < 4) { UI.toast('أكمل الحقول (الرمز 4+ أرقام)', 'error'); return; }
+    if (!team) { UI.toast('اختر طليعة', 'error'); return; }
+    if (S.members[pin]) { UI.toast('الرمز مستخدم مسبقاً', 'error'); return; }
+    DB.child('members').child(pin).set({ name, rank, team, role, pts:0, pin, badges:['عضو جديد'], isPresent:false, joinDate:Date.now() });
+    if (!S.inviteCodes[team]) Admin.genCode(team, false);
+    App.log(`${S.user.name} أضاف عضواً: ${name} في ${team}`);
+    UI.toast(`تمت إضافة ${name} ✓`);
+    UI.closeModal();
+  },
 
-showAddTask() {
-UI.openModal(`<div class="modal-title">📝 مهمة جديدة</div> <label>العنوان</label> <input id="tk-t" placeholder="عنوان المهمة"> <label>الوصف</label> <textarea id="tk-d" placeholder="تفاصيل المهمة..."></textarea> <label>النقاط عند الإنجاز</label> <input id="tk-p" type="number" placeholder="0" min="0"> <label>تاريخ الانتهاء (اختياري)</label> <input id="tk-due" type="date"> <label>تعيين لـ</label> <select id="tk-a"> <option value="all">الجميع</option> ${Object.entries(S.members).map(([id,m]) =>`<option value="${id}">${m.name} (${m.team})</option>`).join('')} </select> <button class="btn btn-green" onclick="Admin.addTask()">إنشاء المهمة ✓</button> <button class="modal-close" onclick="UI.closeModal()">إغلاق</button> `);
-},
+  showAddTask() {
+    UI.openModal(`
+      <div class="modal-title">📝 مهمة جديدة</div>
+      <label>العنوان</label>
+      <input id="tk-t" placeholder="عنوان المهمة">
+      <label>الوصف</label>
+      <textarea id="tk-d" placeholder="تفاصيل المهمة..."></textarea>
+      <label>النقاط عند الإنجاز</label>
+      <input id="tk-p" type="number" placeholder="0" min="0">
+      <label>تاريخ الانتهاء (اختياري)</label>
+      <input id="tk-due" type="date">
+      <label>تعيين لـ</label>
+      <select id="tk-a">
+        <option value="all">الجميع</option>
+        ${Object.entries(S.members).map(([id,m]) => `<option value="${id}">${m.name} (${m.team})</option>`).join('')}
+      </select>
+      <button class="btn btn-green" onclick="Admin.addTask()">إنشاء المهمة ✓</button>
+      <button class="modal-close" onclick="UI.closeModal()">إغلاق</button>
+    `);
+  },
 
-addTask() {
-const title = document.getElementById(‘tk-t’)?.value.trim();
-if (!title) { UI.toast(‘اكتب عنوان المهمة’, ‘error’); return; }
-const id = Date.now().toString();
-DB.child(‘tasks’).child(id).set({
-id, title,
-desc:       document.getElementById(‘tk-d’)?.value.trim()   || ‘’,
-pts:        parseInt(document.getElementById(‘tk-p’)?.value) || 0,
-due:        document.getElementById(‘tk-due’)?.value         || ‘’,
-assignedTo: document.getElementById(‘tk-a’)?.value           || ‘all’,
-done: false, ts: Date.now(), createdBy: S.user.name
-});
-App.log(`${S.user.name} أضاف مهمة: ${title}`);
-UI.toast(‘تم إنشاء المهمة ✓’);
-UI.closeModal();
-},
+  addTask() {
+    const title = document.getElementById('tk-t')?.value.trim();
+    if (!title) { UI.toast('اكتب عنوان المهمة', 'error'); return; }
+    const id = Date.now().toString();
+    DB.child('tasks').child(id).set({
+      id, title,
+      desc:       document.getElementById('tk-d')?.value.trim()   || '',
+      pts:        parseInt(document.getElementById('tk-p')?.value) || 0,
+      due:        document.getElementById('tk-due')?.value         || '',
+      assignedTo: document.getElementById('tk-a')?.value           || 'all',
+      done: false, ts: Date.now(), createdBy: S.user.name
+    });
+    App.log(`${S.user.name} أضاف مهمة: ${title}`);
+    UI.toast('تم إنشاء المهمة ✓');
+    UI.closeModal();
+  },
 
-genCode(team, showToast = true) {
-const prefix = team.replace(/\s/g,’’).slice(0,3).toUpperCase();
-const code   = prefix + Math.floor(1000 + Math.random() * 9000);
-DB.child(‘inviteCodes’).child(team).set(code);
-if (showToast) UI.toast(`تم تجديد كود ${team} ✓`);
-},
+  genCode(team, showToast = true) {
+    const prefix = team.replace(/\s/g,'').slice(0,3).toUpperCase();
+    const code   = prefix + Math.floor(1000 + Math.random() * 9000);
+    DB.child('inviteCodes').child(team).set(code);
+    if (showToast) UI.toast(`تم تجديد كود ${team} ✓`);
+  },
 
-restoreMember(pin) {
-const m = S.archived[pin];
-if (!m) return;
-const restored = { …m };
-delete restored.archivedAt;
-DB.child(‘members’).child(pin).set(restored);
-DB.child(‘archived’).child(pin).remove();
-App.log(`${S.user.name} استعاد [${m.name}] من الأرشيف`);
-UI.toast(`تمت استعادة ${m.name} ✓`);
-}
+  restoreMember(pin) {
+    const m = S.archived[pin];
+    if (!m) return;
+    const restored = { ...m };
+    delete restored.archivedAt;
+    DB.child('members').child(pin).set(restored);
+    DB.child('archived').child(pin).remove();
+    App.log(`${S.user.name} استعاد [${m.name}] من الأرشيف`);
+    UI.toast(`تمت استعادة ${m.name} ✓`);
+  }
 };
 
 /* ══════════════════════════════════════
-SELF-REGISTER — FIX #13
+   SELF-REGISTER
 ══════════════════════════════════════ */
 function showRegister() {
-document.getElementById(‘login-screen’).innerHTML = `<div style="width:100%;max-width:380px;padding:20px;margin:auto;"> <div class="reg-hero"> <div class="reg-logo">أوتاد</div> <div class="reg-title">انضم للفرقة الكشفية</div> <div class="reg-sub">أدخل كود الدعوة الخاص بطليعتك</div> </div> <div class="login-box"> <input id="reg-code" placeholder="كود الدعوة" style="text-align:center;letter-spacing:4px;font-size:18px;"> <input id="reg-name" placeholder="اسمك الكامل"> <input id="reg-pin" type="number" placeholder="اختر رمزاً سرياً (4 أرقام)"> <button class="btn btn-green" onclick="Register.submit()">انضم الآن ⚔️</button> <div style="margin-top:14px;font-size:12px;color:var(--text3);text-align:center;cursor:pointer;" onclick="location.reload()">لدي رمز — تسجيل الدخول</div> </div> </div>`;
+  document.getElementById('login-screen').innerHTML = `
+    <div style="width:100%;max-width:380px;padding:20px;margin:auto;">
+      <div class="reg-hero">
+        <div class="reg-logo">أوتاد</div>
+        <div class="reg-title">انضم للفرقة الكشفية</div>
+        <div class="reg-sub">أدخل كود الدعوة الخاص بطليعتك</div>
+      </div>
+      <div class="login-box">
+        <input id="reg-code" placeholder="كود الدعوة" style="text-align:center;letter-spacing:4px;font-size:18px;">
+        <input id="reg-name" placeholder="اسمك الكامل">
+        <input id="reg-pin" type="number" placeholder="اختر رمزاً سرياً (4 أرقام)">
+        <button class="btn btn-green" onclick="Register.submit()">انضم الآن ⚔️</button>
+        <div style="margin-top:14px;font-size:12px;color:var(--text3);text-align:center;cursor:pointer;" onclick="location.reload()">لدي رمز — تسجيل الدخول</div>
+      </div>
+    </div>`;
 }
 
 const Register = {
-async submit() {
-const code = document.getElementById(‘reg-code’)?.value.trim();
-const name = document.getElementById(‘reg-name’)?.value.trim();
-const pin  = document.getElementById(‘reg-pin’)?.value.trim();
-if (!code || !name || !pin || pin.length < 4) {
-UI.toast(‘أكمل جميع الحقول (الرمز 4 أرقام)’, ‘error’);
-return;
-}
-const snap  = await DB.child(‘inviteCodes’).once(‘value’);
-const codes = snap.val() || {};
-const team  = Object.keys(codes).find(t => codes[t] === code);
-if (!team) { UI.toast(‘كود الدعوة غير صحيح’, ‘error’); return; }
-const mSnap = await DB.child(‘members’).child(pin).once(‘value’);
-if (mSnap.val()) { UI.toast(‘هذا الرمز مستخدم، اختر رمزاً آخر’, ‘error’); return; }
-await DB.child(‘members’).child(pin).set({
-name, rank:‘كشاف’, team, role:‘USER’,
-pts:0, pin, badges:[‘عضو جديد’], isPresent:false, joinDate:Date.now()
-});
-DB.child(‘logs’).push({ txt:`انضم عضو جديد: ${name} في ${team}`, ts:Date.now(), time:now() });
-UI.toast(`مرحباً ${name}! انضممت لـ ${team} ✓`);
-setTimeout(() => location.reload(), 1800);
-}
+  async submit() {
+    const code = document.getElementById('reg-code')?.value.trim();
+    const name = document.getElementById('reg-name')?.value.trim();
+    const pin  = document.getElementById('reg-pin')?.value.trim();
+    if (!code || !name || !pin || pin.length < 4) {
+      UI.toast('أكمل جميع الحقول (الرمز 4 أرقام)', 'error');
+      return;
+    }
+    const snap  = await DB.child('inviteCodes').once('value');
+    const codes = snap.val() || {};
+    const team  = Object.keys(codes).find(t => codes[t] === code);
+    if (!team) { UI.toast('كود الدعوة غير صحيح', 'error'); return; }
+    const mSnap = await DB.child('members').child(pin).once('value');
+    if (mSnap.val()) { UI.toast('هذا الرمز مستخدم، اختر رمزاً آخر', 'error'); return; }
+    await DB.child('members').child(pin).set({
+      name, rank:'كشاف', team, role:'USER',
+      pts:0, pin, badges:['عضو جديد'], isPresent:false, joinDate:Date.now()
+    });
+    DB.child('logs').push({ txt:`انضم عضو جديد: ${name} في ${team}`, ts:Date.now(), time:now() });
+    UI.toast(`مرحباً ${name}! انضممت لـ ${team} ✓`);
+    setTimeout(() => location.reload(), 1800);
+  }
 };
 
 /* ══════════════════════════════════════
-INIT
+   INIT
 ══════════════════════════════════════ */
 window.onload = () => {
-if (localStorage.getItem(‘awtad_theme’) === ‘light’) document.body.classList.add(‘light’);
+  if (localStorage.getItem('awtad_theme') === 'light') document.body.classList.add('light');
 };
 </script>
-
 </body>
 </html>
